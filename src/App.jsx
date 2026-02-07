@@ -98,6 +98,138 @@ const THEMES = {
       font: 'font-sans'
     }
   },
+  xp: {
+    name: 'Windows XP',
+    icon: Monitor,
+    classes: {
+      bg: 'xp-bg',
+      header: 'xp-header border-b-0',
+      textMain: 'text-slate-800',
+      textSec: 'text-slate-600',
+      card: 'xp-card border-2 border-blue-800 shadow-lg',
+      cardBorder: 'border-l-0',
+      badgeCurs: 'xp-badge-blue text-white',
+      badgeSem: 'xp-badge-green text-white',
+      accentText: 'text-blue-800 font-bold',
+      gridHeader: 'xp-grid-header text-white font-bold',
+      gridSubHeader: 'xp-grid-subheader text-blue-900 font-semibold',
+      gridCell: 'bg-white hover:bg-blue-50 border border-blue-200',
+      gridLine: 'divide-blue-300',
+      border: 'border-blue-300',
+      highlightBox: 'xp-highlight border-2 border-blue-500',
+      activeTab: 'xp-tab-active text-white font-bold shadow-md',
+      inactiveTab: 'xp-tab-inactive text-slate-700 border-2 border-blue-400',
+      buttonSecondary: 'xp-button text-slate-700 border-2 border-blue-500',
+      dropdownBg: 'xp-dropdown border-2 border-blue-800 shadow-2xl',
+      dropdownItemActive: 'xp-dropdown-active text-white font-bold',
+      dropdownItemInactive: 'bg-white text-slate-700 hover:bg-blue-100 border border-blue-200',
+      dropdownDivider: 'border-blue-300',
+      dropdownLabel: 'text-blue-700 font-bold',
+      sectionHeaderBg: 'xp-section-header border-b-2 border-blue-600',
+      weekInfoOdd: 'xp-info-blue text-blue-900 border-2 border-blue-600',
+      weekInfoEven: 'xp-info-orange text-orange-900 border-2 border-orange-600',
+      font: 'font-sans'
+    }
+  },
+  stardew: {
+    name: 'Stardew Valley',
+    icon: Sun,
+    classes: {
+      bg: 'stardew-bg',
+      header: 'stardew-header border-b-4 border-amber-900',
+      textMain: 'text-amber-950',
+      textSec: 'text-amber-800',
+      card: 'stardew-card border-4 border-amber-900 shadow-xl',
+      cardBorder: 'border-l-0',
+      badgeCurs: 'stardew-badge-blue text-white',
+      badgeSem: 'stardew-badge-green text-white',
+      accentText: 'text-amber-900 font-bold',
+      gridHeader: 'stardew-grid-header text-white font-bold',
+      gridSubHeader: 'stardew-grid-subheader text-green-900 font-bold',
+      gridCell: 'stardew-cell hover:bg-green-100',
+      gridLine: 'divide-amber-800',
+      border: 'border-amber-800',
+      highlightBox: 'stardew-highlight border-4 border-yellow-600',
+      activeTab: 'stardew-tab-active text-white font-bold shadow-lg',
+      inactiveTab: 'stardew-tab-inactive text-amber-900 border-4 border-amber-700',
+      buttonSecondary: 'stardew-button text-amber-900 border-4 border-amber-800',
+      dropdownBg: 'stardew-dropdown border-4 border-amber-900 shadow-2xl',
+      dropdownItemActive: 'stardew-dropdown-active text-white font-bold',
+      dropdownItemInactive: 'bg-amber-50 text-amber-900 hover:bg-yellow-100 border-2 border-amber-700',
+      dropdownDivider: 'border-amber-800',
+      dropdownLabel: 'text-green-800 font-bold',
+      sectionHeaderBg: 'stardew-section-header border-b-4 border-green-700',
+      weekInfoOdd: 'stardew-info-blue text-blue-900 border-4 border-blue-700',
+      weekInfoEven: 'stardew-info-orange text-orange-900 border-4 border-orange-700',
+      font: 'font-sans'
+    }
+  },
+  gothic: {
+    name: 'Gothic Dark',
+    icon: Moon,
+    classes: {
+      bg: 'gothic-bg',
+      header: 'gothic-header border-b-2 border-purple-900/50',
+      textMain: 'text-purple-100',
+      textSec: 'text-purple-300/70',
+      card: 'gothic-card border border-purple-900/50 shadow-2xl',
+      cardBorder: 'border-l-4',
+      badgeCurs: 'gothic-badge-purple text-white',
+      badgeSem: 'gothic-badge-red text-white',
+      accentText: 'text-purple-400 font-semibold',
+      gridHeader: 'gothic-grid-header text-purple-200 font-bold',
+      gridSubHeader: 'gothic-grid-subheader text-purple-300',
+      gridCell: 'gothic-cell hover:bg-purple-950/30',
+      gridLine: 'divide-purple-900/30',
+      border: 'border-purple-900/30',
+      highlightBox: 'gothic-highlight border border-purple-800/50',
+      activeTab: 'gothic-tab-active text-white shadow-xl',
+      inactiveTab: 'gothic-tab-inactive text-purple-400',
+      buttonSecondary: 'gothic-button text-purple-300',
+      dropdownBg: 'gothic-dropdown border border-purple-800/50 shadow-2xl',
+      dropdownItemActive: 'gothic-dropdown-active text-white',
+      dropdownItemInactive: 'bg-black/40 text-purple-300 hover:bg-purple-950/50',
+      dropdownDivider: 'border-purple-900/40',
+      dropdownLabel: 'text-purple-500 font-semibold',
+      sectionHeaderBg: 'gothic-section-header border-purple-800/30',
+      weekInfoOdd: 'gothic-info-purple text-purple-300 border border-purple-700/50',
+      weekInfoEven: 'gothic-info-red text-red-300 border border-red-800/50',
+      font: 'font-serif'
+    }
+  },
+  aero: {
+    name: 'Vista Aero',
+    icon: Globe,
+    classes: {
+      bg: 'bg-gradient-to-br from-sky-100 via-blue-50 to-indigo-100',
+      header: 'aero-glass border-b border-white/30',
+      textMain: 'text-slate-800',
+      textSec: 'text-slate-600',
+      card: 'aero-card border border-white/40 shadow-xl',
+      cardBorder: 'border-l-4',
+      badgeCurs: 'aero-badge-blue text-white shadow-md',
+      badgeSem: 'aero-badge-green text-white shadow-md',
+      accentText: 'text-blue-700 font-semibold',
+      gridHeader: 'aero-header text-white font-semibold',
+      gridSubHeader: 'aero-subheader text-blue-900',
+      gridCell: 'aero-cell hover:bg-blue-50/50',
+      gridLine: 'divide-blue-200/50',
+      border: 'border-blue-200/50',
+      highlightBox: 'aero-highlight',
+      activeTab: 'aero-tab-active text-white shadow-lg',
+      inactiveTab: 'aero-tab-inactive text-slate-700',
+      buttonSecondary: 'aero-button text-slate-700',
+      dropdownBg: 'aero-dropdown border border-white/40 shadow-2xl',
+      dropdownItemActive: 'aero-dropdown-active text-white',
+      dropdownItemInactive: 'bg-white/60 text-slate-700 hover:bg-blue-100/70',
+      dropdownDivider: 'border-blue-200/30',
+      dropdownLabel: 'text-slate-500 font-semibold',
+      sectionHeaderBg: 'aero-section-header border-blue-200/30',
+      weekInfoOdd: 'aero-info-odd text-blue-800 border border-blue-300/50 shadow-md',
+      weekInfoEven: 'aero-info-even text-orange-800 border border-orange-300/50 shadow-md',
+      font: 'font-sans'
+    }
+  },
   retro: {
     name: 'Retro',
     icon: Monitor,
@@ -381,7 +513,7 @@ export default function App() {
   // --- LOADING CHECK ---
   if (isLoadingApi) {
     return (
-      <div className={`min-h-screen w-full flex flex-col items-center justify-center transition-colors duration-300 ${theme.bg} ${theme.font} ${isRetroAnim ? 'retro-screen retro-screen-glow retro-noise retro-scanline' : ''}`}>
+      <div className={`h-screen w-full flex flex-col items-center justify-center transition-colors duration-300 ${theme.bg} ${theme.font} ${isRetroAnim ? 'retro-screen retro-screen-glow retro-noise retro-scanline' : ''}`}>
          <div className="flex flex-col items-center gap-6 animate-pulse">
             <div className={`p-4 rounded-full ${isRetro ? 'bg-green-900 border-2 border-green-500' : 'bg-blue-50'} ${isRetroAnim ? 'retro-border-pulse' : ''}`}>
                <Globe size={48} className={`animate-bounce ${isRetro ? 'text-green-500' : 'text-blue-600'}`} />
@@ -408,6 +540,543 @@ export default function App() {
         }
         * {
           box-sizing: border-box;
+        }
+        
+        /* === VISTA AERO STYLES === */
+        .aero-glass {
+          background: linear-gradient(135deg, 
+            rgba(255, 255, 255, 0.9) 0%,
+            rgba(240, 248, 255, 0.85) 50%,
+            rgba(230, 240, 255, 0.9) 100%
+          );
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
+          box-shadow: 
+            0 8px 32px rgba(31, 38, 135, 0.15),
+            inset 0 1px 0 rgba(255, 255, 255, 0.8),
+            inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+        }
+        
+        .aero-card {
+          background: linear-gradient(135deg,
+            rgba(255, 255, 255, 0.95) 0%,
+            rgba(245, 250, 255, 0.9) 100%
+          );
+          backdrop-filter: blur(10px);
+          -webkit-backdrop-filter: blur(10px);
+          box-shadow: 
+            0 8px 32px rgba(31, 38, 135, 0.2),
+            inset 0 1px 0 rgba(255, 255, 255, 0.9);
+          border-radius: 8px;
+        }
+        
+        .aero-header {
+          background: linear-gradient(180deg,
+            #4c9bdb 0%,
+            #3d7db3 50%,
+            #2b5d8f 100%
+          );
+          box-shadow: 
+            inset 0 1px 0 rgba(255, 255, 255, 0.4),
+            0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .aero-subheader {
+          background: linear-gradient(180deg,
+            rgba(200, 225, 245, 0.9) 0%,
+            rgba(180, 210, 235, 0.85) 100%
+          );
+          backdrop-filter: blur(5px);
+        }
+        
+        .aero-cell {
+          background: linear-gradient(135deg,
+            rgba(255, 255, 255, 0.6) 0%,
+            rgba(250, 252, 255, 0.5) 100%
+          );
+          backdrop-filter: blur(5px);
+        }
+        
+        .aero-badge-blue {
+          background: linear-gradient(180deg,
+            #5eadeb 0%,
+            #3d8ed3 50%,
+            #2b6da8 100%
+          );
+          box-shadow: 
+            inset 0 1px 0 rgba(255, 255, 255, 0.5),
+            0 2px 4px rgba(0, 0, 0, 0.3);
+          border-radius: 4px;
+        }
+        
+        .aero-badge-green {
+          background: linear-gradient(180deg,
+            #7ed957 0%,
+            #5db33a 50%,
+            #4a9130 100%
+          );
+          box-shadow: 
+            inset 0 1px 0 rgba(255, 255, 255, 0.5),
+            0 2px 4px rgba(0, 0, 0, 0.3);
+          border-radius: 4px;
+        }
+        
+        .aero-tab-active {
+          background: linear-gradient(180deg,
+            #6bb8f0 0%,
+            #4c9bdb 50%,
+            #3d7db3 100%
+          );
+          box-shadow: 
+            inset 0 1px 0 rgba(255, 255, 255, 0.6),
+            0 4px 12px rgba(59, 130, 246, 0.4);
+          border-radius: 6px;
+        }
+        
+        .aero-tab-inactive {
+          background: linear-gradient(135deg,
+            rgba(255, 255, 255, 0.7) 0%,
+            rgba(240, 245, 250, 0.6) 100%
+          );
+          backdrop-filter: blur(5px);
+          border-radius: 6px;
+          border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+        
+        .aero-button {
+          background: linear-gradient(180deg,
+            rgba(255, 255, 255, 0.9) 0%,
+            rgba(230, 240, 250, 0.8) 100%
+          );
+          backdrop-filter: blur(5px);
+          box-shadow: 
+            inset 0 1px 0 rgba(255, 255, 255, 0.8),
+            0 2px 4px rgba(0, 0, 0, 0.1);
+          border: 1px solid rgba(59, 130, 246, 0.3);
+          border-radius: 50%;
+        }
+        
+        .aero-button:hover {
+          background: linear-gradient(180deg,
+            rgba(240, 248, 255, 0.95) 0%,
+            rgba(220, 235, 250, 0.9) 100%
+          );
+        }
+        
+        .aero-dropdown {
+          background: linear-gradient(135deg,
+            rgba(255, 255, 255, 0.95) 0%,
+            rgba(245, 250, 255, 0.9) 100%
+          );
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
+          border-radius: 8px;
+          box-shadow: 
+            0 12px 48px rgba(31, 38, 135, 0.25),
+            inset 0 1px 0 rgba(255, 255, 255, 0.9);
+        }
+        
+        .aero-dropdown-active {
+          background: linear-gradient(90deg,
+            #5eadeb 0%,
+            #4c9bdb 100%
+          );
+          border-radius: 4px;
+        }
+        
+        .aero-section-header {
+          background: linear-gradient(135deg,
+            rgba(220, 235, 250, 0.6) 0%,
+            rgba(200, 225, 245, 0.5) 100%
+          );
+          backdrop-filter: blur(5px);
+        }
+        
+        .aero-highlight {
+          background: linear-gradient(135deg,
+            rgba(190, 220, 250, 0.4) 0%,
+            rgba(170, 210, 245, 0.3) 100%
+          );
+          backdrop-filter: blur(5px);
+          border: 1px solid rgba(59, 130, 246, 0.3);
+          border-radius: 8px;
+        }
+        
+        .aero-info-odd {
+          background: linear-gradient(135deg,
+            rgba(219, 234, 254, 0.8) 0%,
+            rgba(191, 219, 254, 0.7) 100%
+          );
+          backdrop-filter: blur(8px);
+          border-radius: 8px;
+        }
+        
+        .aero-info-even {
+          background: linear-gradient(135deg,
+            rgba(254, 243, 199, 0.8) 0%,
+            rgba(253, 230, 138, 0.7) 100%
+          );
+          backdrop-filter: blur(8px);
+          border-radius: 8px;
+        }
+        
+        /* === WINDOWS XP STYLES === */
+        .xp-bg {
+          background: linear-gradient(180deg, #245edb 0%, #3f8cf3 50%, #245edb 100%);
+        }
+        
+        .xp-header {
+          background: linear-gradient(180deg, #0054e3 0%, #3a8cf5 50%, #0054e3 100%);
+          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3), 0 2px 6px rgba(0, 0, 0, 0.3);
+        }
+        
+        .xp-card {
+          background: linear-gradient(135deg, #ece9d8 0%, #f5f3ea 100%);
+          border-radius: 0;
+          box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.2);
+        }
+        
+        .xp-badge-blue {
+          background: linear-gradient(180deg, #4a8cf7 0%, #0054e3 100%);
+          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 2px 2px 0 rgba(0, 0, 0, 0.3);
+          border-radius: 3px;
+          border: 1px solid #0040a8;
+        }
+        
+        .xp-badge-green {
+          background: linear-gradient(180deg, #7ed321 0%, #5a9e16 100%);
+          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 2px 2px 0 rgba(0, 0, 0, 0.3);
+          border-radius: 3px;
+          border: 1px solid #4a8012;
+        }
+        
+        .xp-grid-header {
+          background: linear-gradient(180deg, #0054e3 0%, #3a8cf5 50%, #0054e3 100%);
+          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+        
+        .xp-grid-subheader {
+          background: linear-gradient(180deg, #d6e8ff 0%, #b5d3f5 100%);
+        }
+        
+        .xp-highlight {
+          background: linear-gradient(135deg, #fef6d5 0%, #ffe89f 100%);
+          border-radius: 0;
+        }
+        
+        .xp-tab-active {
+          background: linear-gradient(180deg, #4a8cf7 0%, #0054e3 100%);
+          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 2px 2px 4px rgba(0, 0, 0, 0.3);
+          border-radius: 3px;
+        }
+        
+        .xp-tab-inactive {
+          background: linear-gradient(180deg, #f0f0f0 0%, #d4d4d4 100%);
+          border-radius: 3px;
+        }
+        
+        .xp-button {
+          background: linear-gradient(180deg, #ffffff 0%, #e8e8e8 100%);
+          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 2px 2px 4px rgba(0, 0, 0, 0.2);
+          border-radius: 50%;
+        }
+        
+        .xp-dropdown {
+          background: linear-gradient(135deg, #ece9d8 0%, #f5f3ea 100%);
+          border-radius: 0;
+          box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.3);
+        }
+        
+        .xp-dropdown-active {
+          background: linear-gradient(90deg, #4a8cf7 0%, #0054e3 100%);
+          border-radius: 0;
+        }
+        
+        .xp-section-header {
+          background: linear-gradient(180deg, #d6e8ff 0%, #b5d3f5 100%);
+        }
+        
+        .xp-info-blue {
+          background: linear-gradient(135deg, #cfe5ff 0%, #a5d0ff 100%);
+          box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+          border-radius: 3px;
+        }
+        
+        .xp-info-orange {
+          background: linear-gradient(135deg, #ffe5cf 0%, #ffd0a5 100%);
+          box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+          border-radius: 3px;
+        }
+        
+        /* === STARDEW VALLEY STYLES === */
+        .stardew-bg {
+          background: linear-gradient(180deg, #8fde5d 0%, #68b83f 50%, #8fde5d 100%);
+        }
+        
+        .stardew-header {
+          background: linear-gradient(180deg, #f4a460 0%, #d2691e 50%, #8b4513 100%);
+          box-shadow: 0 4px 0 #5d2e0f, inset 0 -2px 0 #ffd699;
+        }
+        
+        .stardew-card {
+          background: linear-gradient(135deg, #fff8dc 0%, #fffacd 100%);
+          border-radius: 8px;
+          box-shadow: 4px 4px 0 rgba(139, 69, 19, 0.3);
+          image-rendering: pixelated;
+        }
+        
+        .stardew-badge-blue {
+          background: linear-gradient(180deg, #6495ed 0%, #4169e1 100%);
+          box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.5), 3px 3px 0 rgba(0, 0, 0, 0.3);
+          border-radius: 4px;
+          border: 2px solid #1e3a8a;
+        }
+        
+        .stardew-badge-green {
+          background: linear-gradient(180deg, #90ee90 0%, #228b22 100%);
+          box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.5), 3px 3px 0 rgba(0, 0, 0, 0.3);
+          border-radius: 4px;
+          border: 2px solid #065f06;
+        }
+        
+        .stardew-grid-header {
+          background: linear-gradient(180deg, #8b4513 0%, #654321 100%);
+          box-shadow: inset 0 2px 0 #d2691e, 0 3px 0 rgba(0, 0, 0, 0.3);
+        }
+        
+        .stardew-grid-subheader {
+          background: linear-gradient(180deg, #daa520 0%, #b8860b 100%);
+          box-shadow: inset 0 2px 0 #ffd700;
+        }
+        
+        .stardew-cell {
+          background: linear-gradient(135deg, #fffacd 0%, #fff8dc 100%);
+          border: 2px solid #deb887;
+        }
+        
+        .stardew-highlight {
+          background: linear-gradient(135deg, #fffacd 0%, #ffeb99 100%);
+          border-radius: 8px;
+          box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+        
+        .stardew-tab-active {
+          background: linear-gradient(180deg, #8b4513 0%, #654321 100%);
+          box-shadow: inset 0 2px 0 #d2691e, 3px 3px 0 rgba(0, 0, 0, 0.4);
+          border-radius: 6px;
+        }
+        
+        .stardew-tab-inactive {
+          background: linear-gradient(180deg, #f0e68c 0%, #daa520 100%);
+          border-radius: 6px;
+        }
+        
+        .stardew-button {
+          background: linear-gradient(180deg, #ffd700 0%, #daa520 100%);
+          box-shadow: inset 0 2px 0 #ffe97f, 3px 3px 0 rgba(0, 0, 0, 0.3);
+          border-radius: 50%;
+        }
+        
+        .stardew-dropdown {
+          background: linear-gradient(135deg, #fff8dc 0%, #fffacd 100%);
+          border-radius: 8px;
+          box-shadow: 4px 4px 8px rgba(139, 69, 19, 0.4);
+        }
+        
+        .stardew-dropdown-active {
+          background: linear-gradient(90deg, #8b4513 0%, #654321 100%);
+          border-radius: 4px;
+          box-shadow: inset 0 1px 0 #d2691e;
+        }
+        
+        .stardew-section-header {
+          background: linear-gradient(180deg, #90ee90 0%, #66cc66 100%);
+          box-shadow: inset 0 2px 0 #b0f0b0, 0 2px 0 rgba(0, 0, 0, 0.2);
+        }
+        
+        .stardew-info-blue {
+          background: linear-gradient(135deg, #87ceeb 0%, #4682b4 100%);
+          box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.3);
+          border-radius: 8px;
+        }
+        
+        .stardew-info-orange {
+          background: linear-gradient(135deg, #ffa500 0%, #ff8c00 100%);
+          box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.3);
+          border-radius: 8px;
+        }
+        
+        /* === GOTHIC DARK STYLES === */
+        .gothic-bg {
+          background: radial-gradient(ellipse at top, #1a0f2e 0%, #0d0618 50%, #000000 100%);
+        }
+        
+        .gothic-header {
+          background: linear-gradient(180deg, 
+            rgba(88, 28, 135, 0.4) 0%,
+            rgba(49, 20, 80, 0.6) 50%,
+            rgba(24, 10, 40, 0.8) 100%
+          );
+          backdrop-filter: blur(10px);
+          box-shadow: 
+            0 0 20px rgba(168, 85, 247, 0.2),
+            inset 0 1px 0 rgba(168, 85, 247, 0.2);
+        }
+        
+        .gothic-card {
+          background: linear-gradient(135deg,
+            rgba(24, 10, 40, 0.8) 0%,
+            rgba(49, 20, 80, 0.6) 100%
+          );
+          backdrop-filter: blur(10px);
+          border-radius: 12px;
+          box-shadow: 
+            0 8px 32px rgba(0, 0, 0, 0.6),
+            0 0 20px rgba(168, 85, 247, 0.1),
+            inset 0 1px 0 rgba(168, 85, 247, 0.1);
+        }
+        
+        .gothic-badge-purple {
+          background: linear-gradient(180deg, #a855f7 0%, #7c3aed 100%);
+          box-shadow: 
+            0 0 10px rgba(168, 85, 247, 0.5),
+            inset 0 1px 0 rgba(255, 255, 255, 0.2);
+          border-radius: 6px;
+          border: 1px solid #9333ea;
+        }
+        
+        .gothic-badge-red {
+          background: linear-gradient(180deg, #dc2626 0%, #991b1b 100%);
+          box-shadow: 
+            0 0 10px rgba(220, 38, 38, 0.5),
+            inset 0 1px 0 rgba(255, 255, 255, 0.2);
+          border-radius: 6px;
+          border: 1px solid #7f1d1d;
+        }
+        
+        .gothic-grid-header {
+          background: linear-gradient(180deg,
+            rgba(88, 28, 135, 0.8) 0%,
+            rgba(49, 20, 80, 0.9) 100%
+          );
+          box-shadow: 
+            0 0 15px rgba(168, 85, 247, 0.3),
+            inset 0 1px 0 rgba(168, 85, 247, 0.3);
+        }
+        
+        .gothic-grid-subheader {
+          background: linear-gradient(180deg,
+            rgba(49, 20, 80, 0.6) 0%,
+            rgba(24, 10, 40, 0.8) 100%
+          );
+          backdrop-filter: blur(5px);
+        }
+        
+        .gothic-cell {
+          background: linear-gradient(135deg,
+            rgba(24, 10, 40, 0.4) 0%,
+            rgba(49, 20, 80, 0.3) 100%
+          );
+          backdrop-filter: blur(3px);
+          border: 1px solid rgba(168, 85, 247, 0.1);
+        }
+        
+        .gothic-highlight {
+          background: linear-gradient(135deg,
+            rgba(88, 28, 135, 0.3) 0%,
+            rgba(49, 20, 80, 0.4) 100%
+          );
+          backdrop-filter: blur(5px);
+          border-radius: 12px;
+          box-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
+        }
+        
+        .gothic-tab-active {
+          background: linear-gradient(180deg, #a855f7 0%, #7c3aed 100%);
+          box-shadow: 
+            0 0 15px rgba(168, 85, 247, 0.6),
+            inset 0 1px 0 rgba(255, 255, 255, 0.2);
+          border-radius: 8px;
+          border: 1px solid #9333ea;
+        }
+        
+        .gothic-tab-inactive {
+          background: linear-gradient(135deg,
+            rgba(49, 20, 80, 0.5) 0%,
+            rgba(24, 10, 40, 0.7) 100%
+          );
+          backdrop-filter: blur(5px);
+          border-radius: 8px;
+          border: 1px solid rgba(168, 85, 247, 0.2);
+        }
+        
+        .gothic-button {
+          background: linear-gradient(180deg,
+            rgba(88, 28, 135, 0.6) 0%,
+            rgba(49, 20, 80, 0.8) 100%
+          );
+          backdrop-filter: blur(5px);
+          box-shadow: 
+            0 0 10px rgba(168, 85, 247, 0.3),
+            inset 0 1px 0 rgba(168, 85, 247, 0.2);
+          border: 1px solid rgba(168, 85, 247, 0.3);
+          border-radius: 50%;
+        }
+        
+        .gothic-button:hover {
+          background: linear-gradient(180deg,
+            rgba(88, 28, 135, 0.8) 0%,
+            rgba(49, 20, 80, 1) 100%
+          );
+          box-shadow: 0 0 20px rgba(168, 85, 247, 0.5);
+        }
+        
+        .gothic-dropdown {
+          background: linear-gradient(135deg,
+            rgba(24, 10, 40, 0.95) 0%,
+            rgba(49, 20, 80, 0.9) 100%
+          );
+          backdrop-filter: blur(20px);
+          border-radius: 12px;
+          box-shadow: 
+            0 12px 48px rgba(0, 0, 0, 0.8),
+            0 0 30px rgba(168, 85, 247, 0.2),
+            inset 0 1px 0 rgba(168, 85, 247, 0.2);
+        }
+        
+        .gothic-dropdown-active {
+          background: linear-gradient(90deg, #a855f7 0%, #7c3aed 100%);
+          border-radius: 6px;
+          box-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
+        }
+        
+        .gothic-section-header {
+          background: linear-gradient(135deg,
+            rgba(49, 20, 80, 0.5) 0%,
+            rgba(24, 10, 40, 0.7) 100%
+          );
+          backdrop-filter: blur(5px);
+          box-shadow: 0 0 10px rgba(168, 85, 247, 0.1);
+        }
+        
+        .gothic-info-purple {
+          background: linear-gradient(135deg,
+            rgba(88, 28, 135, 0.5) 0%,
+            rgba(49, 20, 80, 0.7) 100%
+          );
+          backdrop-filter: blur(8px);
+          border-radius: 12px;
+          box-shadow: 0 0 15px rgba(168, 85, 247, 0.3);
+        }
+        
+        .gothic-info-red {
+          background: linear-gradient(135deg,
+            rgba(127, 29, 29, 0.5) 0%,
+            rgba(69, 10, 10, 0.7) 100%
+          );
+          backdrop-filter: blur(8px);
+          border-radius: 12px;
+          box-shadow: 0 0 15px rgba(220, 38, 38, 0.3);
         }
       `}</style>
       {isRetro && (
