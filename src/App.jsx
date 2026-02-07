@@ -295,7 +295,7 @@ export default function App() {
          badgeStyle = isCurs ? theme.badgeCurs : theme.badgeSem;
     }
     return (
-      <span className={`text-[10px] font-bold px-2 py-0.5 rounded-sm uppercase tracking-wider ${badgeStyle}`}>
+      <span className={`text-[10px] font-bold px-2 py-0.5 rounded-sm uppercase tracking-wider ${badgeStyle} ${isRetro && !faded ? 'retro-border-pulse' : ''}`}>
         {type}
       </span>
     );
@@ -313,13 +313,13 @@ export default function App() {
     }
     return (
       <div className={`p-3 h-full flex flex-col justify-between transition-all ${
-        isRetro ? 'rounded-none' : 'rounded-lg'
+        isRetro ? 'rounded-none border-2 retro-border-pulse' : 'rounded-lg'
       } ${theme.card} ${theme.cardBorder} ${borderColor} ${
         faded ? 'opacity-40' : ''
       }`}>
         <div className="min-w-0">
           <div className="flex justify-between items-start gap-2 mb-1">
-            <h4 className={`font-bold text-sm leading-tight break-words ${theme.textMain}`}>
+            <h4 className={`font-bold text-sm leading-tight break-words ${theme.textMain} ${isRetro && !faded ? 'retro-glow' : ''}`}>
               {data.subject}
             </h4>
             <Badge type={data.type} faded={faded} />
@@ -347,14 +347,18 @@ export default function App() {
   // --- LOADING CHECK ---
   if (isLoadingApi) {
     return (
-      <div className={`min-h-screen w-full flex flex-col items-center justify-center transition-colors duration-300 ${theme.bg} ${theme.font}`}>
+      <div className={`min-h-screen w-full flex flex-col items-center justify-center transition-colors duration-300 ${theme.bg} ${theme.font} ${isRetro ? 'retro-screen retro-screen-glow retro-noise retro-scanline' : ''}`}>
          <div className="flex flex-col items-center gap-6 animate-pulse">
-            <div className={`p-4 rounded-full ${isRetro ? 'bg-green-900 border border-green-500' : 'bg-blue-50'}`}>
+            <div className={`p-4 rounded-full ${isRetro ? 'bg-green-900 border-2 border-green-500 retro-border-pulse' : 'bg-blue-50'}`}>
                <Globe size={48} className={`animate-bounce ${isRetro ? 'text-green-500' : 'text-blue-600'}`} />
             </div>
             <div className="text-center space-y-2">
-               <h2 className={`text-xl font-bold ${theme.textMain}`}>Se sincronizează orarul...</h2>
-               <p className={`text-sm ${theme.textSec}`}>Verificăm ora exactă pentru paritatea săptămânii</p>
+               <h2 className={`text-xl font-bold ${theme.textMain} ${isRetro ? 'retro-glow retro-cursor' : ''}`}>
+                 {isRetro ? '>>> LOADING SYSTEM...' : 'Se sincronizează orarul...'}
+               </h2>
+               <p className={`text-sm ${theme.textSec} ${isRetro ? 'retro-glow' : ''}`}>
+                 {isRetro ? '>>> SYNC TIME_API' : 'Verificăm ora exactă pentru paritatea săptămânii'}
+               </p>
             </div>
          </div>
       </div>
@@ -362,7 +366,7 @@ export default function App() {
   }
 
   return (
-    <div className={`min-h-screen pb-10 transition-colors duration-300 overflow-x-hidden ${theme.bg} ${theme.font}`}>
+    <div className={`min-h-screen pb-10 transition-colors duration-300 overflow-x-hidden ${theme.bg} ${theme.font} ${isRetro ? 'retro-screen retro-screen-glow retro-noise retro-scanline' : ''}`}>
       <style>{`
         html, body {
           overflow-x: hidden;
@@ -376,6 +380,112 @@ export default function App() {
         <style>{`
           @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
           .font-mono { font-family: 'VT323', monospace; font-size: 1.1em; }
+          
+          /* Scanline effect */
+          @keyframes scanline {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100vh); }
+          }
+          
+          .retro-scanline::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 20px;
+            background: linear-gradient(to bottom, transparent 0%, rgba(0, 255, 0, 0.1) 50%, transparent 100%);
+            pointer-events: none;
+            z-index: 9999;
+            animation: scanline 8s linear infinite;
+          }
+          
+          /* CRT screen curve effect */
+          .retro-screen {
+            animation: flicker 0.15s infinite;
+          }
+          
+          @keyframes flicker {
+            0% { opacity: 0.97; }
+            50% { opacity: 1; }
+            100% { opacity: 0.97; }
+          }
+          
+          /* Glowing text */
+          .retro-glow {
+            text-shadow: 
+              0 0 5px rgba(0, 255, 0, 0.8),
+              0 0 10px rgba(0, 255, 0, 0.6),
+              0 0 20px rgba(0, 255, 0, 0.4);
+          }
+          
+          /* Blinking cursor */
+          @keyframes blink {
+            0%, 49% { opacity: 1; }
+            50%, 100% { opacity: 0; }
+          }
+          
+          .retro-cursor::after {
+            content: '█';
+            animation: blink 1s infinite;
+            margin-left: 2px;
+          }
+          
+          /* Typing animation for headers */
+          @keyframes typing {
+            from { width: 0; }
+            to { width: 100%; }
+          }
+          
+          .retro-typing {
+            overflow: hidden;
+            white-space: nowrap;
+            animation: typing 2s steps(30) 1;
+          }
+          
+          /* Screen glow effect */
+          .retro-screen-glow {
+            box-shadow: 
+              inset 0 0 100px rgba(0, 255, 0, 0.1),
+              0 0 50px rgba(0, 255, 0, 0.2);
+          }
+          
+          /* Pixel border animation */
+          @keyframes border-pulse {
+            0%, 100% { border-color: #00ff00; }
+            50% { border-color: #00aa00; }
+          }
+          
+          .retro-border-pulse {
+            animation: border-pulse 2s infinite;
+          }
+          
+          /* Noise/static effect */
+          @keyframes noise {
+            0%, 100% { background-position: 0 0; }
+            10% { background-position: -5% -10%; }
+            20% { background-position: -15% 5%; }
+            30% { background-position: 7% -25%; }
+            40% { background-position: 20% 25%; }
+            50% { background-position: -25% 10%; }
+            60% { background-position: 15% 5%; }
+            70% { background-position: 0 15%; }
+            80% { background-position: 25% 35%; }
+            90% { background-position: -10% 10%; }
+          }
+          
+          .retro-noise::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 9998;
+            animation: noise 0.2s infinite;
+          }
         `}</style>
       )}
 
@@ -383,7 +493,7 @@ export default function App() {
       <header className={`sticky top-0 z-50 shadow-sm transition-colors duration-300 ${theme.header}`}>
         <div className="w-full max-w-7xl mx-auto px-4 md:px-6 py-4 flex flex-col items-center md:flex-row md:justify-between gap-4">
           <div className="text-center md:text-left w-full md:w-auto">
-            <h1 className={`text-xl md:text-2xl font-black tracking-tight break-words ${theme.accentText}`}>
+            <h1 className={`text-xl md:text-2xl font-black tracking-tight break-words ${theme.accentText} ${isRetro ? 'retro-glow retro-cursor' : ''}`}>
               INFO ENG GRUPA 1030
             </h1>
             <div className={`text-sm flex flex-wrap items-center justify-center md:justify-start gap-2 mt-1 ${theme.textSec}`}>
@@ -466,13 +576,13 @@ export default function App() {
         {/* DASHBOARD */}
         <section className="grid md:grid-cols-2 gap-4">
           {/* Card Ora Curenta */}
-          <div className={`overflow-hidden transition-all ${isRetro ? 'border-2 border-green-600' : 'rounded-xl shadow-sm border border-gray-200'} ${theme.card}`}>
+          <div className={`overflow-hidden transition-all ${isRetro ? 'border-2 border-green-600 retro-border-pulse' : 'rounded-xl shadow-sm border border-gray-200'} ${theme.card}`}>
             <div className={`px-4 py-2 flex justify-between items-center border-b ${theme.sectionHeaderBg}`}>
-              <h3 className={`font-bold text-sm uppercase flex items-center gap-2 ${theme.accentText}`}>
+              <h3 className={`font-bold text-sm uppercase flex items-center gap-2 ${theme.accentText} ${isRetro ? 'retro-glow' : ''}`}>
                 <div className={`w-2 h-2 rounded-full animate-pulse ${isRetro ? 'bg-green-500' : 'bg-green-500'}`}></div>
                 Ora Curentă
               </h3>
-              <span className={`text-xs font-mono ${theme.textSec}`}>LIVE</span>
+              <span className={`text-xs font-mono ${theme.textSec} ${isRetro ? 'retro-glow' : ''}`}>LIVE</span>
             </div>
             <div className="p-4 min-h-[120px] flex items-center justify-center">
               {currentClass ? (
@@ -488,9 +598,9 @@ export default function App() {
           </div>
 
           {/* Card Ora Urmatoare */}
-          <div className={`overflow-hidden transition-all ${isRetro ? 'border-2 border-green-800 border-dashed' : 'rounded-xl shadow-sm border border-gray-200'} ${theme.card}`}>
+          <div className={`overflow-hidden transition-all ${isRetro ? 'border-2 border-green-800 border-dashed retro-border-pulse' : 'rounded-xl shadow-sm border border-gray-200'} ${theme.card}`}>
              <div className={`px-4 py-2 border-b ${theme.sectionHeaderBg}`}>
-              <h3 className={`font-bold text-sm uppercase flex items-center gap-2 ${theme.textMain}`}>
+              <h3 className={`font-bold text-sm uppercase flex items-center gap-2 ${theme.textMain} ${isRetro ? 'retro-glow' : ''}`}>
                 <ChevronRight size={16} />
                 Ora Următoare
               </h3>
@@ -510,9 +620,9 @@ export default function App() {
         </section>
 
         {/* ORAR SECTION */}
-        <section className={`overflow-hidden transition-all ${isRetro ? 'border-2 border-green-700' : 'rounded-xl shadow-lg border border-gray-200'} ${theme.card}`}>
+        <section className={`overflow-hidden transition-all ${isRetro ? 'border-2 border-green-700 retro-border-pulse' : 'rounded-xl shadow-lg border border-gray-200'} ${theme.card}`}>
           <div className={`p-4 flex justify-between items-center ${isRetro ? 'border-b border-green-700' : `border-b ${theme.sectionHeaderBg}`}`}>
-            <h2 className={`font-bold flex items-center gap-2 ${theme.textMain}`}>
+            <h2 className={`font-bold flex items-center gap-2 ${theme.textMain} ${isRetro ? 'retro-glow' : ''}`}>
               <Calendar size={18} /> Orar Complet
             </h2>
           </div>
@@ -596,9 +706,9 @@ export default function App() {
                  if (slotClasses.length === 0) return null; // Hide empty slots on mobile to save space
                  
                  return (
-                   <div key={time} className="flex gap-3">
-                     <div className={`w-14 shrink-0 flex flex-col items-center justify-center rounded p-1 h-fit ${theme.gridSubHeader}`}>
-                        <span className="text-sm font-bold">{time}</span>
+                   <div key={time} className="flex gap-3 items-center">
+                     <div className={`w-14 shrink-0 flex flex-col items-center justify-center rounded p-1 ${theme.gridSubHeader} ${isRetro ? 'retro-border-pulse border-2' : ''}`}>
+                        <span className={`text-sm font-bold ${isRetro ? 'retro-glow' : ''}`}>{time}</span>
                      </div>
                      <div className="flex-1 space-y-2">
                         {slotClasses.map((cls, idx) => {
@@ -630,11 +740,23 @@ export default function App() {
         </section>
 
         {/* FOOTER */}
-        <footer className={`text-center text-xs py-4 ${theme.textSec}`}>
-          <p>Ultima actualizare automată: {now.toLocaleTimeString()}</p>
-          <p className="mt-1">
-             Tema: <span className="uppercase font-bold">{themeMode}</span>
-          </p>
+        <footer className={`text-center text-xs py-4 ${theme.textSec} ${isRetro ? 'retro-glow' : ''}`}>
+          {isRetro ? (
+            <>
+              <p className="font-mono">{'>'} LAST_UPDATE: {now.toLocaleTimeString()}</p>
+              <p className="mt-1 font-mono">
+                {'>'} THEME_MODE: <span className="uppercase font-bold text-green-400">[{themeMode}]</span>
+              </p>
+              <p className="mt-1 font-mono">{'>'} SYSTEM_STATUS: <span className="text-green-400 animate-pulse">ONLINE</span></p>
+            </>
+          ) : (
+            <>
+              <p>Ultima actualizare automată: {now.toLocaleTimeString()}</p>
+              <p className="mt-1">
+                Tema: <span className="uppercase font-bold">{themeMode}</span>
+              </p>
+            </>
+          )}
         </footer>
 
       </main>
