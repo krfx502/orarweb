@@ -4,26 +4,25 @@ import { Calendar, Clock, MapPin, User, Info, ChevronRight, Settings, Monitor, M
 const SEMESTER_START_DATE = new Date('2025-02-17T00:00:00'); 
 
 const SCHEDULE_DATA = [
-  { day: 'Luni', time: '07:30', duration: 90, subject: null }, 
-  { day: 'Marti', time: '07:30', duration: 90, subject: 'Statistică', type: 'Curs', prof: 'Prof. ROMAN Monica Mihaela', room: '2104', parity: 'all' },
-  { day: 'Marti', time: '09:00', duration: 90, subject: 'Introducere în contabilitate', type: 'Seminar', prof: 'Prof. IONAȘCU Mihaela', room: '2704', parity: 'even' },
-  { day: 'Marti', time: '10:30', duration: 90, subject: 'Sport', type: 'Seminar', prof: 'Prof. POP CRISTIANA-LUCREȚIA', room: '6201B', parity: 'all' },
-  { day: 'Miercuri', time: '12:00', duration: 90, subject: 'Limba Engleză', type: 'Seminar', prof: 'Prof. CONDRUZ-BĂCESCU', room: '2608', parity: 'all' },
-  { day: 'Miercuri', time: '13:30', duration: 90, subject: 'Statistică', type: 'Seminar', prof: 'Prof. ROMAN Monica Mihaela', room: '2214', parity: 'all' },
-  { day: 'Miercuri', time: '15:00', duration: 90, subject: 'Bazele tehnologiei informației', type: 'Curs', prof: 'Prof. ZOTA Razvan', room: '2104', parity: 'all' },
-  { day: 'Miercuri', time: '16:30', duration: 90, subject: 'Algebră', type: 'Curs', prof: 'Prof. Mitroi Symeonidis Flavia Corina', room: '2201', parity: 'all' },
-  { day: 'Joi', time: '13:30', duration: 90, subject: 'Bazele tehnologiei informației', type: 'Seminar', prof: 'Prof. CLIM ANTONIO', room: '2305', parity: 'odd' },
-  { day: 'Joi', time: '15:00', duration: 90, subject: 'Algebră', type: 'Seminar', prof: 'Prof. Mitroi Symeonidis Flavia Corina', room: '2303', parity: 'odd' },
-  { day: 'Joi', time: '15:00', duration: 90, subject: 'Economie', type: 'Seminar', prof: 'Prof. MANOLE Alina Magdalena', room: '2211', parity: 'even' },
-  { day: 'Joi', time: '16:30', duration: 90, subject: 'Introducere în contabilitate', type: 'Curs', prof: 'Prof. IONAȘCU Mihaela', room: '2104', parity: 'all' },
-  { day: 'Vineri', time: '13:30', duration: 90, subject: 'Economie', type: 'Curs', prof: 'Prof. MOSORA Liviu - Cosmin', room: '0601', parity: 'all' },
-  { day: 'Luni', time: '10:30', duration: 90, subject: 'Bazele programării calculatoarelor', type: 'Curs', prof: 'Prof. POCATILU Lorena', room: 'B102', parity: 'all' },
-  { day: 'Luni', time: '12:00', duration: 90, subject: 'Bazele cercetărilor operaționale', type: 'Seminar', prof: 'Prof. GRAMATOVICI Sorina', room: '2215', parity: 'all' },
-  { day: 'Luni', time: '13:30', duration: 90, subject: 'Bazele programării calculatoarelor', type: 'Seminar', prof: 'Prof. POCATILU Lorena', room: '2320', parity: 'all' },
-  { day: 'Luni', time: '15:00', duration: 90, subject: 'Bazele cercetărilor operaționale', type: 'Curs', prof: 'Prof. GRAMATOVICI Sorina', room: '2102', parity: 'all' },
+  { day: 'Luni', time: '12:30', duration: 90, subject: 'Statistică', type: 'Seminar', prof: 'Prof. SERBAN Daniela', room: '2604', parity: 'even' }, 
+  { day: 'Luni', time: '14:10', duration: 90, subject: 'Statistică', type: 'Curs', prof: 'Prof. SERBAN Daniela', room: '0124', parity: 'all' }, 
+  { day: 'Luni', time: '15:50', duration: 90, subject: 'Marketing', type: 'Curs', prof: 'Prof. Stefan-Claudiu', room: '0124', parity: 'all' }, 
+  { day: 'Marti', time: '14:10', duration: 90, subject: 'Management', type: 'Seminar', prof: 'Prof. VRINCUT Mihai', room: '2506', parity: 'odd' }, 
+  { day: 'Marti', time: '14:10', duration: 90, subject: 'Marketing', type: 'Seminar', prof: 'Prof. ORINDARU', room: '2302', parity: 'even' }, 
+  { day: 'Marti', time: '15:50', duration: 90, subject: 'Bazele ciberneticii economice', type: 'Curs', prof: 'Prof. GRAMATOVICI Sorina', room: '2201', parity: 'all' }, 
+  { day: 'Miercuri', time: '12:30', duration: 90, subject: 'Finante', type: 'Seminar', prof: 'Prof. KAGITCI Meral', room: '2608', parity: 'even' }, 
+  { day: 'Miercuri', time: '15:50', duration: 90, subject: 'Analiza matematica', type: 'Curs', prof: 'Prof. FLORENTA Daniela', room: '0124', parity: 'all' }, 
+  { day: 'Joi', time: '12:30', duration: 90, subject: 'Sisteme de operare', type: 'Curs', prof: 'Prof. ZOTA Razvan', room: '0124', parity: 'all' }, 
+  { day: 'Joi', time: '14:10', duration: 90, subject: 'Sisteme de operare', type: 'Seminar', prof: 'Prof. CLIM Antonio', room: '2305', parity: 'odd' }, 
+  { day: 'Joi', time: '14:10', duration: 90, subject: 'Bazele ciberneticii economice', type: 'Seminar', prof: 'Prof. GRAMATOVICI Sorina', room: '2212', parity: 'even' }, 
+  { day: 'Joi', time: '15:50', duration: 90, subject: 'Analiza matematica', type: 'Seminar', prof: 'Prof. IJACU', room: '2012', parity: 'all' }, 
+  { day: 'Vineri', time: '10:50', duration: 90, subject: 'Algoritmi si tehnici de programare', type: 'Curs', prof: 'Prof. USCATU Cristian Razvan', room: '2104', parity: 'all' }, 
+  { day: 'Vineri', time: '12:30', duration: 90, subject: 'Algoritmi si tehnici de programare', type: 'Seminar', prof: 'Prof. USCATU Cristian Razvan', room: '2317', parity: 'all' }, 
+  { day: 'Vineri', time: '14:10', duration: 90, subject: 'Management', type: 'Curs', prof: 'Prof. VRINCUT Mihai', room: '2101', parity: 'all' }, 
+  { day: 'Vineri', time: '15:50', duration: 90, subject: 'Finante', type: 'Curs', prof: 'Prof. KAGITCI Meral', room: '2104', parity: 'all' }
 ];
 
-const TIME_SLOTS = ['07:30', '09:00', '10:30', '12:00', '13:30', '15:00', '16:30', '18:00'];
+const TIME_SLOTS = ['12:30', '14:10', '15:50'];
 const DAYS = ['Luni', 'Marti', 'Miercuri', 'Joi', 'Vineri'];
 
 const THEMES = {
@@ -462,7 +461,7 @@ export default function App() {
                  {isRetro ? '>>> LOADING SYSTEM...' : 'Se sincronizează orarul...'}
                </h2>
                <p className={`text-sm ${theme.textSec} ${isRetroAnim ? 'retro-glow' : ''}`}>
-                 {isRetro ? '>>> SYNC TIME_API' : 'Verificăm săptămâna!'}
+                 {isRetro ? '>>> SYNC TIME_API' : 'Verificăm săptămâna...'}
                </p>
             </div>
          </div>
