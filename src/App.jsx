@@ -54,7 +54,6 @@ const THEMES = {
       activeTab: 'bg-blue-800 text-white',
       inactiveTab: 'bg-gray-200 text-gray-600',
       buttonSecondary: 'bg-gray-200 hover:bg-gray-300 text-gray-700',
-      // UPDATED: Cleaner light theme dropdown styles
       dropdownBg: 'bg-white border border-gray-200 shadow-xl',
       dropdownItemActive: 'bg-blue-600 text-white font-bold',
       dropdownItemInactive: 'text-gray-700 hover:bg-gray-100 bg-transparent',
@@ -148,7 +147,7 @@ const getDayName = (dayIndex) => {
 const normalizeStr = (str) => str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 
 export default function App() {
-  const [now, setNow] = useState(new Date());
+  const [now, setNow] = useState(null); // Init with null to strictly wait for API
   const [isOddWeek, setIsOddWeek] = useState(true);
   const [currentClass, setCurrentClass] = useState(null);
   const [nextClass, setNextClass] = useState(null);
@@ -172,7 +171,9 @@ export default function App() {
 
   // --- API TIME FETCHING ---
   const fetchRealTime = async () => {
-    setIsLoadingApi(true);
+    // Only show loading indicator if we don't have a time yet
+    if (!now) setIsLoadingApi(true);
+    
     try {
       // Folosim un API gratuit pentru ora exactă în București
       const response = await fetch('https://worldtimeapi.org/api/timezone/Europe/Bucharest');
@@ -183,21 +184,22 @@ export default function App() {
       
       setNow(apiDate);
       setIsApiConnected(true);
-      return apiDate;
+      setIsLoadingApi(false); // Unblock UI only on success
     } catch (error) {
-      console.error("API Error - Falling back to system time", error);
+      console.error("API Error", error);
       setIsApiConnected(false);
-      setNow(new Date()); // Fallback
-      return new Date();
-    } finally {
-      // Adaugăm un mic delay artificial pentru a nu fi prea brusc dacă API-ul răspunde instant
-      setTimeout(() => setIsLoadingApi(false), 800);
+      
+      // Dacă nu avem încă timpul, REÎNCERCĂM. Nu folosim sistemul.
+      // Așteptăm și încercăm din nou la infinit până avem net/răspuns.
+      if (!now) {
+        setTimeout(fetchRealTime, 2000); 
+      }
     }
   };
 
   // Initial load
   useEffect(() => {
-    // Day
+    // Day initial setting (just for UI tab default)
     const today = getDayName(new Date().getDay());
     if (DAYS.includes(today)) {
       setMobileSelectedDay(today);
@@ -218,14 +220,15 @@ export default function App() {
   // Clock & Parity Logic
   useEffect(() => {
     const tick = () => {
-      // In mod normal, doar incrementăm timpul local, dar la intervale mari putem re-sincroniza cu API
-      // Pentru simplitate, aici folosim ceasul intern incrementat, dar bazat pe startul din API
-      setNow(prev => new Date(prev.getTime() + 1000)); 
+      // Increment only if we have a valid time from API
+      setNow(prev => prev ? new Date(prev.getTime() + 1000) : null); 
     };
 
     // Parity calculation logic
     const calculateParity = (dateReference) => {
-      // --- CALCUL BAZAT PE DATA REALA (DIN API SAU SYSTEM) ---
+      if (!dateReference) return;
+
+      // --- CALCUL BAZAT PE DATA REALA (DIN API) ---
       const diffTime = Math.abs(dateReference - SEMESTER_START_DATE);
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
       
@@ -237,7 +240,9 @@ export default function App() {
       setIsOddWeek(isOdd);
     };
 
-    calculateParity(now);
+    if (now) {
+        calculateParity(now);
+    }
 
     const timer = setInterval(tick, 1000); // Update secundar
     
@@ -248,10 +253,12 @@ export default function App() {
       clearInterval(timer);
       clearInterval(syncTimer);
     };
-  }, [now]); // Recalculate when time advances
+  }, [now]); 
 
   // Class Identification Logic
   useEffect(() => {
+    if (!now) return; // Guard clause - wait for API time
+
     const currentDayName = getDayName(now.getDay());
     const currentMinutes = now.getHours() * 60 + now.getMinutes();
 
@@ -299,9 +306,9 @@ export default function App() {
     let borderColor = '';
     if (!isRetro) {
         if (faded) {
-            borderColor = themeMode === 'dark' ? 'border-slate-700' : 'border-gray-300';
+            borderColor = themeMode === 'dark' ? 'border-l-slate-700' : 'border-l-gray-300';
         } else {
-            borderColor = data.type === 'Curs' ? 'border-blue-700' : 'border-green-600';
+            borderColor = data.type === 'Curs' ? 'border-l-blue-700' : 'border-l-green-600';
         }
     }
     return (
@@ -355,7 +362,7 @@ export default function App() {
   }
 
   return (
-    <div className={`min-h-screen pb-10 transition-colors duration-300 ${theme.bg} ${theme.font}`}>
+    <div className={`min-h-screen pb-10 transition-colors duration-300 overflow-x-hidden ${theme.bg} ${theme.font}`}>
       {isRetro && (
         <style>{`
           @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
@@ -365,12 +372,12 @@ export default function App() {
 
       {/* HEADER */}
       <header className={`sticky top-0 z-20 shadow-sm transition-colors duration-300 ${theme.header}`}>
-        <div className="w-full px-4 md:px-6 py-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
+        <div className="w-full max-w-7xl mx-auto px-4 md:px-6 py-4 flex flex-col items-center md:flex-row md:justify-between gap-4">
+          <div className="text-center md:text-left">
             <h1 className={`text-xl md:text-2xl font-black tracking-tight ${theme.accentText}`}>
               INFO ENG GRUPA 1030
             </h1>
-            <div className={`text-sm flex flex-wrap items-center gap-2 mt-1 ${theme.textSec}`}>
+            <div className={`text-sm flex flex-wrap items-center justify-center md:justify-start gap-2 mt-1 ${theme.textSec}`}>
               
               {/* API Status Indicator */}
               <div className="flex items-center gap-1" title={isApiConnected ? "Sincronizat cu WorldTimeAPI" : "Offline / System Time"}>
@@ -445,7 +452,7 @@ export default function App() {
         </div>
       </header>
 
-      <main className="w-full px-4 md:px-6 py-6 space-y-8">
+      <main className="w-full max-w-7xl mx-auto px-4 md:px-6 py-6 space-y-8">
 
         {/* DASHBOARD */}
         <section className="grid md:grid-cols-2 gap-4">
