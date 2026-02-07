@@ -317,20 +317,20 @@ export default function App() {
       } ${theme.card} ${theme.cardBorder} ${borderColor} ${
         faded ? 'opacity-40' : ''
       }`}>
-        <div>
-          <div className="flex justify-between items-start mb-1">
-            <h4 className={`font-bold text-sm leading-tight ${theme.textMain}`}>
+        <div className="min-w-0">
+          <div className="flex justify-between items-start gap-2 mb-1">
+            <h4 className={`font-bold text-sm leading-tight break-words ${theme.textMain}`}>
               {data.subject}
             </h4>
             <Badge type={data.type} faded={faded} />
           </div>
           <div className={`text-xs mt-2 space-y-1 ${theme.textSec}`}>
-            <div className="flex items-center gap-1">
-              <User size={12} />
-              <span>{data.prof}</span>
+            <div className="flex items-start gap-1 min-w-0">
+              <User size={12} className="shrink-0 mt-0.5" />
+              <span className="break-words">{data.prof}</span>
             </div>
             <div className={`flex items-center gap-1 font-semibold ${theme.textMain}`}>
-              <MapPin size={12} />
+              <MapPin size={12} className="shrink-0" />
               <span>Sala: {data.room}</span>
             </div>
             {data.parity !== 'all' && (
@@ -363,6 +363,15 @@ export default function App() {
 
   return (
     <div className={`min-h-screen pb-10 transition-colors duration-300 overflow-x-hidden ${theme.bg} ${theme.font}`}>
+      <style>{`
+        html, body {
+          overflow-x: hidden;
+          max-width: 100vw;
+        }
+        * {
+          box-sizing: border-box;
+        }
+      `}</style>
       {isRetro && (
         <style>{`
           @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
@@ -371,10 +380,10 @@ export default function App() {
       )}
 
       {/* HEADER */}
-      <header className={`sticky top-0 z-20 shadow-sm transition-colors duration-300 ${theme.header}`}>
+      <header className={`sticky top-0 z-50 shadow-sm transition-colors duration-300 ${theme.header}`}>
         <div className="w-full max-w-7xl mx-auto px-4 md:px-6 py-4 flex flex-col items-center md:flex-row md:justify-between gap-4">
-          <div className="text-center md:text-left">
-            <h1 className={`text-xl md:text-2xl font-black tracking-tight ${theme.accentText}`}>
+          <div className="text-center md:text-left w-full md:w-auto">
+            <h1 className={`text-xl md:text-2xl font-black tracking-tight break-words ${theme.accentText}`}>
               INFO ENG GRUPA 1030
             </h1>
             <div className={`text-sm flex flex-wrap items-center justify-center md:justify-start gap-2 mt-1 ${theme.textSec}`}>
@@ -408,7 +417,7 @@ export default function App() {
             </div>
 
             {/* Theme Toggle */}
-            <div className="relative">
+            <div className="relative z-[100]">
               <button 
                 onClick={() => setShowThemeMenu(!showThemeMenu)}
                 className={`p-2 rounded-full transition-colors ${theme.buttonSecondary}`}
@@ -417,7 +426,7 @@ export default function App() {
               </button>
 
               {showThemeMenu && (
-                <div className={`absolute right-0 top-full mt-2 w-48 rounded-lg shadow-xl z-50 overflow-hidden border ${theme.dropdownBg}`}>
+                <div className={`absolute right-0 top-full mt-2 w-48 rounded-lg shadow-xl z-[100] overflow-hidden border ${theme.dropdownBg}`}>
                   
                   {/* Theme Controls Only */}
                   <div className="p-2">
@@ -452,7 +461,7 @@ export default function App() {
         </div>
       </header>
 
-      <main className="w-full max-w-7xl mx-auto px-4 md:px-6 py-6 space-y-8">
+      <main className="w-full max-w-7xl mx-auto px-4 md:px-6 py-6 space-y-8 overflow-x-hidden">
 
         {/* DASHBOARD */}
         <section className="grid md:grid-cols-2 gap-4">
@@ -510,7 +519,7 @@ export default function App() {
 
           {/* --- DESKTOP VIEW (TABLE) --- */}
           <div className="hidden md:block overflow-x-auto">
-            <div className={`min-w-[1000px] grid grid-cols-[80px_repeat(5,_1fr)] ${theme.gridLine} ${isRetro ? '' : 'border-b ' + theme.border}`}>
+            <div className={`min-w-[700px] grid grid-cols-[80px_repeat(5,_1fr)] ${theme.gridLine} ${isRetro ? '' : 'border-b ' + theme.border}`}>
               {/* Table Header */}
               <div className={`p-3 font-bold text-sm flex items-center justify-center ${theme.gridHeader}`}>Ora</div>
               {DAYS.map(day => (
@@ -524,7 +533,7 @@ export default function App() {
               ))}
             </div>
 
-            <div className={`min-w-[1000px] divide-y ${theme.gridLine}`}>
+            <div className={`min-w-[700px] divide-y ${theme.gridLine}`}>
               {TIME_SLOTS.map((time) => (
                 <div key={time} className={`grid grid-cols-[80px_repeat(5,_1fr)] divide-x ${theme.gridLine} group`}>
                   {/* Time Column */}
@@ -564,12 +573,12 @@ export default function App() {
           {/* --- MOBILE VIEW (TABS + LIST) --- */}
           <div className="block md:hidden">
             {/* Day Selector Tabs */}
-            <div className={`flex overflow-x-auto p-2 gap-2 border-b ${theme.border}`}>
+            <div className={`flex flex-wrap justify-center p-2 gap-2 border-b ${theme.border}`}>
               {DAYS.map(day => (
                 <button
                   key={day}
                   onClick={() => setMobileSelectedDay(day)}
-                  className={`px-4 py-2 rounded-lg text-sm font-bold whitespace-nowrap transition-colors flex-1 ${
+                  className={`px-3 py-2 rounded-lg text-sm font-bold whitespace-nowrap transition-colors ${
                     mobileSelectedDay === day
                       ? theme.activeTab
                       : theme.inactiveTab
