@@ -3,7 +3,6 @@ import { Calendar, Clock, MapPin, User, Info, ChevronRight, Settings, Monitor, M
 
 // --- CONFIGURARE SEMESTRU ---
 // Data de referință pentru începutul semestrului.
-// Folosim data din API pentru a calcula distanța față de acest punct.
 const SEMESTER_START_DATE = new Date('2025-02-17T00:00:00'); 
 
 // --- DATA ---
@@ -98,39 +97,6 @@ const THEMES = {
       font: 'font-sans'
     }
   },
-  xp: {
-    name: 'Windows XP',
-    icon: Monitor,
-    classes: {
-      bg: 'xp-bg',
-      header: 'xp-header border-b-0',
-      textMain: 'text-slate-800',
-      textSec: 'text-slate-600',
-      card: 'xp-card border-2 border-blue-800 shadow-lg',
-      cardBorder: 'border-l-0',
-      badgeCurs: 'xp-badge-blue text-white',
-      badgeSem: 'xp-badge-green text-white',
-      accentText: 'text-blue-800 font-bold',
-      gridHeader: 'xp-grid-header text-white font-bold',
-      gridSubHeader: 'xp-grid-subheader text-blue-900 font-semibold',
-      gridCell: 'bg-white hover:bg-blue-50 border border-blue-200',
-      gridLine: 'divide-blue-300',
-      border: 'border-blue-300',
-      highlightBox: 'xp-highlight border-2 border-blue-500',
-      activeTab: 'xp-tab-active text-white font-bold shadow-md',
-      inactiveTab: 'xp-tab-inactive text-slate-700 border-2 border-blue-400',
-      buttonSecondary: 'xp-button text-slate-700 border-2 border-blue-500',
-      dropdownBg: 'xp-dropdown border-2 border-blue-800 shadow-2xl',
-      dropdownItemActive: 'xp-dropdown-active text-white font-bold',
-      dropdownItemInactive: 'bg-white text-slate-700 hover:bg-blue-100 border border-blue-200',
-      dropdownDivider: 'border-blue-300',
-      dropdownLabel: 'text-blue-700 font-bold',
-      sectionHeaderBg: 'xp-section-header border-b-2 border-blue-600',
-      weekInfoOdd: 'xp-info-blue text-blue-900 border-2 border-blue-600',
-      weekInfoEven: 'xp-info-orange text-orange-900 border-2 border-orange-600',
-      font: 'font-sans'
-    }
-  },
   stardew: {
     name: 'Stardew Valley',
     icon: Sun,
@@ -138,15 +104,15 @@ const THEMES = {
       bg: 'stardew-bg',
       header: 'stardew-header border-b-4 border-amber-900',
       textMain: 'text-amber-950',
-      textSec: 'text-amber-800',
+      textSec: 'text-amber-900',
       card: 'stardew-card border-4 border-amber-900 shadow-xl',
       cardBorder: 'border-l-0',
       badgeCurs: 'stardew-badge-blue text-white',
       badgeSem: 'stardew-badge-green text-white',
-      accentText: 'text-amber-900 font-bold',
+      accentText: 'text-amber-100 font-bold drop-shadow-md',
       gridHeader: 'stardew-grid-header text-white font-bold',
       gridSubHeader: 'stardew-grid-subheader text-green-900 font-bold',
-      gridCell: 'stardew-cell hover:bg-green-100',
+      gridCell: 'stardew-cell hover:bg-green-100/80',
       gridLine: 'divide-amber-800',
       border: 'border-amber-800',
       highlightBox: 'stardew-highlight border-4 border-yellow-600',
@@ -161,7 +127,7 @@ const THEMES = {
       sectionHeaderBg: 'stardew-section-header border-b-4 border-green-700',
       weekInfoOdd: 'stardew-info-blue text-blue-900 border-4 border-blue-700',
       weekInfoEven: 'stardew-info-orange text-orange-900 border-4 border-orange-700',
-      font: 'font-sans'
+      font: 'font-pixel' 
     }
   },
   gothic: {
@@ -321,6 +287,8 @@ export default function App() {
   const [themeMode, setThemeMode] = useState(() => {
     try {
       const saved = localStorage.getItem('university-schedule-theme');
+      // Dacă tema salvată era xp (pe care am șters-o), revenim la light
+      if (saved === 'xp') return 'light';
       return (saved && THEMES[saved]) ? saved : 'light';
     } catch {
       return 'light';
@@ -720,108 +688,25 @@ export default function App() {
           border-radius: 8px;
         }
         
-        /* === WINDOWS XP STYLES === */
-        .xp-bg {
-          background: linear-gradient(180deg, #245edb 0%, #3f8cf3 50%, #245edb 100%);
-        }
-        
-        .xp-header {
-          background: linear-gradient(180deg, #0054e3 0%, #3a8cf5 50%, #0054e3 100%);
-          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3), 0 2px 6px rgba(0, 0, 0, 0.3);
-        }
-        
-        .xp-card {
-          background: linear-gradient(135deg, #ece9d8 0%, #f5f3ea 100%);
-          border-radius: 0;
-          box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.2);
-        }
-        
-        .xp-badge-blue {
-          background: linear-gradient(180deg, #4a8cf7 0%, #0054e3 100%);
-          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 2px 2px 0 rgba(0, 0, 0, 0.3);
-          border-radius: 3px;
-          border: 1px solid #0040a8;
-        }
-        
-        .xp-badge-green {
-          background: linear-gradient(180deg, #7ed321 0%, #5a9e16 100%);
-          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 2px 2px 0 rgba(0, 0, 0, 0.3);
-          border-radius: 3px;
-          border: 1px solid #4a8012;
-        }
-        
-        .xp-grid-header {
-          background: linear-gradient(180deg, #0054e3 0%, #3a8cf5 50%, #0054e3 100%);
-          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
-        }
-        
-        .xp-grid-subheader {
-          background: linear-gradient(180deg, #d6e8ff 0%, #b5d3f5 100%);
-        }
-        
-        .xp-highlight {
-          background: linear-gradient(135deg, #fef6d5 0%, #ffe89f 100%);
-          border-radius: 0;
-        }
-        
-        .xp-tab-active {
-          background: linear-gradient(180deg, #4a8cf7 0%, #0054e3 100%);
-          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 2px 2px 4px rgba(0, 0, 0, 0.3);
-          border-radius: 3px;
-        }
-        
-        .xp-tab-inactive {
-          background: linear-gradient(180deg, #f0f0f0 0%, #d4d4d4 100%);
-          border-radius: 3px;
-        }
-        
-        .xp-button {
-          background: linear-gradient(180deg, #ffffff 0%, #e8e8e8 100%);
-          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 2px 2px 4px rgba(0, 0, 0, 0.2);
-          border-radius: 50%;
-        }
-        
-        .xp-dropdown {
-          background: linear-gradient(135deg, #ece9d8 0%, #f5f3ea 100%);
-          border-radius: 0;
-          box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.3);
-        }
-        
-        .xp-dropdown-active {
-          background: linear-gradient(90deg, #4a8cf7 0%, #0054e3 100%);
-          border-radius: 0;
-        }
-        
-        .xp-section-header {
-          background: linear-gradient(180deg, #d6e8ff 0%, #b5d3f5 100%);
-        }
-        
-        .xp-info-blue {
-          background: linear-gradient(135deg, #cfe5ff 0%, #a5d0ff 100%);
-          box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-          border-radius: 3px;
-        }
-        
-        .xp-info-orange {
-          background: linear-gradient(135deg, #ffe5cf 0%, #ffd0a5 100%);
-          box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-          border-radius: 3px;
-        }
-        
         /* === STARDEW VALLEY STYLES === */
         .stardew-bg {
-          background: linear-gradient(180deg, #8fde5d 0%, #68b83f 50%, #8fde5d 100%);
+          background-image: url('https://images3.alphacoders.com/126/thumb-1920-1269904.png');
+          background-size: cover;
+          background-position: center;
+          background-attachment: fixed;
+          background-repeat: no-repeat;
         }
         
         .stardew-header {
-          background: linear-gradient(180deg, #f4a460 0%, #d2691e 50%, #8b4513 100%);
+          background: linear-gradient(180deg, rgba(244, 164, 96, 0.9) 0%, rgba(210, 105, 30, 0.9) 50%, rgba(139, 69, 19, 0.95) 100%);
           box-shadow: 0 4px 0 #5d2e0f, inset 0 -2px 0 #ffd699;
+          backdrop-filter: blur(4px);
         }
         
         .stardew-card {
-          background: linear-gradient(135deg, #fff8dc 0%, #fffacd 100%);
+          background: linear-gradient(135deg, rgba(255, 248, 220, 0.7) 0%, rgba(255, 250, 205, 0.9) 100%);
           border-radius: 8px;
-          box-shadow: 4px 4px 0 rgba(139, 69, 19, 0.3);
+          box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.5);
           image-rendering: pixelated;
         }
         
@@ -850,7 +735,7 @@ export default function App() {
         }
         
         .stardew-cell {
-          background: linear-gradient(135deg, #fffacd 0%, #fff8dc 100%);
+          background: linear-gradient(135deg, rgba(255, 250, 205, 0.9) 0%, rgba(255, 248, 220, 0.85) 100%);
           border: 2px solid #deb887;
         }
         
@@ -1077,6 +962,20 @@ export default function App() {
           backdrop-filter: blur(8px);
           border-radius: 12px;
           box-shadow: 0 0 15px rgba(220, 38, 38, 0.3);
+        }
+        /* === STARDEW PIXEL FONT === */
+        @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+        
+        .font-pixel {
+          font-family: 'VT323', monospace;
+          font-size: 1.15rem;
+          letter-spacing: 0.05em;
+        }
+
+        /* Ajustare opțională pentru titluri în modul stardew */
+        .stardew-bg .text-xl, .stardew-bg .text-2xl {
+          font-size: 1.5rem;
+          line-height: 1;
         }
       `}</style>
       {isRetro && (
