@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, Clock, MapPin, User, Info, ChevronRight, Settings, Monitor, Moon, Sun, Globe, WifiOff } from 'lucide-react';
 
-// --- CONFIGURARE SEMESTRU ---
-// Data de referință pentru începutul semestrului.
 const SEMESTER_START_DATE = new Date('2025-02-17T00:00:00'); 
 
-// --- DATA ---
 const SCHEDULE_DATA = [
   { day: 'Luni', time: '07:30', duration: 90, subject: null }, 
   { day: 'Marti', time: '07:30', duration: 90, subject: 'Statistică', type: 'Curs', prof: 'Prof. ROMAN Monica Mihaela', room: '2104', parity: 'all' },
@@ -29,7 +26,6 @@ const SCHEDULE_DATA = [
 const TIME_SLOTS = ['07:30', '09:00', '10:30', '12:00', '13:30', '15:00', '16:30', '18:00'];
 const DAYS = ['Luni', 'Marti', 'Miercuri', 'Joi', 'Vineri'];
 
-// --- THEMES CONFIG ---
 const THEMES = {
   light: {
     name: 'Light',
@@ -39,6 +35,7 @@ const THEMES = {
       header: 'bg-white border-b border-gray-200',
       textMain: 'text-gray-800',
       textSec: 'text-gray-500',
+      headerDateText: 'text-gray-500',
       card: 'bg-white border-gray-100 shadow-sm',
       cardBorder: 'border-l-4',
       badgeCurs: 'bg-blue-700 text-white',
@@ -72,6 +69,7 @@ const THEMES = {
       header: 'bg-slate-900 border-b border-slate-800',
       textMain: 'text-slate-100',
       textSec: 'text-slate-400',
+      headerDateText: 'text-slate-400',
       card: 'bg-slate-900 border-slate-800 shadow-lg',
       cardBorder: 'border-l-4',
       badgeCurs: 'bg-indigo-600 text-white',
@@ -105,11 +103,12 @@ const THEMES = {
       header: 'stardew-header border-b-4 border-amber-900',
       textMain: 'text-amber-950',
       textSec: 'text-amber-900',
+      headerDateText: 'text-amber-950',
       card: 'stardew-card border-4 border-amber-900 shadow-xl',
       cardBorder: 'border-l-0',
       badgeCurs: 'stardew-badge-blue text-white',
       badgeSem: 'stardew-badge-green text-white',
-      accentText: 'text-amber-100 font-bold drop-shadow-md',
+      accentText: 'text-amber-950 font-bold drop-shadow-md',
       gridHeader: 'stardew-grid-header text-white font-bold',
       gridSubHeader: 'stardew-grid-subheader text-green-900 font-bold',
       gridCell: 'stardew-cell hover:bg-green-100/80',
@@ -138,6 +137,7 @@ const THEMES = {
       header: 'gothic-header border-b-2 border-purple-900/50',
       textMain: 'text-purple-100',
       textSec: 'text-purple-300/70',
+      headerDateText: 'text-purple-300/70',
       card: 'gothic-card border border-purple-900/50 shadow-2xl',
       cardBorder: 'border-l-4',
       badgeCurs: 'gothic-badge-purple text-white',
@@ -171,6 +171,7 @@ const THEMES = {
       header: 'aero-glass border-b border-white/30',
       textMain: 'text-slate-800',
       textSec: 'text-slate-600',
+      headerDateText: 'text-slate-600',
       card: 'aero-card border border-white/40 shadow-xl',
       cardBorder: 'border-l-4',
       badgeCurs: 'aero-badge-blue text-white shadow-md',
@@ -204,6 +205,7 @@ const THEMES = {
       header: 'bg-black border-b-2 border-green-800',
       textMain: 'text-green-500',
       textSec: 'text-green-800',
+      headerDateText: 'text-green-800',
       card: 'bg-black border-2 border-green-900 shadow-none rounded-none',
       cardBorder: 'border-l-0', 
       badgeCurs: 'bg-green-900 text-green-300 border border-green-500',
@@ -230,7 +232,7 @@ const THEMES = {
     }
   },
   retro_anim: {
-    name: 'Retro Anim',
+    name: 'Retro Animated',
     icon: Monitor,
     classes: {
       bg: 'bg-black',
@@ -264,7 +266,6 @@ const THEMES = {
   }
 };
 
-// --- HELPERS ---
 const timeToMinutes = (timeStr) => {
   const [hours, minutes] = timeStr.split(':').map(Number);
   return hours * 60 + minutes;
@@ -278,16 +279,13 @@ const getDayName = (dayIndex) => {
 const normalizeStr = (str) => str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 
 export default function App() {
-  const [now, setNow] = useState(null); // Init with null to strictly wait for API
+  const [now, setNow] = useState(null);
   const [isOddWeek, setIsOddWeek] = useState(true);
   const [currentClass, setCurrentClass] = useState(null);
   const [nextClass, setNextClass] = useState(null);
-  
-  // Inițializăm tema direct din localStorage pentru a evita flash-uri la loading
   const [themeMode, setThemeMode] = useState(() => {
     try {
       const saved = localStorage.getItem('university-schedule-theme');
-      // Dacă tema salvată era xp (pe care am șters-o), revenim la light
       if (saved === 'xp') return 'light';
       return (saved && THEMES[saved]) ? saved : 'light';
     } catch {
@@ -297,48 +295,34 @@ export default function App() {
 
   const [showThemeMenu, setShowThemeMenu] = useState(false);
   const [mobileSelectedDay, setMobileSelectedDay] = useState('Luni');
-  
-  // API State
   const [isApiConnected, setIsApiConnected] = useState(false);
   const [isLoadingApi, setIsLoadingApi] = useState(true);
 
-  // --- API TIME FETCHING ---
   const fetchRealTime = async () => {
-    // Only show loading indicator if we don't have a time yet
     if (!now) setIsLoadingApi(true);
     
     try {
-      // Folosim un API gratuit pentru ora exactă în București
       const response = await fetch('https://worldtimeapi.org/api/timezone/Europe/Bucharest');
       const data = await response.json();
-      
-      // Data datetime vine in format ISO: 2024-03-25T14:30:00.123+02:00
       const apiDate = new Date(data.datetime);
-      
       setNow(apiDate);
       setIsApiConnected(true);
-      setIsLoadingApi(false); // Unblock UI only on success
+      setIsLoadingApi(false);
     } catch (error) {
       console.error("API Error", error);
       setIsApiConnected(false);
-      
-      // Dacă nu avem încă timpul, REÎNCERCĂM. Nu folosim sistemul.
-      // Așteptăm și încercăm din nou la infinit până avem net/răspuns.
       if (!now) {
         setTimeout(fetchRealTime, 2000); 
       }
     }
   };
 
-  // Initial load
   useEffect(() => {
-    // Day initial setting (just for UI tab default)
     const today = getDayName(new Date().getDay());
     if (DAYS.includes(today)) {
       setMobileSelectedDay(today);
     }
 
-    // Fetch time immediately on mount
     fetchRealTime();
   }, []);
 
@@ -351,25 +335,17 @@ export default function App() {
   const isRetro = themeMode === 'retro' || themeMode === 'retro_anim';
   const isRetroAnim = themeMode === 'retro_anim';
 
-  // Clock & Parity Logic
   useEffect(() => {
     const tick = () => {
-      // Increment only if we have a valid time from API
       setNow(prev => prev ? new Date(prev.getTime() + 1000) : null); 
     };
 
-    // Parity calculation logic
     const calculateParity = (dateReference) => {
       if (!dateReference) return;
 
-      // --- CALCUL BAZAT PE DATA REALA (DIN API) ---
       const diffTime = Math.abs(dateReference - SEMESTER_START_DATE);
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
-      
-      // Calculăm numărul săptămânii
       let weekNo = Math.floor(diffDays / 7) + 1;
-      
-      // Dacă săptămâna e impară (1, 3, 5...) -> isOdd = true
       const isOdd = weekNo % 2 !== 0; 
       setIsOddWeek(isOdd);
     };
@@ -378,9 +354,7 @@ export default function App() {
         calculateParity(now);
     }
 
-    const timer = setInterval(tick, 1000); // Update secundar
-    
-    // Re-sync with API every 5 minutes to stay accurate
+    const timer = setInterval(tick, 1000);
     const syncTimer = setInterval(fetchRealTime, 1000 * 60 * 5);
 
     return () => {
@@ -389,9 +363,8 @@ export default function App() {
     };
   }, [now]); 
 
-  // Class Identification Logic
   useEffect(() => {
-    if (!now) return; // Guard clause - wait for API time
+    if (!now) return;
 
     const currentDayName = getDayName(now.getDay());
     const currentMinutes = now.getHours() * 60 + now.getMinutes();
@@ -419,7 +392,6 @@ export default function App() {
     setNextClass(next || null);
   }, [now, isOddWeek]);
 
-  // --- COMPONENTS ---
   const Badge = ({ type, faded }) => {
     const isCurs = type === 'Curs';
     let badgeStyle = '';
@@ -478,7 +450,6 @@ export default function App() {
     );
   };
 
-  // --- LOADING CHECK ---
   if (isLoadingApi) {
     return (
       <div className={`h-screen w-full flex flex-col items-center justify-center transition-colors duration-300 ${theme.bg} ${theme.font} ${isRetroAnim ? 'retro-screen retro-screen-glow retro-noise retro-scanline' : ''}`}>
@@ -491,7 +462,7 @@ export default function App() {
                  {isRetro ? '>>> LOADING SYSTEM...' : 'Se sincronizează orarul...'}
                </h2>
                <p className={`text-sm ${theme.textSec} ${isRetroAnim ? 'retro-glow' : ''}`}>
-                 {isRetro ? '>>> SYNC TIME_API' : 'Verificăm ora exactă pentru paritatea săptămânii'}
+                 {isRetro ? '>>> SYNC TIME_API' : 'Verificăm săptămâna!'}
                </p>
             </div>
          </div>
@@ -972,7 +943,6 @@ export default function App() {
           letter-spacing: 0.05em;
         }
 
-        /* Ajustare opțională pentru titluri în modul stardew */
         .stardew-bg .text-xl, .stardew-bg .text-2xl {
           font-size: 1.5rem;
           line-height: 1;
@@ -986,7 +956,6 @@ export default function App() {
       )}
       {isRetroAnim && (
         <style>{`
-          /* Scanline effect */
           @keyframes scanline {
             0% { transform: translateY(-100%); }
             100% { transform: translateY(100vh); }
@@ -1005,7 +974,6 @@ export default function App() {
             animation: scanline 8s linear infinite;
           }
           
-          /* CRT screen curve effect */
           .retro-screen {
             animation: flicker 0.15s infinite;
           }
@@ -1016,7 +984,6 @@ export default function App() {
             100% { opacity: 0.97; }
           }
           
-          /* Glowing text */
           .retro-glow {
             text-shadow: 
               0 0 5px rgba(0, 255, 0, 0.8),
@@ -1024,7 +991,6 @@ export default function App() {
               0 0 20px rgba(0, 255, 0, 0.4);
           }
           
-          /* Blinking cursor */
           @keyframes blink {
             0%, 49% { opacity: 1; }
             50%, 100% { opacity: 0; }
@@ -1036,7 +1002,6 @@ export default function App() {
             margin-left: 2px;
           }
           
-          /* Typing animation for headers */
           @keyframes typing {
             from { width: 0; }
             to { width: 100%; }
@@ -1048,14 +1013,12 @@ export default function App() {
             animation: typing 2s steps(30) 1;
           }
           
-          /* Screen glow effect */
           .retro-screen-glow {
             box-shadow: 
               inset 0 0 100px rgba(0, 255, 0, 0.1),
               0 0 50px rgba(0, 255, 0, 0.2);
           }
           
-          /* Pixel border animation */
           @keyframes border-pulse {
             0%, 100% { border-color: #00ff00; }
             50% { border-color: #00aa00; }
@@ -1065,7 +1028,6 @@ export default function App() {
             animation: border-pulse 2s infinite;
           }
           
-          /* Noise/static effect */
           @keyframes noise {
             0%, 100% { background-position: 0 0; }
             10% { background-position: -5% -10%; }
@@ -1094,16 +1056,14 @@ export default function App() {
         `}</style>
       )}
 
-      {/* HEADER */}
       <header className={`sticky top-0 z-50 shadow-sm transition-colors duration-300 ${theme.header}`}>
         <div className="w-full max-w-7xl mx-auto px-4 md:px-6 py-4 flex flex-col items-center md:flex-row md:justify-between gap-4">
           <div className="text-center md:text-left w-full md:w-auto">
             <h1 className={`text-xl md:text-2xl font-black tracking-tight break-words ${theme.accentText} ${isRetroAnim ? 'retro-glow retro-cursor' : ''}`}>
               INFO ENG GRUPA 1030
             </h1>
-            <div className={`text-sm flex flex-wrap items-center justify-center md:justify-start gap-2 mt-1 ${theme.textSec}`}>
+            <div className={`text-sm flex flex-wrap items-center justify-center md:justify-start gap-2 mt-1 ${theme.headerDateText}`}>
               
-              {/* API Status Indicator */}
               <div className="flex items-center gap-1" title={isApiConnected ? "Sincronizat cu WorldTimeAPI" : "Offline / System Time"}>
                 {isLoadingApi ? (
                   <span className="animate-pulse">●</span> 
@@ -1123,7 +1083,6 @@ export default function App() {
           </div>
           
           <div className="flex flex-wrap items-center gap-3">
-             {/* Week Info */}
             <div className={`px-4 py-2 text-sm shadow-sm flex items-center gap-2 whitespace-nowrap rounded-lg font-bold ${
               isOddWeek ? theme.weekInfoOdd : theme.weekInfoEven
             }`}>
@@ -1131,7 +1090,6 @@ export default function App() {
               <span>Săpt. {isOddWeek ? 'IMPARĂ' : 'PARĂ'}</span>
             </div>
 
-            {/* Theme Toggle */}
             <div className="relative z-[100]">
               <button 
                 onClick={() => setShowThemeMenu(!showThemeMenu)}
@@ -1143,7 +1101,6 @@ export default function App() {
               {showThemeMenu && (
                 <div className={`absolute right-0 top-full mt-2 w-48 rounded-lg shadow-xl z-[100] overflow-hidden border ${theme.dropdownBg}`}>
                   
-                  {/* Theme Controls Only */}
                   <div className="p-2">
                     <div className={`text-xs uppercase font-bold px-2 mb-2 ${theme.dropdownLabel}`}>
                       Temă
@@ -1178,9 +1135,7 @@ export default function App() {
 
       <main className="w-full max-w-7xl mx-auto px-4 md:px-6 py-6 space-y-8 overflow-x-hidden">
 
-        {/* DASHBOARD */}
         <section className="grid md:grid-cols-2 gap-4">
-          {/* Card Ora Curenta */}
           <div className={`overflow-hidden transition-all ${isRetro ? 'border-2 border-green-600' : 'rounded-xl shadow-sm border border-gray-200'} ${isRetroAnim ? 'retro-border-pulse' : ''} ${theme.card}`}>
             <div className={`px-4 py-2 flex justify-between items-center border-b ${theme.sectionHeaderBg}`}>
               <h3 className={`font-bold text-sm uppercase flex items-center gap-2 ${theme.accentText} ${isRetroAnim ? 'retro-glow' : ''}`}>
@@ -1196,13 +1151,12 @@ export default function App() {
                 </div>
               ) : (
                 <div className={`text-center italic ${theme.textSec}`}>
-                  <p className="text-sm">Nicio oră în desfășurare</p>
+                  <p className="text-sm">Nicio oră curentă</p>
                 </div>
               )}
             </div>
           </div>
 
-          {/* Card Ora Urmatoare */}
           <div className={`overflow-hidden transition-all ${isRetro ? 'border-2 border-green-800 border-dashed' : 'rounded-xl shadow-sm border border-gray-200'} ${isRetroAnim ? 'retro-border-pulse' : ''} ${theme.card}`}>
              <div className={`px-4 py-2 border-b ${theme.sectionHeaderBg}`}>
               <h3 className={`font-bold text-sm uppercase flex items-center gap-2 ${theme.textMain} ${isRetroAnim ? 'retro-glow' : ''}`}>
@@ -1224,18 +1178,15 @@ export default function App() {
           </div>
         </section>
 
-        {/* ORAR SECTION */}
         <section className={`overflow-hidden transition-all ${isRetro ? 'border-2 border-green-700' : 'rounded-xl shadow-lg border border-gray-200'} ${isRetroAnim ? 'retro-border-pulse' : ''} ${theme.card}`}>
           <div className={`p-4 flex justify-between items-center ${isRetro ? 'border-b border-green-700' : `border-b ${theme.sectionHeaderBg}`}`}>
             <h2 className={`font-bold flex items-center gap-2 ${theme.textMain} ${isRetroAnim ? 'retro-glow' : ''}`}>
-              <Calendar size={18} /> Orar Complet
+              <Calendar size={18} /> Orar
             </h2>
           </div>
 
-          {/* --- DESKTOP VIEW (TABLE) --- */}
           <div className="hidden md:block overflow-x-auto">
             <div className={`min-w-[700px] grid grid-cols-[80px_repeat(5,_1fr)] ${theme.gridLine} ${isRetro ? '' : 'border-b ' + theme.border}`}>
-              {/* Table Header */}
               <div className={`p-3 font-bold text-sm flex items-center justify-center ${theme.gridHeader}`}>Ora</div>
               {DAYS.map(day => (
                 <div key={day} className={`p-3 font-bold text-sm text-center ${
@@ -1251,12 +1202,10 @@ export default function App() {
             <div className={`min-w-[700px] divide-y ${theme.gridLine}`}>
               {TIME_SLOTS.map((time) => (
                 <div key={time} className={`grid grid-cols-[80px_repeat(5,_1fr)] divide-x ${theme.gridLine} group`}>
-                  {/* Time Column */}
                   <div className={`p-3 text-xs font-bold flex items-center justify-center ${theme.gridSubHeader}`}>
                     {time}
                   </div>
 
-                  {/* Days Columns */}
                   {DAYS.map(day => {
                     const slotClasses = SCHEDULE_DATA.filter(c => c.day === day && c.time === time);
                     return (
@@ -1285,9 +1234,7 @@ export default function App() {
             </div>
           </div>
 
-          {/* --- MOBILE VIEW (TABS + LIST) --- */}
           <div className="block md:hidden">
-            {/* Day Selector Tabs */}
             <div className={`flex flex-wrap justify-center p-2 gap-2 border-b ${theme.border}`}>
               {DAYS.map(day => (
                 <button
@@ -1304,12 +1251,10 @@ export default function App() {
               ))}
             </div>
 
-            {/* Mobile Schedule List */}
             <div className="p-2 space-y-4">
                {TIME_SLOTS.map(time => {
                  const slotClasses = SCHEDULE_DATA.filter(c => c.day === mobileSelectedDay && c.time === time);
-                 if (slotClasses.length === 0) return null; // Hide empty slots on mobile to save space
-                 
+                 if (slotClasses.length === 0) return null; 
                  return (
                    <div key={time} className="flex gap-3 items-center">
                      <div className={`w-14 shrink-0 flex flex-col items-center justify-center rounded p-1 ${theme.gridSubHeader} ${isRetroAnim ? 'retro-border-pulse border-2' : ''}`}>
@@ -1333,7 +1278,6 @@ export default function App() {
                  )
                })}
                
-               {/* Empty State for Day */}
                {TIME_SLOTS.every(time => SCHEDULE_DATA.filter(c => c.day === mobileSelectedDay && c.time === time).length === 0) && (
                  <div className={`text-center py-8 opacity-60 ${theme.textSec}`}>
                    <p>Nu sunt ore programate în această zi.</p>
@@ -1344,7 +1288,6 @@ export default function App() {
 
         </section>
 
-        {/* FOOTER */}
         <footer className={`text-center text-xs py-4 ${theme.textSec} ${isRetroAnim ? 'retro-glow' : ''}`}>
           {isRetro ? (
             <>
@@ -1356,7 +1299,7 @@ export default function App() {
             </>
           ) : (
             <>
-              <p>Ultima actualizare automată: {now.toLocaleTimeString()}</p>
+              <p>Ultima actualizare: {now.toLocaleTimeString()}</p>
               <p className="mt-1">
                 Tema: <span className="uppercase font-bold">{themeMode}</span>
               </p>
