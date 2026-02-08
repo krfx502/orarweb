@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, Clock, MapPin, User, Info, ChevronRight, Settings, Monitor, Moon, Sun, Globe, WifiOff } from 'lucide-react';
 
-const SEMESTER_START_DATE = new Date('2025-02-17T00:00:00'); 
+const SEMESTER_START_DATE = new Date('2025-02-16T00:00:00'); 
 
 const SCHEDULE_DATA = [
   { day: 'Luni', time: '12:30', duration: 90, subject: 'Statistică', type: 'Seminar', prof: 'Prof. SERBAN Daniela', room: '2604', parity: 'even' }, 
@@ -301,7 +301,7 @@ export default function App() {
     if (!now) setIsLoadingApi(true);
     
     try {
-      const response = await fetch('https://worldtimeapi.org/api/timezone/Europe/Bucharest');
+      const response = await fetch('https://time.now/developer/api/timezone/Europe/Bucharest');
       const data = await response.json();
       const apiDate = new Date(data.datetime);
       setNow(apiDate);
