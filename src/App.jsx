@@ -1,1312 +1,953 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, Clock, MapPin, User, Info, ChevronRight, Settings, Monitor, Moon, Sun, Globe, WifiOff } from 'lucide-react';
+import { CheckCircle2, XCircle, ArrowRight, ArrowLeft, RotateCcw, Award, Moon, Sun, RefreshCw } from 'lucide-react';
 
-const SEMESTER_START_DATE = new Date('2025-02-16T00:00:00'); 
+const quizData = [
+  // --- Fundamentals & OS ---
+  {
+    id: 1,
+    text: "An operating system serves two fundamental roles: as a ______ that hides hardware complexity, and as a ______ that allocates CPU, memory, and I/O fairly.",
+    type: "single",
+    options: [
+      "resource manager / virtual machine",
+      "virtual machine / resource manager",
+      "kernel / shell",
+      "supervisor / user application"
+    ],
+    correctAnswer: "virtual machine / resource manager",
+    explanation: "An OS acts as a virtual machine by providing a simplified interface to hardware, and as a resource manager by fairly distributing system resources (CPU, RAM, etc.)."
+  },
+  {
+    id: 2,
+    text: "In the PATH variable, the __ character is used to separate the directories.",
+    type: "single",
+    options: [":", "/", "~", ";"],
+    correctAnswer: ":",
+    explanation: "In Linux/Unix, directories in the PATH variable are separated by a colon (:). You previously selected '/', which is the directory separator for file paths, not the PATH list separator."
+  },
+  {
+    id: 3,
+    text: "In Bash, an exit code of 0 stored in $? indicates that the previous command completed successfully.",
+    type: "single",
+    options: ["Adevărat (True)", "Fals (False)"],
+    correctAnswer: "Adevărat (True)",
+    explanation: "An exit code of 0 always means success in Bash. Any non-zero exit code indicates an error."
+  },
+  {
+    id: 4,
+    text: "What is the ASCII decimal code of the character that marks files as hidden in Linux (the dot/period)?",
+    type: "text",
+    correctAnswer: "46",
+    explanation: "The ASCII decimal value for a dot/period (.) is 46. You previously entered a literal dot."
+  },
+  {
+    id: 5,
+    text: "Which of the following commands will produce the same result as `start=\\`date\\``?",
+    type: "single",
+    options: ["start=%date%", "start=(date)", "start=$(date)", "start=date"],
+    correctAnswer: "start=$(date)",
+    explanation: "$(command) is the modern, preferred Bash syntax for command substitution, replacing the older backtick `command` syntax."
+  },
+  {
+    id: 6,
+    text: "Linux is distributed under which license?",
+    type: "single",
+    options: ["MIT", "GPLv3", "BSD", "Linux Foundation", "GPLv2"],
+    correctAnswer: "GPLv2",
+    explanation: "The Linux kernel is specifically licensed under the GNU General Public License version 2 (GPLv2)."
+  },
+  {
+    id: 7,
+    text: "An interpreted programming language: (choose two)",
+    type: "multiple",
+    options: [
+      "Tends to offer more features than compiled languages",
+      "Takes fewer resources to run than a compiled language",
+      "Must be linked against system libraries before execution",
+      "Is converted into machine specific instructions as the program runs",
+      "Must be compiled to machine code before it can run"
+    ],
+    correctAnswer: [
+      "Tends to offer more features than compiled languages",
+      "Is converted into machine specific instructions as the program runs"
+    ],
+    explanation: "Interpreted languages are translated on the fly (as they run) and generally offer higher-level features (like dynamic typing) at the cost of using MORE resources, not fewer."
+  },
+  {
+    id: 8,
+    text: "What is the fundamental difference between brace expansion {a,b,c} and glob patterns [abc]?",
+    type: "single",
+    options: [
+      "Brace expansion only works with numeric sequences, not strings",
+      "Braces generate strings unconditionally; globs match existing files",
+      "There is no functional difference; both match existing files",
+      "Globs are faster than brace expansion"
+    ],
+    correctAnswer: "Braces generate strings unconditionally; globs match existing files",
+    explanation: "Brace expansion creates the strings regardless of what is on your hard drive. Globs (*, ?, []) only return results if files actually exist matching that pattern."
+  },
+  {
+    id: 9,
+    text: "Which TWO are valid disk partition table types? (choose two)",
+    type: "multiple",
+    options: [
+      "BIOS — firmware, not partition table",
+      "GPT (GUID Partition Table) — modern, >2TB support",
+      "MBR (Master Boot Record) — legacy, up to 2TB",
+      "UEFI — firmware interface, uses GPT"
+    ],
+    correctAnswer: [
+      "GPT (GUID Partition Table) — modern, >2TB support",
+      "MBR (Master Boot Record) — legacy, up to 2TB"
+    ],
+    explanation: "MBR and GPT are the two actual structures written to a disk to define partitions. BIOS and UEFI are motherboard firmwares."
+  },
+  {
+    id: 10,
+    text: "The `fdisk` command is a tool used for working with the MBR partitioned disks. True or False?",
+    type: "single",
+    options: ["Adevărat (True)", "Fals (False)"],
+    correctAnswer: "Adevărat (True)",
+    explanation: "fdisk is the classic tool for MBR. gdisk is typically used for GPT disks."
+  },
+  {
+    id: 11,
+    text: "Which of the following commands will check hard disk MBR partitions? (choose three)",
+    type: "multiple",
+    options: ["gdisk", "sfdisk", "fdisk", "cfdisk", "gfdisk"],
+    correctAnswer: ["sfdisk", "fdisk", "cfdisk"],
+    explanation: "fdisk, cfdisk, and sfdisk all manipulate MBR partition tables. gdisk is for GPT. You missed sfdisk and cfdisk previously!"
+  },
+  {
+    id: 12,
+    text: "Applications run in ______ mode with restricted hardware access. To request OS services, they issue a ______, which triggers a transition to ______ mode.",
+    type: "single",
+    options: [
+      "user / system call / kernel",
+      "supervisor / system call / kernel",
+      "kernel / interrupt / user",
+      "user / process / supervisor"
+    ],
+    correctAnswer: "user / system call / kernel",
+    explanation: "Standard apps run in 'user' mode. They use a 'system call' to ask the 'kernel' to do privileged hardware tasks."
+  },
+  
+  // --- Navigation & Commands ---
+  {
+    id: 13,
+    text: "The `cd` command by itself will take you to what directory?",
+    type: "single",
+    options: [
+      "The parent directory above your current location",
+      "None; it is not a valid command",
+      "The system root directory",
+      "Your home directory"
+    ],
+    correctAnswer: "Your home directory",
+    explanation: "Typing just `cd` and pressing enter defaults to taking you straight to your home directory (~)."
+  },
+  {
+    id: 14,
+    text: "The double dot (..) can be used with the cd command to represent:",
+    type: "single",
+    options: [
+      "The directory above the current working directory",
+      "A user's home directory",
+      "Any two single characters",
+      "Nothing special; the shell treats it as a literal string."
+    ],
+    correctAnswer: "The directory above the current working directory",
+    explanation: "The double dot (..) refers to the parent directory."
+  },
+  {
+    id: 15,
+    text: "In Bash, which symbol represents the home directory, which refers to the parent directory, and which denotes the current directory?",
+    type: "single",
+    options: [
+      "~ (home), - (parent), . (current)",
+      "~ (home), .. (parent), . (current)",
+      "/ (home), .. (parent), * (current)",
+      "~ (home), . (parent), .. (current)"
+    ],
+    correctAnswer: "~ (home), .. (parent), . (current)",
+    explanation: "Tilde (~) is home. Double dot (..) is parent. Single dot (.) is current directory. (A single dash '-' takes you to your PREVIOUS directory, not necessarily parent)."
+  },
+  {
+    id: 16,
+    text: "Which option for the `ls` command, when used in conjunction with the `-l` option, will display human-readable file sizes?",
+    type: "single",
+    options: ["-h", "-M", "-H", "-S"],
+    correctAnswer: "-h",
+    explanation: "-h stands for human-readable (shows KB, MB, GB instead of just bytes)."
+  },
+  {
+    id: 17,
+    text: "What does the -r option do with the `ls` command?",
+    type: "single",
+    options: [
+      "Groups files by their extension type",
+      "Displays detailed information about files",
+      "Shows hidden files including dotfiles",
+      "Lists files in reverse alphabetical order"
+    ],
+    correctAnswer: "Lists files in reverse alphabetical order",
+    explanation: "-r reverses the sort order. (-R uppercase is recursive, -a is hidden, -l is detailed)."
+  },
+  {
+    id: 18,
+    text: "The `ls` command without options or arguments:",
+    type: "single",
+    options: [
+      "...lists the contents of the current directory.",
+      "...prompts for a directory to list.",
+      "...generates an error as this command requires arguments.",
+      "...lists the contents of a user's home directory."
+    ],
+    correctAnswer: "...lists the contents of the current directory.",
+    explanation: "By default, ls lists visible files and directories in your current location."
+  },
+  {
+    id: 19,
+    text: "Which of the following commands will prevent any aliased options to the `ls` command?",
+    type: "single",
+    options: ["\"ls\"", "\\ls", "/ls", "%ls"],
+    correctAnswer: "\\ls",
+    explanation: "Prepending a backslash (\\) temporarily bypasses any alias set for that command."
+  },
+  {
+    id: 20,
+    text: "The `touch` command can be used to: (choose two)",
+    type: "multiple",
+    options: [
+      "Update the timestamp of existing files",
+      "Rename a file",
+      "Create new files",
+      "Change ownership of a file"
+    ],
+    correctAnswer: [
+      "Update the timestamp of existing files",
+      "Create new files"
+    ],
+    explanation: "If the file doesn't exist, touch creates it. If it does exist, touch updates its modified/accessed timestamps."
+  },
 
-const SCHEDULE_DATA = [
-  { day: 'Luni', time: '12:30', duration: 90, subject: 'Statistică', type: 'Seminar', prof: 'Prof. SERBAN Daniela', room: '2604', parity: 'even' }, 
-  { day: 'Luni', time: '14:10', duration: 90, subject: 'Statistică', type: 'Curs', prof: 'Prof. SERBAN Daniela', room: '0124', parity: 'all' }, 
-  { day: 'Luni', time: '15:50', duration: 90, subject: 'Marketing', type: 'Curs', prof: 'Prof. Stefan-Claudiu', room: '0124', parity: 'all' }, 
-  { day: 'Marti', time: '14:10', duration: 90, subject: 'Management', type: 'Seminar', prof: 'Prof. VRINCUT Mihai', room: '2506', parity: 'odd' }, 
-  { day: 'Marti', time: '14:10', duration: 90, subject: 'Marketing', type: 'Seminar', prof: 'Prof. ORINDARU', room: '2302', parity: 'even' }, 
-  { day: 'Marti', time: '15:50', duration: 90, subject: 'Bazele ciberneticii economice', type: 'Curs', prof: 'Prof. GRAMATOVICI Sorina', room: '2201', parity: 'all' }, 
-  { day: 'Miercuri', time: '12:30', duration: 90, subject: 'Finante', type: 'Seminar', prof: 'Prof. KAGITCI Meral', room: '2608', parity: 'even' }, 
-  { day: 'Miercuri', time: '15:50', duration: 90, subject: 'Analiza matematica', type: 'Curs', prof: 'Prof. FLORENTA Daniela', room: '0124', parity: 'all' }, 
-  { day: 'Joi', time: '12:30', duration: 90, subject: 'Sisteme de operare', type: 'Curs', prof: 'Prof. ZOTA Razvan', room: '0124', parity: 'all' }, 
-  { day: 'Joi', time: '14:10', duration: 90, subject: 'Sisteme de operare', type: 'Seminar', prof: 'Prof. CLIM Antonio', room: '2305', parity: 'odd' }, 
-  { day: 'Joi', time: '14:10', duration: 90, subject: 'Bazele ciberneticii economice', type: 'Seminar', prof: 'Prof. GRAMATOVICI Sorina', room: '2212', parity: 'even' }, 
-  { day: 'Joi', time: '15:50', duration: 90, subject: 'Analiza matematica', type: 'Seminar', prof: 'Prof. IJACU', room: '2012', parity: 'all' }, 
-  { day: 'Vineri', time: '10:50', duration: 90, subject: 'Algoritmi si tehnici de programare', type: 'Curs', prof: 'Prof. USCATU Cristian Razvan', room: '2104', parity: 'all' }, 
-  { day: 'Vineri', time: '12:30', duration: 90, subject: 'Algoritmi si tehnici de programare', type: 'Seminar', prof: 'Prof. USCATU Cristian Razvan', room: '2317', parity: 'all' }, 
-  { day: 'Vineri', time: '14:10', duration: 90, subject: 'Management', type: 'Curs', prof: 'Prof. VRINCUT Mihai', room: '2101', parity: 'all' }, 
-  { day: 'Vineri', time: '15:50', duration: 90, subject: 'Finante', type: 'Curs', prof: 'Prof. KAGITCI Meral', room: '2104', parity: 'all' }
+  // --- Help, Globbing & Advanced ---
+  {
+    id: 21,
+    text: "What is the standard option to view a command's built-in help?",
+    type: "single",
+    options: ["-h", "--info", "--help", "--manual"],
+    correctAnswer: "--help",
+    explanation: "--help is the GNU standard long option for built-in command documentation."
+  },
+  {
+    id: 22,
+    text: "To get help on using the `info` command, execute: (choose two)",
+    type: "multiple",
+    options: ["help info", "info info", "man info", "info -q"],
+    correctAnswer: ["info info", "man info"],
+    explanation: "`info` is a standalone program, not a bash builtin, so `help info` doesn't work. You use `man info` or `info info`."
+  },
+  {
+    id: 23,
+    text: "In which section number of the man pages are regular user commands documented?",
+    type: "text",
+    correctAnswer: "1",
+    explanation: "Section 1 is for user commands. Section 8 is usually for sysadmin commands. Section 5 is for configuration files."
+  },
+  {
+    id: 24,
+    text: "To search the man page sections for the keyword 'example', which of the following command lines could you execute? (choose two)",
+    type: "multiple",
+    options: ["man -k example", "whatis example", "man -f example", "apropos example"],
+    correctAnswer: ["man -k example", "apropos example"],
+    explanation: "`apropos` and `man -k` search the name AND DESCRIPTION of man pages for a keyword. `whatis` and `man -f` only search the exact command names."
+  },
+  {
+    id: 25,
+    text: "The ______ command displays complete manual pages, while ______ provides a quick summary of command options.",
+    type: "single",
+    options: [
+      "man / apropos",
+      "man / whatis",
+      "info / man",
+      "whatis / apropos"
+    ],
+    correctAnswer: "man / whatis",
+    explanation: "`man` shows the full page. `whatis` shows a one-line summary (the NAME section of the man page)."
+  },
+  {
+    id: 26,
+    text: "Which glob character matches exactly one character?",
+    type: "single",
+    options: ["*", "?", ".", "["],
+    correctAnswer: "?",
+    explanation: "The question mark (?) matches exactly one character in globbing. Asterisk (*) matches zero or more."
+  },
+  {
+    id: 27,
+    text: "Which of the following are glob characters? (choose three)",
+    type: "multiple",
+    options: [
+      "The asterisk *",
+      "The dash character -",
+      "The question mark ?",
+      "The square brackets [ and ]"
+    ],
+    correctAnswer: [
+      "The asterisk *",
+      "The question mark ?",
+      "The square brackets [ and ]"
+    ],
+    explanation: "*, ?, and [] are the fundamental shell globbing characters."
+  },
+  {
+    id: 28,
+    text: "What will the following statement do? `for name in \\`cat /root/users\\``",
+    type: "single",
+    options: [
+      "Run for two values: cat and /root/users",
+      "Report a syntax error due to missing backtick closure",
+      "Assign to the name variable each value in the specified file",
+      "Enter an infinite loop reading the file continuously"
+    ],
+    correctAnswer: "Assign to the name variable each value in the specified file",
+    explanation: "The backticks execute the command `cat /root/users` first. The `for` loop then iterates over every word/line returned by that command."
+  },
+  
+  // --- Variables, Permissions & Distros ---
+  {
+    id: 29,
+    text: "What is the key difference between `source script.sh` and `./script.sh`?",
+    type: "single",
+    options: [
+      "source is faster because it skips the fork() system call",
+      "source requires execute permission",
+      "They are identical — both execute in the current shell environment",
+      "source runs in current shell; ./script.sh runs in subshell"
+    ],
+    correctAnswer: "source runs in current shell; ./script.sh runs in subshell",
+    explanation: "Using `./` creates a new child process (subshell) so variables don't persist. `source` runs it in your CURRENT shell, so variable changes stay active."
+  },
+  {
+    id: 30,
+    text: "You define `SECRET=password` without export. What happens in a subshell?",
+    type: "single",
+    options: [
+      "The subshell inherits all variables",
+      "An error occurs",
+      "The variable SECRET is undefined",
+      "The variable has value 'password'"
+    ],
+    correctAnswer: "The variable SECRET is undefined",
+    explanation: "Local variables (not exported) are NOT passed down to child processes/subshells."
+  },
+  {
+    id: 31,
+    text: "To make a variable accessible in child processes, use the ______ command. To remove a variable entirely, use ______.",
+    type: "single",
+    options: [
+      "export / delete",
+      "env / remove",
+      "export / unset",
+      "set / unset"
+    ],
+    correctAnswer: "export / unset",
+    explanation: "`export` makes it global to children. `unset` completely removes a variable."
+  },
+  {
+    id: 32,
+    text: "Which chmod ensures ONLY the owner can execute a script?",
+    type: "single",
+    options: [
+      "`chmod +x script`",
+      "`chmod u+x,go-x script`",
+      "`chmod a+x script`",
+      "`chmod 755 script`"
+    ],
+    correctAnswer: "`chmod u+x,go-x script`",
+    explanation: "`u+x` adds execution for the User (owner). `go-x` explicitly removes execution for Group and Others."
+  },
+  {
+    id: 33,
+    text: "Apple's OS X is: (choose three)",
+    type: "multiple",
+    options: [
+      "Partially based on code from the FreeBSD project",
+      "Derived from Linux",
+      "Able to natively run Windows binaries",
+      "A fully certified UNIX distribution",
+      "Tightly integrated with Apple hardware",
+      "Primarily used to manage network services"
+    ],
+    correctAnswer: [
+      "Partially based on code from the FreeBSD project",
+      "A fully certified UNIX distribution",
+      "Tightly integrated with Apple hardware"
+    ],
+    explanation: "macOS (OS X) is NOT Linux. It is a certified UNIX, heavily based on FreeBSD, and tied to Apple hardware."
+  },
+  {
+    id: 34,
+    text: "Linux source code is available to:",
+    type: "single",
+    options: [
+      "Anyone who has the knowledge needed to access it",
+      "Only university researchers with a government grant",
+      "Employees of the FBI, CIA and NSA with top secret clearance",
+      "Only employees of the Linux Foundation"
+    ],
+    correctAnswer: "Anyone who has the knowledge needed to access it",
+    explanation: "Linux is open source. Anyone can view and modify the source code."
+  },
+  {
+    id: 35,
+    text: "Open source licenses differ, but generally agree that: (choose two)",
+    type: "multiple",
+    options: [
+      "You should have access to the source code of software",
+      "You are not allowed to sell the software",
+      "You must redistribute your changes",
+      "You should be able to modify the software as you wish"
+    ],
+    correctAnswer: [
+      "You should have access to the source code of software",
+      "You should be able to modify the software as you wish"
+    ],
+    explanation: "Open source guarantees access to code and the right to modify it. You ARE actually allowed to sell open source software, and you don't always have to redistribute changes (depends on the specific license)."
+  },
+  {
+    id: 36,
+    text: "What does the `alias` command do?",
+    type: "single",
+    options: [
+      "Runs a specific program",
+      "Shows information about a command",
+      "Creates a shortcut for a longer command",
+      "Lists all available commands"
+    ],
+    correctAnswer: "Creates a shortcut for a longer command",
+    explanation: "Aliases are custom shortcuts, e.g., `alias update='sudo apt update && sudo apt upgrade'`."
+  },
+  {
+    id: 37,
+    text: "A user defines `alias cls='clear'` directly in the terminal. After closing and reopening the terminal, the alias no longer works. What is the most likely cause?",
+    type: "single",
+    options: [
+      "The alias was not saved in ~/.bashrc or another initialisation file",
+      "The alias definition used incorrect syntax or missing quotes",
+      "Aliases require root privileges to be saved permanently across sessions",
+      "The clear command does not exist on this system"
+    ],
+    correctAnswer: "The alias was not saved in ~/.bashrc or another initialisation file",
+    explanation: "Commands typed directly into the terminal are volatile. To make them permanent, they must be saved in a startup script like ~/.bashrc."
+  },
+  {
+    id: 38,
+    text: "Which of the following commands will execute the last command that started with `ec`:",
+    type: "single",
+    options: ["!-ec", "!!", "!?ec", "!ec"],
+    correctAnswer: "!ec",
+    explanation: "`!string` executes the most recent command starting with that string. `!!` runs the very last command. `!?string` runs a command CONTAINING the string."
+  },
+  {
+    id: 39,
+    text: "The `jamie` user already exists in the system. The command `grep jamie /etc/passwd` displays one user record. Running the `echo $?` command immediately after would result in what output?",
+    type: "single",
+    options: ["1", "5", "2", "0"],
+    correctAnswer: "0",
+    explanation: "Because `grep` successfully found the record, it exits with a success status, which in Bash is 0."
+  },
+  // --- NEW QUESTIONS ADDED FROM LATEST IMAGES ---
+  {
+    id: 40,
+    text: "An ______ (Interrupt Request) is a hardware signal line used by devices to request CPU attention. The code that handles the interrupt is called an ______ (Interrupt Service Routine). The IVT stores the ______ of all ISRs.",
+    type: "single",
+    options: [
+      "interrupt request / interrupt service routine / memory addresses",
+      "interrupt signal / interrupt handler / process IDs",
+      "interrupt request / system call / memory addresses",
+      "I/O request / interrupt service routine / IRQ numbers"
+    ],
+    correctAnswer: "interrupt request / interrupt service routine / memory addresses",
+    explanation: "Hardware sends an Interrupt Request (IRQ). The CPU runs the Interrupt Service Routine (ISR) to handle it. The Interrupt Vector Table (IVT) holds the memory addresses of these routines."
+  },
+  {
+    id: 41,
+    text: "______ quotes prevent all interpretation by the shell, while ______ quotes allow variable expansion but prevent word splitting.",
+    type: "single",
+    options: [
+      "Double / Single",
+      "Single / Double",
+      "Backtick / Single",
+      "Single / Backtick"
+    ],
+    correctAnswer: "Single / Double",
+    explanation: "Single quotes ('') are literal and prevent ALL interpretation. Double quotes (\"\") allow variables like $USER to be expanded while keeping the string together as one argument."
+  },
+  {
+    id: 42,
+    text: "Which correctly distinguishes monolithic and microkernel architectures?",
+    type: "single",
+    options: [
+      "Microkernels achieve higher performance due to minimal kernel-space footprint",
+      "Linux implements a pure microkernel design with all drivers in user space",
+      "Monolithic kernels cannot load or unload any modules during runtime",
+      "Monolithic runs services in kernel space; microkernel moves most to user space"
+    ],
+    correctAnswer: "Monolithic runs services in kernel space; microkernel moves most to user space",
+    explanation: "Monolithic kernels (like Linux) run OS services in a single large kernel space. Microkernels run only the bare minimum in kernel space and move services/drivers to user space."
+  },
+  {
+    id: 43,
+    text: "Linux uses a ______ kernel architecture, where all services run in the same ______. In contrast, Minix uses a ______ design.",
+    type: "single",
+    options: [
+      "monolithic / virtual machine / microkernel",
+      "monolithic / address space / microkernel",
+      "microkernel / address space / monolithic",
+      "supervisor / kernel space / monolithic"
+    ],
+    correctAnswer: "monolithic / address space / microkernel",
+    explanation: "Linux is monolithic, sharing a single kernel address space for its services. Minix is the classic example of a microkernel architecture. (You previously selected 'virtual machine' which is incorrect here)."
+  },
+  {
+    id: 44,
+    text: "Complete the help-seeking commands:\n1. Read the manual page for ls: ___ ls\n2. Search manuals by keyword: ___ network\n3. Brief description of a command: ___ grep\n4. Built-in help for cd: ___ cd",
+    type: "single",
+    options: [
+      "man / apropos / whatis / help",
+      "read / apropos / whatis / help",
+      "man / grep / info / man",
+      "info / find / whatis / info"
+    ],
+    correctAnswer: "man / apropos / whatis / help",
+    explanation: "man = manual pages. apropos = search man page descriptions by keyword. whatis = brief one-line description. help = documentation for shell built-ins like cd."
+  },
+  {
+    id: 45,
+    text: "Environment variables cannot be created by which command?",
+    type: "single",
+    options: [
+      "declare",
+      "export",
+      "set",
+      "typeset"
+    ],
+    correctAnswer: "set",
+    explanation: "The `set` command (without -a) creates local shell variables, not environment variables. `export`, `declare -x`, and `typeset -x` can all create environment variables."
+  },
+  {
+    id: 46,
+    text: "Environment variables can be viewed by running: (choose two)",
+    type: "multiple",
+    options: [
+      "env",
+      "printenv",
+      "setenv",
+      "showenv"
+    ],
+    correctAnswer: [
+      "env",
+      "printenv"
+    ],
+    explanation: "Both `env` and `printenv` will print out all currently exported environment variables in Linux."
+  }
 ];
 
-const TIME_SLOTS = ['12:30', '14:10', '15:50'];
-const DAYS = ['Luni', 'Marti', 'Miercuri', 'Joi', 'Vineri'];
-
-const THEMES = {
-  light: {
-    name: 'Light',
-    icon: Sun,
-    classes: {
-      bg: 'bg-gray-100',
-      header: 'bg-white border-b border-gray-200',
-      textMain: 'text-gray-800',
-      textSec: 'text-gray-500',
-      headerDateText: 'text-gray-500',
-      card: 'bg-white border-gray-100 shadow-sm',
-      cardBorder: 'border-l-4',
-      badgeCurs: 'bg-blue-700 text-white',
-      badgeSem: 'bg-green-600 text-white',
-      accentText: 'text-blue-900',
-      gridHeader: 'bg-blue-900 text-white',
-      gridSubHeader: 'bg-blue-800 text-white',
-      gridCell: 'bg-white hover:bg-gray-50',
-      gridLine: 'divide-gray-200',
-      border: 'border-gray-200',
-      highlightBox: 'bg-blue-50 border-blue-100',
-      activeTab: 'bg-blue-800 text-white',
-      inactiveTab: 'bg-gray-200 text-gray-600',
-      buttonSecondary: 'bg-gray-200 hover:bg-gray-300 text-gray-700',
-      dropdownBg: 'bg-white border border-gray-200 shadow-xl',
-      dropdownItemActive: 'bg-blue-600 text-white font-bold',
-      dropdownItemInactive: 'text-gray-700 hover:bg-gray-100 bg-transparent',
-      dropdownDivider: 'border-gray-200',
-      dropdownLabel: 'text-gray-400',
-      sectionHeaderBg: 'bg-gray-50 border-gray-100',
-      weekInfoOdd: 'bg-blue-100 text-blue-800 border-blue-200',
-      weekInfoEven: 'bg-orange-100 text-orange-800 border-orange-200',
-      font: 'font-sans'
-    }
-  },
-  dark: {
-    name: 'Dark',
-    icon: Moon,
-    classes: {
-      bg: 'bg-slate-950',
-      header: 'bg-slate-900 border-b border-slate-800',
-      textMain: 'text-slate-100',
-      textSec: 'text-slate-400',
-      headerDateText: 'text-slate-400',
-      card: 'bg-slate-900 border-slate-800 shadow-lg',
-      cardBorder: 'border-l-4',
-      badgeCurs: 'bg-indigo-600 text-white',
-      badgeSem: 'bg-emerald-700 text-white',
-      accentText: 'text-indigo-300',
-      gridHeader: 'bg-slate-950 text-indigo-300',
-      gridSubHeader: 'bg-slate-800 text-slate-300',
-      gridCell: 'bg-slate-900 hover:bg-slate-800',
-      gridLine: 'divide-slate-800',
-      border: 'border-slate-800',
-      highlightBox: 'bg-slate-800 border-slate-700',
-      activeTab: 'bg-indigo-600 text-white',
-      inactiveTab: 'bg-slate-800 text-slate-400',
-      buttonSecondary: 'bg-slate-800 hover:bg-slate-700 text-slate-300',
-      dropdownBg: 'bg-slate-800 border-slate-700 shadow-xl',
-      dropdownItemActive: 'bg-indigo-900/50 text-indigo-300 font-bold',
-      dropdownItemInactive: 'text-slate-400 hover:bg-slate-700 bg-transparent',
-      dropdownDivider: 'border-slate-700',
-      dropdownLabel: 'text-slate-500',
-      sectionHeaderBg: 'bg-slate-900/50 border-slate-800',
-      weekInfoOdd: 'bg-indigo-900/40 text-indigo-300 border border-indigo-800',
-      weekInfoEven: 'bg-orange-900/40 text-orange-300 border border-orange-800',
-      font: 'font-sans'
-    }
-  },
-  stardew: {
-    name: 'Stardew Valley',
-    icon: Sun,
-    classes: {
-      bg: 'stardew-bg',
-      header: 'stardew-header border-b-4 border-amber-900',
-      textMain: 'text-amber-950',
-      textSec: 'text-amber-900',
-      headerDateText: 'text-amber-950',
-      card: 'stardew-card border-4 border-amber-900 shadow-xl',
-      cardBorder: 'border-l-0',
-      badgeCurs: 'stardew-badge-blue text-white',
-      badgeSem: 'stardew-badge-green text-white',
-      accentText: 'text-amber-950 font-bold drop-shadow-md',
-      gridHeader: 'stardew-grid-header text-white font-bold',
-      gridSubHeader: 'stardew-grid-subheader text-green-900 font-bold',
-      gridCell: 'stardew-cell hover:bg-green-100/80',
-      gridLine: 'divide-amber-800',
-      border: 'border-amber-800',
-      highlightBox: 'stardew-highlight border-4 border-yellow-600',
-      activeTab: 'stardew-tab-active text-white font-bold shadow-lg',
-      inactiveTab: 'stardew-tab-inactive text-amber-900 border-4 border-amber-700',
-      buttonSecondary: 'stardew-button text-amber-900 border-4 border-amber-800',
-      dropdownBg: 'stardew-dropdown border-4 border-amber-900 shadow-2xl',
-      dropdownItemActive: 'stardew-dropdown-active text-white font-bold',
-      dropdownItemInactive: 'bg-amber-50 text-amber-900 hover:bg-yellow-100 border-2 border-amber-700',
-      dropdownDivider: 'border-amber-800',
-      dropdownLabel: 'text-green-800 font-bold',
-      sectionHeaderBg: 'stardew-section-header border-b-4 border-green-700',
-      weekInfoOdd: 'stardew-info-blue text-blue-900 border-4 border-blue-700',
-      weekInfoEven: 'stardew-info-orange text-orange-900 border-4 border-orange-700',
-      font: 'font-pixel' 
-    }
-  },
-  gothic: {
-    name: 'Gothic Dark',
-    icon: Moon,
-    classes: {
-      bg: 'gothic-bg',
-      header: 'gothic-header border-b-2 border-purple-900/50',
-      textMain: 'text-purple-100',
-      textSec: 'text-purple-300/70',
-      headerDateText: 'text-purple-300/70',
-      card: 'gothic-card border border-purple-900/50 shadow-2xl',
-      cardBorder: 'border-l-4',
-      badgeCurs: 'gothic-badge-purple text-white',
-      badgeSem: 'gothic-badge-red text-white',
-      accentText: 'text-purple-400 font-semibold',
-      gridHeader: 'gothic-grid-header text-purple-200 font-bold',
-      gridSubHeader: 'gothic-grid-subheader text-purple-300',
-      gridCell: 'gothic-cell hover:bg-purple-950/30',
-      gridLine: 'divide-purple-900/30',
-      border: 'border-purple-900/30',
-      highlightBox: 'gothic-highlight border border-purple-800/50',
-      activeTab: 'gothic-tab-active text-white shadow-xl',
-      inactiveTab: 'gothic-tab-inactive text-purple-400',
-      buttonSecondary: 'gothic-button text-purple-300',
-      dropdownBg: 'gothic-dropdown border border-purple-800/50 shadow-2xl',
-      dropdownItemActive: 'gothic-dropdown-active text-white',
-      dropdownItemInactive: 'bg-black/40 text-purple-300 hover:bg-purple-950/50',
-      dropdownDivider: 'border-purple-900/40',
-      dropdownLabel: 'text-purple-500 font-semibold',
-      sectionHeaderBg: 'gothic-section-header border-purple-800/30',
-      weekInfoOdd: 'gothic-info-purple text-purple-300 border border-purple-700/50',
-      weekInfoEven: 'gothic-info-red text-red-300 border border-red-800/50',
-      font: 'font-serif'
-    }
-  },
-  aero: {
-    name: 'Vista Aero',
-    icon: Globe,
-    classes: {
-      bg: 'bg-gradient-to-br from-sky-100 via-blue-50 to-indigo-100',
-      header: 'aero-glass border-b border-white/30',
-      textMain: 'text-slate-800',
-      textSec: 'text-slate-600',
-      headerDateText: 'text-slate-600',
-      card: 'aero-card border border-white/40 shadow-xl',
-      cardBorder: 'border-l-4',
-      badgeCurs: 'aero-badge-blue text-white shadow-md',
-      badgeSem: 'aero-badge-green text-white shadow-md',
-      accentText: 'text-blue-700 font-semibold',
-      gridHeader: 'aero-header text-white font-semibold',
-      gridSubHeader: 'aero-subheader text-blue-900',
-      gridCell: 'aero-cell hover:bg-blue-50/50',
-      gridLine: 'divide-blue-200/50',
-      border: 'border-blue-200/50',
-      highlightBox: 'aero-highlight',
-      activeTab: 'aero-tab-active text-white shadow-lg',
-      inactiveTab: 'aero-tab-inactive text-slate-700',
-      buttonSecondary: 'aero-button text-slate-700',
-      dropdownBg: 'aero-dropdown border border-white/40 shadow-2xl',
-      dropdownItemActive: 'aero-dropdown-active text-white',
-      dropdownItemInactive: 'bg-white/60 text-slate-700 hover:bg-blue-100/70',
-      dropdownDivider: 'border-blue-200/30',
-      dropdownLabel: 'text-slate-500 font-semibold',
-      sectionHeaderBg: 'aero-section-header border-blue-200/30',
-      weekInfoOdd: 'aero-info-odd text-blue-800 border border-blue-300/50 shadow-md',
-      weekInfoEven: 'aero-info-even text-orange-800 border border-orange-300/50 shadow-md',
-      font: 'font-sans'
-    }
-  },
-  retro: {
-    name: 'Retro',
-    icon: Monitor,
-    classes: {
-      bg: 'bg-black',
-      header: 'bg-black border-b-2 border-green-800',
-      textMain: 'text-green-500',
-      textSec: 'text-green-800',
-      headerDateText: 'text-green-800',
-      card: 'bg-black border-2 border-green-900 shadow-none rounded-none',
-      cardBorder: 'border-l-0', 
-      badgeCurs: 'bg-green-900 text-green-300 border border-green-500',
-      badgeSem: 'bg-green-900 text-green-300 border border-green-500',
-      accentText: 'text-green-400 uppercase tracking-widest',
-      gridHeader: 'bg-black text-green-500 border-b-2 border-green-800',
-      gridSubHeader: 'bg-black text-green-600 border-b border-green-900',
-      gridCell: 'bg-black hover:bg-green-900/20 border-r border-green-900',
-      gridLine: 'divide-green-900',
-      border: 'border-green-900',
-      highlightBox: 'bg-black border-2 border-green-700',
-      activeTab: 'bg-green-900 text-green-300 border border-green-500',
-      inactiveTab: 'bg-black text-green-800 border border-green-900',
-      buttonSecondary: 'bg-green-900 text-green-300 hover:bg-green-800',
-      dropdownBg: 'bg-black border-green-500 shadow-none',
-      dropdownItemActive: 'bg-green-900 text-green-100',
-      dropdownItemInactive: 'text-green-600 hover:bg-green-900/30 bg-transparent',
-      dropdownDivider: 'border-green-800',
-      dropdownLabel: 'text-green-800',
-      sectionHeaderBg: 'bg-green-900/20 border-green-600',
-      weekInfoOdd: 'bg-black border border-green-500 text-green-400',
-      weekInfoEven: 'bg-black border border-green-500 text-green-400',
-      font: 'font-mono'
-    }
-  },
-  retro_anim: {
-    name: 'Retro Animated',
-    icon: Monitor,
-    classes: {
-      bg: 'bg-black',
-      header: 'bg-black border-b-2 border-green-800',
-      textMain: 'text-green-500',
-      textSec: 'text-green-800',
-      card: 'bg-black border-2 border-green-900 shadow-none rounded-none',
-      cardBorder: 'border-l-0', 
-      badgeCurs: 'bg-green-900 text-green-300 border border-green-500',
-      badgeSem: 'bg-green-900 text-green-300 border border-green-500',
-      accentText: 'text-green-400 uppercase tracking-widest',
-      gridHeader: 'bg-black text-green-500 border-b-2 border-green-800',
-      gridSubHeader: 'bg-black text-green-600 border-b border-green-900',
-      gridCell: 'bg-black hover:bg-green-900/20 border-r border-green-900',
-      gridLine: 'divide-green-900',
-      border: 'border-green-900',
-      highlightBox: 'bg-black border-2 border-green-700',
-      activeTab: 'bg-green-900 text-green-300 border border-green-500',
-      inactiveTab: 'bg-black text-green-800 border border-green-900',
-      buttonSecondary: 'bg-green-900 text-green-300 hover:bg-green-800',
-      dropdownBg: 'bg-black border-green-500 shadow-none',
-      dropdownItemActive: 'bg-green-900 text-green-100',
-      dropdownItemInactive: 'text-green-600 hover:bg-green-900/30 bg-transparent',
-      dropdownDivider: 'border-green-800',
-      dropdownLabel: 'text-green-800',
-      sectionHeaderBg: 'bg-green-900/20 border-green-600',
-      weekInfoOdd: 'bg-black border border-green-500 text-green-400',
-      weekInfoEven: 'bg-black border border-green-500 text-green-400',
-      font: 'font-mono'
-    }
-  }
-};
-
-const timeToMinutes = (timeStr) => {
-  const [hours, minutes] = timeStr.split(':').map(Number);
-  return hours * 60 + minutes;
-};
-
-const getDayName = (dayIndex) => {
-  const map = ['Duminica', 'Luni', 'Marti', 'Miercuri', 'Joi', 'Vineri', 'Sambata'];
-  return map[dayIndex];
-};
-
-const normalizeStr = (str) => str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
-
 export default function App() {
-  const [now, setNow] = useState(null);
-  const [isOddWeek, setIsOddWeek] = useState(true);
-  const [currentClass, setCurrentClass] = useState(null);
-  const [nextClass, setNextClass] = useState(null);
-  const [themeMode, setThemeMode] = useState(() => {
-    try {
-      const saved = localStorage.getItem('university-schedule-theme');
-      if (saved === 'xp') return 'light';
-      return (saved && THEMES[saved]) ? saved : 'light';
-    } catch {
-      return 'light';
-    }
-  });
+  const [activeQuestions, setActiveQuestions] = useState(quizData);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [userAnswers, setUserAnswers] = useState({});
+  const [checkedQuestions, setCheckedQuestions] = useState([]);
+  const [showResults, setShowResults] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
-  const [showThemeMenu, setShowThemeMenu] = useState(false);
-  const [mobileSelectedDay, setMobileSelectedDay] = useState('Luni');
-  const [isApiConnected, setIsApiConnected] = useState(false);
-  const [isLoadingApi, setIsLoadingApi] = useState(true);
+  const question = activeQuestions[currentQuestionIndex];
+  const isChecked = checkedQuestions.includes(question?.id);
 
-  const fetchRealTime = async () => {
-    if (!now) setIsLoadingApi(true);
-    
-    try {
-      const response = await fetch('https://time.now/developer/api/timezone/Europe/Bucharest');
-      const data = await response.json();
-      const apiDate = new Date(data.datetime);
-      setNow(apiDate);
-      setIsApiConnected(true);
-      setIsLoadingApi(false);
-    } catch (error) {
-      console.error("API Error", error);
-      setIsApiConnected(false);
-      if (!now) {
-        setTimeout(fetchRealTime, 2000); 
-      }
-    }
+  const handleSingleSelect = (option) => {
+    if (isChecked) return;
+    setUserAnswers({ ...userAnswers, [question.id]: option });
   };
 
-  useEffect(() => {
-    const today = getDayName(new Date().getDay());
-    if (DAYS.includes(today)) {
-      setMobileSelectedDay(today);
-    }
-
-    fetchRealTime();
-  }, []);
-
-  const changeTheme = (mode) => {
-    setThemeMode(mode);
-    localStorage.setItem('university-schedule-theme', mode);
-  };
-
-  const theme = THEMES[themeMode].classes;
-  const isRetro = themeMode === 'retro' || themeMode === 'retro_anim';
-  const isRetroAnim = themeMode === 'retro_anim';
-
-  useEffect(() => {
-    const tick = () => {
-      setNow(prev => prev ? new Date(prev.getTime() + 1000) : null); 
-    };
-
-    const calculateParity = (dateReference) => {
-      if (!dateReference) return;
-
-      const diffTime = Math.abs(dateReference - SEMESTER_START_DATE);
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
-      let weekNo = Math.floor(diffDays / 7) + 1;
-      const isOdd = weekNo % 2 !== 0; 
-      setIsOddWeek(isOdd);
-    };
-
-    if (now) {
-        calculateParity(now);
-    }
-
-    const timer = setInterval(tick, 1000);
-    const syncTimer = setInterval(fetchRealTime, 1000 * 60 * 5);
-
-    return () => {
-      clearInterval(timer);
-      clearInterval(syncTimer);
-    };
-  }, [now]); 
-
-  useEffect(() => {
-    if (!now) return;
-
-    const currentDayName = getDayName(now.getDay());
-    const currentMinutes = now.getHours() * 60 + now.getMinutes();
-
-    const todaysClasses = SCHEDULE_DATA.filter(item => {
-      const isToday = normalizeStr(item.day) === normalizeStr(currentDayName);
-      const parityMatch = item.parity === 'all' || 
-                          (isOddWeek && item.parity === 'odd') || 
-                          (!isOddWeek && item.parity === 'even');
-      return isToday && parityMatch;
-    }).sort((a, b) => timeToMinutes(a.time) - timeToMinutes(b.time));
-
-    const active = todaysClasses.find(item => {
-      const start = timeToMinutes(item.time);
-      const end = start + item.duration;
-      return currentMinutes >= start && currentMinutes < end;
-    });
-
-    const next = todaysClasses.find(item => {
-      const start = timeToMinutes(item.time);
-      return start > currentMinutes;
-    });
-
-    setCurrentClass(active || null);
-    setNextClass(next || null);
-  }, [now, isOddWeek]);
-
-  const Badge = ({ type, faded }) => {
-    const isCurs = type === 'Curs';
-    let badgeStyle = '';
-    if (faded && !isRetro) {
-         badgeStyle = themeMode === 'dark' ? 'bg-slate-700 text-slate-400' : 'bg-gray-200 text-gray-500';
+  const handleMultiSelect = (option) => {
+    if (isChecked) return;
+    const currentSelected = userAnswers[question.id] || [];
+    let newSelected;
+    if (currentSelected.includes(option)) {
+      newSelected = currentSelected.filter(item => item !== option);
     } else {
-         badgeStyle = isCurs ? theme.badgeCurs : theme.badgeSem;
+      newSelected = [...currentSelected, option];
     }
-    return (
-      <span className={`text-[10px] font-bold px-2 py-0.5 rounded-sm uppercase tracking-wider ${badgeStyle} ${isRetroAnim && !faded ? 'retro-border-pulse' : ''}`}>
-        {type}
-      </span>
-    );
+    setUserAnswers({ ...userAnswers, [question.id]: newSelected });
   };
 
-  const ClassCard = ({ data, faded = false }) => {
-    if (!data) return null;
-    let borderColor = '';
-    if (!isRetro) {
-        if (faded) {
-            borderColor = themeMode === 'dark' ? 'border-l-slate-700' : 'border-l-gray-300';
-        } else {
-            borderColor = data.type === 'Curs' ? 'border-l-blue-700' : 'border-l-green-600';
-        }
+  const handleTextChange = (e) => {
+    if (isChecked) return;
+    setUserAnswers({ ...userAnswers, [question.id]: e.target.value });
+  };
+
+  const checkAnswer = (qId) => {
+    const q = quizData.find(x => x.id === qId);
+    const uAns = userAnswers[qId];
+    
+    if (q.type === 'single') {
+      return uAns === q.correctAnswer;
+    } else if (q.type === 'multiple') {
+      if (!uAns || uAns.length !== q.correctAnswer.length) return false;
+      return q.correctAnswer.every(val => uAns.includes(val));
+    } else if (q.type === 'text') {
+      return uAns && uAns.trim().toLowerCase() === q.correctAnswer.toLowerCase();
     }
+    return false;
+  };
+
+  const handleCheckQuestion = () => {
+    if (!checkedQuestions.includes(question.id)) {
+      setCheckedQuestions([...checkedQuestions, question.id]);
+    }
+  };
+
+  const nextQuestion = () => {
+    if (currentQuestionIndex < activeQuestions.length - 1) {
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
+    } else {
+      setShowResults(true);
+    }
+  };
+
+  const prevQuestion = () => {
+    if (currentQuestionIndex > 0) {
+      setCurrentQuestionIndex(currentQuestionIndex - 1);
+    }
+  };
+
+  const restartQuiz = () => {
+    setActiveQuestions(quizData);
+    setCurrentQuestionIndex(0);
+    setUserAnswers({});
+    setCheckedQuestions([]);
+    setShowResults(false);
+  };
+
+  const retakeMissed = () => {
+    const missed = activeQuestions.filter(q => !checkAnswer(q.id));
+    if (missed.length > 0) {
+      setActiveQuestions(missed);
+      setCurrentQuestionIndex(0);
+      setUserAnswers({});
+      setCheckedQuestions([]);
+      setShowResults(false);
+    }
+  };
+
+  const calculateScore = () => {
+    let score = 0;
+    activeQuestions.forEach(q => {
+      if (checkAnswer(q.id)) score++;
+    });
+    return score;
+  };
+
+  const isCurrentQuestionAnswered = () => {
+    if (!question) return false;
+    const currentAns = userAnswers[question.id];
+    if (currentAns === undefined) return false;
+    if (Array.isArray(currentAns)) return currentAns.length > 0;
+    return currentAns.toString().trim() !== '';
+  };
+
+  const getOptionStyles = (option) => {
+    const isSelected = question.type === 'multiple' 
+      ? (userAnswers[question.id] || []).includes(option)
+      : userAnswers[question.id] === option;
+    
+    if (!isChecked) {
+      return isSelected 
+        ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/40 dark:border-blue-400 shadow-sm' 
+        : 'border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50';
+    }
+
+    const isCorrectOption = question.type === 'multiple'
+      ? question.correctAnswer.includes(option)
+      : question.correctAnswer === option;
+
+    if (isCorrectOption) {
+      return 'border-green-500 bg-green-50 dark:bg-green-900/40 text-green-800 dark:text-green-300 font-medium';
+    }
+    if (isSelected && !isCorrectOption) {
+      return 'border-red-500 bg-red-50 dark:bg-red-900/40 text-red-800 dark:text-red-300 font-medium line-through decoration-red-400 opacity-80';
+    }
+    
+    return 'border-gray-200 dark:border-gray-700 opacity-50 bg-gray-50 dark:bg-gray-800';
+  };
+
+  if (showResults) {
+    const score = calculateScore();
+    const percentage = Math.round((score / activeQuestions.length) * 100);
+    const hasMissed = score < activeQuestions.length;
+
     return (
-      <div className={`p-3 h-full flex flex-col justify-between transition-all ${
-        isRetro ? 'rounded-none border-2' : 'rounded-lg'
-      } ${isRetroAnim ? 'retro-border-pulse' : ''} ${theme.card} ${theme.cardBorder} ${borderColor} ${
-        faded ? 'opacity-40' : ''
-      }`}>
-        <div className="min-w-0">
-          <div className="flex justify-between items-start gap-2 mb-1">
-            <h4 className={`font-bold text-sm leading-tight break-words ${theme.textMain} ${isRetroAnim && !faded ? 'retro-glow' : ''}`}>
-              {data.subject}
-            </h4>
-            <Badge type={data.type} faded={faded} />
+      <div className={isDarkMode ? 'dark' : ''}>
+        <div className="min-h-screen bg-gray-100 dark:bg-gray-900 p-4 md:p-8 font-sans text-gray-800 dark:text-gray-100 transition-colors">
+          <div className="max-w-4xl mx-auto bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden transition-colors">
+            <div className="bg-blue-600 dark:bg-blue-800 p-8 text-center text-white relative">
+              <button 
+                onClick={() => setIsDarkMode(!isDarkMode)}
+                className="absolute top-4 right-4 p-2 rounded-full hover:bg-white/20 transition-colors"
+                title="Toggle Dark Mode"
+              >
+                {isDarkMode ? <Sun className="w-6 h-6" /> : <Moon className="w-6 h-6" />}
+              </button>
+              <Award className="w-16 h-16 mx-auto mb-4" />
+              <h1 className="text-3xl font-bold mb-2">Exam Results</h1>
+              <p className="text-xl">You scored {score} out of {activeQuestions.length} ({percentage}%)</p>
+              {percentage >= 80 ? (
+                <p className="mt-2 text-green-300 font-semibold">Excellent! You are ready for the exam! 🚀</p>
+              ) : (
+                <p className="mt-2 text-yellow-300 font-semibold">Good effort! Review the missed questions below to perfect your knowledge.</p>
+              )}
+            </div>
+            
+            <div className="p-8 space-y-8 h-[60vh] overflow-y-auto">
+              {activeQuestions.map((q, idx) => {
+                const isCorrect = checkAnswer(q.id);
+                return (
+                  <div key={q.id} className={`p-6 rounded-lg border-l-4 ${isCorrect ? 'bg-green-50 dark:bg-green-900/20 border-green-500' : 'bg-red-50 dark:bg-red-900/20 border-red-500'}`}>
+                    <div className="flex items-start gap-3">
+                      <div className="mt-1">
+                        {isCorrect ? <CheckCircle2 className="text-green-600 dark:text-green-400" /> : <XCircle className="text-red-600 dark:text-red-400" />}
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="font-semibold text-lg mb-2 dark:text-white">Q{idx + 1}: {q.text}</h3>
+                        
+                        <div className="mb-3 space-y-1 text-sm">
+                          <p>
+                            <span className="font-medium text-gray-600 dark:text-gray-400">Your Answer: </span>
+                            <span className={isCorrect ? 'text-green-700 dark:text-green-400' : 'text-red-700 dark:text-red-400 font-medium'}>
+                              {q.type === 'multiple' 
+                                ? (userAnswers[q.id]?.join(', ') || 'None') 
+                                : (userAnswers[q.id] || 'None')}
+                            </span>
+                          </p>
+                          {!isCorrect && (
+                            <p>
+                              <span className="font-medium text-gray-600 dark:text-gray-400">Correct Answer: </span>
+                              <span className="text-green-700 dark:text-green-400 font-medium">
+                                {q.type === 'multiple' ? q.correctAnswer.join(', ') : q.correctAnswer}
+                              </span>
+                            </p>
+                          )}
+                        </div>
+                        
+                        <div className="mt-3 text-sm bg-white dark:bg-gray-800 p-3 rounded border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300">
+                          <span className="font-bold text-blue-800 dark:text-blue-400">Explanation:</span> {q.explanation}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            <div className="p-6 bg-gray-50 dark:bg-gray-800/80 border-t dark:border-gray-700 flex flex-wrap justify-center gap-4">
+              <button 
+                onClick={restartQuiz}
+                className="flex items-center gap-2 px-6 py-3 bg-blue-600 dark:bg-blue-700 text-white font-semibold rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors shadow-sm"
+              >
+                <RotateCcw className="w-5 h-5" /> Retake All
+              </button>
+              {hasMissed && (
+                <button 
+                  onClick={retakeMissed}
+                  className="flex items-center gap-2 px-6 py-3 bg-amber-500 dark:bg-amber-600 text-white font-semibold rounded-lg hover:bg-amber-600 dark:hover:bg-amber-500 transition-colors shadow-sm"
+                >
+                  <RefreshCw className="w-5 h-5" /> Retake Missed Only
+                </button>
+              )}
+            </div>
           </div>
-          <div className={`text-xs mt-2 space-y-1 ${theme.textSec}`}>
-            <div className="flex items-start gap-1 min-w-0">
-              <User size={12} className="shrink-0 mt-0.5" />
-              <span className="break-words">{data.prof}</span>
+        </div>
+      </div>
+    );
+  }
+
+  const isCurrentCorrect = isChecked && checkAnswer(question?.id);
+
+  if (!question) return null;
+
+  return (
+    <div className={isDarkMode ? 'dark' : ''}>
+      <div className="min-h-screen bg-gray-100 dark:bg-gray-900 flex items-center justify-center p-4 font-sans text-gray-800 dark:text-gray-100 transition-colors">
+        <div className="max-w-3xl w-full bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden flex flex-col min-h-[500px] transition-colors">
+          {/* Header & Progress */}
+          <div className="bg-blue-600 dark:bg-blue-800 text-white p-6 relative">
+            <button 
+              onClick={() => setIsDarkMode(!isDarkMode)}
+              className="absolute top-6 right-6 p-2 rounded-full hover:bg-white/20 transition-colors"
+              title="Toggle Dark Mode"
+            >
+              {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+            </button>
+            <div className="flex justify-between items-center mb-4 pr-12">
+              <h2 className="text-xl font-bold">Linux Essentials Exam Prep</h2>
+              <span className="font-medium bg-blue-700 dark:bg-blue-900 px-3 py-1 rounded-full text-sm">
+                Question {currentQuestionIndex + 1} of {activeQuestions.length}
+              </span>
             </div>
-            <div className={`flex items-center gap-1 font-semibold ${theme.textMain}`}>
-              <MapPin size={12} className="shrink-0" />
-              <span>Sala: {data.room}</span>
+            <div className="w-full bg-blue-800 dark:bg-blue-900 rounded-full h-2">
+              <div 
+                className="bg-green-400 h-2 rounded-full transition-all duration-300" 
+                style={{ width: `${((currentQuestionIndex) / activeQuestions.length) * 100}%` }}
+              ></div>
             </div>
-            {data.parity !== 'all' && (
-              <div className="italic opacity-80">
-                (Săptămână {data.parity === 'odd' ? 'Impară' : 'Pară'})
-              </div>
+          </div>
+
+          {/* Question Area */}
+          <div className="p-8 flex-1 flex flex-col">
+            <h3 className="text-2xl font-semibold mb-6 leading-snug dark:text-white">
+              {question.text}
+            </h3>
+
+            <div className="space-y-3 flex-1">
+              {question.type === 'single' && question.options.map((option, idx) => (
+                <label 
+                  key={idx} 
+                  className={`flex items-center p-4 border rounded-xl transition-all ${
+                    isChecked ? 'cursor-default' : 'cursor-pointer'
+                  } ${getOptionStyles(option)}`}
+                >
+                  <input 
+                    type="radio" 
+                    name={`q-${question.id}`} 
+                    value={option}
+                    checked={userAnswers[question.id] === option}
+                    onChange={() => handleSingleSelect(option)}
+                    disabled={isChecked}
+                    className="w-5 h-5 text-blue-600 dark:text-blue-500 border-gray-300 dark:border-gray-600 focus:ring-blue-500 disabled:opacity-50 dark:bg-gray-700"
+                  />
+                  <span className="ml-3 text-lg">{option}</span>
+                </label>
+              ))}
+
+              {question.type === 'multiple' && (
+                <>
+                  <p className="text-sm text-blue-600 dark:text-blue-400 font-medium mb-3">Select all that apply:</p>
+                  {question.options.map((option, idx) => {
+                    const isOptionChecked = (userAnswers[question.id] || []).includes(option);
+                    return (
+                      <label 
+                        key={idx} 
+                        className={`flex items-center p-4 border rounded-xl transition-all ${
+                          isChecked ? 'cursor-default' : 'cursor-pointer'
+                        } ${getOptionStyles(option)}`}
+                      >
+                        <input 
+                          type="checkbox" 
+                          checked={isOptionChecked}
+                          onChange={() => handleMultiSelect(option)}
+                          disabled={isChecked}
+                          className="w-5 h-5 text-blue-600 dark:text-blue-500 rounded border-gray-300 dark:border-gray-600 focus:ring-blue-500 disabled:opacity-50 dark:bg-gray-700"
+                        />
+                        <span className="ml-3 text-lg">{option}</span>
+                      </label>
+                    );
+                  })}
+                </>
+              )}
+
+              {question.type === 'text' && (
+                <div className="mt-4">
+                  <input 
+                    type="text"
+                    value={userAnswers[question.id] || ''}
+                    onChange={handleTextChange}
+                    disabled={isChecked}
+                    placeholder="Type your answer here..."
+                    className={`w-full p-4 border rounded-xl text-lg outline-none transition-all ${
+                      isChecked 
+                        ? isCurrentCorrect 
+                          ? 'bg-green-50 dark:bg-green-900/20 border-green-500 text-green-900 dark:text-green-300'
+                          : 'bg-red-50 dark:bg-red-900/20 border-red-500 text-red-900 dark:text-red-300'
+                        : 'border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 dark:text-white'
+                    }`}
+                  />
+                </div>
+              )}
+              
+              {/* Immediate Feedback Container */}
+              {isChecked && (
+                <div className={`mt-6 p-5 rounded-xl border-l-4 shadow-sm ${
+                  isCurrentCorrect ? 'bg-green-50 dark:bg-green-900/20 border-green-500' : 'bg-red-50 dark:bg-red-900/20 border-red-500'
+                }`}>
+                  <div className="flex items-start gap-4">
+                    {isCurrentCorrect ? (
+                      <CheckCircle2 className="w-8 h-8 text-green-600 dark:text-green-400 flex-shrink-0" />
+                    ) : (
+                      <XCircle className="w-8 h-8 text-red-600 dark:text-red-400 flex-shrink-0" />
+                    )}
+                    <div>
+                      <h4 className={`text-lg font-bold ${isCurrentCorrect ? 'text-green-800 dark:text-green-300' : 'text-red-800 dark:text-red-300'}`}>
+                        {isCurrentCorrect ? 'Correct!' : 'Incorrect'}
+                      </h4>
+                      
+                      {!isCurrentCorrect && question.type !== 'single' && (
+                        <p className="mt-2 text-red-900 dark:text-red-200 font-medium bg-white/60 dark:bg-black/20 inline-block px-3 py-1 rounded">
+                          Correct Answer:{' '}
+                          {Array.isArray(question.correctAnswer) 
+                            ? question.correctAnswer.join(', ') 
+                            : question.correctAnswer}
+                        </p>
+                      )}
+                      
+                      <p className="mt-3 text-gray-700 dark:text-gray-300 leading-relaxed">
+                        <span className="font-bold text-gray-900 dark:text-white block mb-1">Explanation:</span> 
+                        {question.explanation}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Footer Navigation */}
+          <div className="p-6 bg-gray-50 dark:bg-gray-800/80 border-t dark:border-gray-700 flex justify-between items-center">
+            <button 
+              onClick={prevQuestion}
+              disabled={currentQuestionIndex === 0}
+              className={`flex items-center gap-2 px-5 py-2.5 rounded-lg font-medium transition-colors ${
+                currentQuestionIndex === 0 
+                ? 'text-gray-400 dark:text-gray-600 cursor-not-allowed' 
+                : 'text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+              }`}
+            >
+              <ArrowLeft className="w-5 h-5" /> Previous
+            </button>
+            
+            {!isChecked ? (
+              <button 
+                onClick={handleCheckQuestion}
+                disabled={!isCurrentQuestionAnswered()}
+                className={`flex items-center gap-2 px-6 py-2.5 rounded-lg font-semibold transition-all shadow-sm ${
+                  isCurrentQuestionAnswered() 
+                  ? 'bg-amber-500 text-white hover:bg-amber-600 dark:bg-amber-600 dark:hover:bg-amber-500' 
+                  : 'bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-500 cursor-not-allowed'
+                }`}
+              >
+                Check Answer
+              </button>
+            ) : (
+              <button 
+                onClick={nextQuestion}
+                className="flex items-center gap-2 px-6 py-2.5 bg-blue-600 dark:bg-blue-700 text-white rounded-lg font-medium hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors shadow-sm"
+              >
+                {currentQuestionIndex === activeQuestions.length - 1 ? 'Finish Quiz' : 'Next'} <ArrowRight className="w-5 h-5" />
+              </button>
             )}
           </div>
         </div>
       </div>
-    );
-  };
-
-  if (isLoadingApi) {
-    return (
-      <div className={`h-screen w-full flex flex-col items-center justify-center transition-colors duration-300 ${theme.bg} ${theme.font} ${isRetroAnim ? 'retro-screen retro-screen-glow retro-noise retro-scanline' : ''}`}>
-         <div className="flex flex-col items-center gap-6 animate-pulse">
-            <div className={`p-4 rounded-full ${isRetro ? 'bg-green-900 border-2 border-green-500' : 'bg-blue-50'} ${isRetroAnim ? 'retro-border-pulse' : ''}`}>
-               <Globe size={48} className={`animate-bounce ${isRetro ? 'text-green-500' : 'text-blue-600'}`} />
-            </div>
-            <div className="text-center space-y-2">
-               <h2 className={`text-xl font-bold ${theme.textMain} ${isRetroAnim ? 'retro-glow retro-cursor' : ''}`}>
-                 {isRetro ? '>>> LOADING SYSTEM...' : 'Se sincronizează orarul...'}
-               </h2>
-               <p className={`text-sm ${theme.textSec} ${isRetroAnim ? 'retro-glow' : ''}`}>
-                 {isRetro ? '>>> SYNC TIME_API' : 'Verificăm săptămâna...'}
-               </p>
-            </div>
-         </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className={`min-h-screen pb-10 transition-colors duration-300 overflow-x-hidden ${theme.bg} ${theme.font} ${isRetroAnim ? 'retro-screen retro-screen-glow retro-noise retro-scanline' : ''}`}>
-      <style>{`
-        html, body {
-          overflow-x: hidden;
-          max-width: 100vw;
-        }
-        * {
-          box-sizing: border-box;
-        }
-        
-        /* === VISTA AERO STYLES === */
-        .aero-glass {
-          background: linear-gradient(135deg, 
-            rgba(255, 255, 255, 0.9) 0%,
-            rgba(240, 248, 255, 0.85) 50%,
-            rgba(230, 240, 255, 0.9) 100%
-          );
-          backdrop-filter: blur(20px);
-          -webkit-backdrop-filter: blur(20px);
-          box-shadow: 
-            0 8px 32px rgba(31, 38, 135, 0.15),
-            inset 0 1px 0 rgba(255, 255, 255, 0.8),
-            inset 0 -1px 0 rgba(0, 0, 0, 0.1);
-        }
-        
-        .aero-card {
-          background: linear-gradient(135deg,
-            rgba(255, 255, 255, 0.95) 0%,
-            rgba(245, 250, 255, 0.9) 100%
-          );
-          backdrop-filter: blur(10px);
-          -webkit-backdrop-filter: blur(10px);
-          box-shadow: 
-            0 8px 32px rgba(31, 38, 135, 0.2),
-            inset 0 1px 0 rgba(255, 255, 255, 0.9);
-          border-radius: 8px;
-        }
-        
-        .aero-header {
-          background: linear-gradient(180deg,
-            #4c9bdb 0%,
-            #3d7db3 50%,
-            #2b5d8f 100%
-          );
-          box-shadow: 
-            inset 0 1px 0 rgba(255, 255, 255, 0.4),
-            0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-        
-        .aero-subheader {
-          background: linear-gradient(180deg,
-            rgba(200, 225, 245, 0.9) 0%,
-            rgba(180, 210, 235, 0.85) 100%
-          );
-          backdrop-filter: blur(5px);
-        }
-        
-        .aero-cell {
-          background: linear-gradient(135deg,
-            rgba(255, 255, 255, 0.6) 0%,
-            rgba(250, 252, 255, 0.5) 100%
-          );
-          backdrop-filter: blur(5px);
-        }
-        
-        .aero-badge-blue {
-          background: linear-gradient(180deg,
-            #5eadeb 0%,
-            #3d8ed3 50%,
-            #2b6da8 100%
-          );
-          box-shadow: 
-            inset 0 1px 0 rgba(255, 255, 255, 0.5),
-            0 2px 4px rgba(0, 0, 0, 0.3);
-          border-radius: 4px;
-        }
-        
-        .aero-badge-green {
-          background: linear-gradient(180deg,
-            #7ed957 0%,
-            #5db33a 50%,
-            #4a9130 100%
-          );
-          box-shadow: 
-            inset 0 1px 0 rgba(255, 255, 255, 0.5),
-            0 2px 4px rgba(0, 0, 0, 0.3);
-          border-radius: 4px;
-        }
-        
-        .aero-tab-active {
-          background: linear-gradient(180deg,
-            #6bb8f0 0%,
-            #4c9bdb 50%,
-            #3d7db3 100%
-          );
-          box-shadow: 
-            inset 0 1px 0 rgba(255, 255, 255, 0.6),
-            0 4px 12px rgba(59, 130, 246, 0.4);
-          border-radius: 6px;
-        }
-        
-        .aero-tab-inactive {
-          background: linear-gradient(135deg,
-            rgba(255, 255, 255, 0.7) 0%,
-            rgba(240, 245, 250, 0.6) 100%
-          );
-          backdrop-filter: blur(5px);
-          border-radius: 6px;
-          border: 1px solid rgba(59, 130, 246, 0.2);
-        }
-        
-        .aero-button {
-          background: linear-gradient(180deg,
-            rgba(255, 255, 255, 0.9) 0%,
-            rgba(230, 240, 250, 0.8) 100%
-          );
-          backdrop-filter: blur(5px);
-          box-shadow: 
-            inset 0 1px 0 rgba(255, 255, 255, 0.8),
-            0 2px 4px rgba(0, 0, 0, 0.1);
-          border: 1px solid rgba(59, 130, 246, 0.3);
-          border-radius: 50%;
-        }
-        
-        .aero-button:hover {
-          background: linear-gradient(180deg,
-            rgba(240, 248, 255, 0.95) 0%,
-            rgba(220, 235, 250, 0.9) 100%
-          );
-        }
-        
-        .aero-dropdown {
-          background: linear-gradient(135deg,
-            rgba(255, 255, 255, 0.95) 0%,
-            rgba(245, 250, 255, 0.9) 100%
-          );
-          backdrop-filter: blur(20px);
-          -webkit-backdrop-filter: blur(20px);
-          border-radius: 8px;
-          box-shadow: 
-            0 12px 48px rgba(31, 38, 135, 0.25),
-            inset 0 1px 0 rgba(255, 255, 255, 0.9);
-        }
-        
-        .aero-dropdown-active {
-          background: linear-gradient(90deg,
-            #5eadeb 0%,
-            #4c9bdb 100%
-          );
-          border-radius: 4px;
-        }
-        
-        .aero-section-header {
-          background: linear-gradient(135deg,
-            rgba(220, 235, 250, 0.6) 0%,
-            rgba(200, 225, 245, 0.5) 100%
-          );
-          backdrop-filter: blur(5px);
-        }
-        
-        .aero-highlight {
-          background: linear-gradient(135deg,
-            rgba(190, 220, 250, 0.4) 0%,
-            rgba(170, 210, 245, 0.3) 100%
-          );
-          backdrop-filter: blur(5px);
-          border: 1px solid rgba(59, 130, 246, 0.3);
-          border-radius: 8px;
-        }
-        
-        .aero-info-odd {
-          background: linear-gradient(135deg,
-            rgba(219, 234, 254, 0.8) 0%,
-            rgba(191, 219, 254, 0.7) 100%
-          );
-          backdrop-filter: blur(8px);
-          border-radius: 8px;
-        }
-        
-        .aero-info-even {
-          background: linear-gradient(135deg,
-            rgba(254, 243, 199, 0.8) 0%,
-            rgba(253, 230, 138, 0.7) 100%
-          );
-          backdrop-filter: blur(8px);
-          border-radius: 8px;
-        }
-        
-        /* === STARDEW VALLEY STYLES === */
-        .stardew-bg {
-          background-image: url('https://images3.alphacoders.com/126/thumb-1920-1269904.png');
-          background-size: cover;
-          background-position: center;
-          background-attachment: fixed;
-          background-repeat: no-repeat;
-        }
-        
-        .stardew-header {
-          background: linear-gradient(180deg, rgba(244, 164, 96, 0.9) 0%, rgba(210, 105, 30, 0.9) 50%, rgba(139, 69, 19, 0.95) 100%);
-          box-shadow: 0 4px 0 #5d2e0f, inset 0 -2px 0 #ffd699;
-          backdrop-filter: blur(4px);
-        }
-        
-        .stardew-card {
-          background: linear-gradient(135deg, rgba(255, 248, 220, 0.7) 0%, rgba(255, 250, 205, 0.9) 100%);
-          border-radius: 8px;
-          box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.5);
-          image-rendering: pixelated;
-        }
-        
-        .stardew-badge-blue {
-          background: linear-gradient(180deg, #6495ed 0%, #4169e1 100%);
-          box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.5), 3px 3px 0 rgba(0, 0, 0, 0.3);
-          border-radius: 4px;
-          border: 2px solid #1e3a8a;
-        }
-        
-        .stardew-badge-green {
-          background: linear-gradient(180deg, #90ee90 0%, #228b22 100%);
-          box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.5), 3px 3px 0 rgba(0, 0, 0, 0.3);
-          border-radius: 4px;
-          border: 2px solid #065f06;
-        }
-        
-        .stardew-grid-header {
-          background: linear-gradient(180deg, #8b4513 0%, #654321 100%);
-          box-shadow: inset 0 2px 0 #d2691e, 0 3px 0 rgba(0, 0, 0, 0.3);
-        }
-        
-        .stardew-grid-subheader {
-          background: linear-gradient(180deg, #daa520 0%, #b8860b 100%);
-          box-shadow: inset 0 2px 0 #ffd700;
-        }
-        
-        .stardew-cell {
-          background: linear-gradient(135deg, rgba(255, 250, 205, 0.9) 0%, rgba(255, 248, 220, 0.85) 100%);
-          border: 2px solid #deb887;
-        }
-        
-        .stardew-highlight {
-          background: linear-gradient(135deg, #fffacd 0%, #ffeb99 100%);
-          border-radius: 8px;
-          box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
-        }
-        
-        .stardew-tab-active {
-          background: linear-gradient(180deg, #8b4513 0%, #654321 100%);
-          box-shadow: inset 0 2px 0 #d2691e, 3px 3px 0 rgba(0, 0, 0, 0.4);
-          border-radius: 6px;
-        }
-        
-        .stardew-tab-inactive {
-          background: linear-gradient(180deg, #f0e68c 0%, #daa520 100%);
-          border-radius: 6px;
-        }
-        
-        .stardew-button {
-          background: linear-gradient(180deg, #ffd700 0%, #daa520 100%);
-          box-shadow: inset 0 2px 0 #ffe97f, 3px 3px 0 rgba(0, 0, 0, 0.3);
-          border-radius: 50%;
-        }
-        
-        .stardew-dropdown {
-          background: linear-gradient(135deg, #fff8dc 0%, #fffacd 100%);
-          border-radius: 8px;
-          box-shadow: 4px 4px 8px rgba(139, 69, 19, 0.4);
-        }
-        
-        .stardew-dropdown-active {
-          background: linear-gradient(90deg, #8b4513 0%, #654321 100%);
-          border-radius: 4px;
-          box-shadow: inset 0 1px 0 #d2691e;
-        }
-        
-        .stardew-section-header {
-          background: linear-gradient(180deg, #90ee90 0%, #66cc66 100%);
-          box-shadow: inset 0 2px 0 #b0f0b0, 0 2px 0 rgba(0, 0, 0, 0.2);
-        }
-        
-        .stardew-info-blue {
-          background: linear-gradient(135deg, #87ceeb 0%, #4682b4 100%);
-          box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.3);
-          border-radius: 8px;
-        }
-        
-        .stardew-info-orange {
-          background: linear-gradient(135deg, #ffa500 0%, #ff8c00 100%);
-          box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.3);
-          border-radius: 8px;
-        }
-        
-        /* === GOTHIC DARK STYLES === */
-        .gothic-bg {
-          background: radial-gradient(ellipse at top, #1a0f2e 0%, #0d0618 50%, #000000 100%);
-        }
-        
-        .gothic-header {
-          background: linear-gradient(180deg, 
-            rgba(88, 28, 135, 0.4) 0%,
-            rgba(49, 20, 80, 0.6) 50%,
-            rgba(24, 10, 40, 0.8) 100%
-          );
-          backdrop-filter: blur(10px);
-          box-shadow: 
-            0 0 20px rgba(168, 85, 247, 0.2),
-            inset 0 1px 0 rgba(168, 85, 247, 0.2);
-        }
-        
-        .gothic-card {
-          background: linear-gradient(135deg,
-            rgba(24, 10, 40, 0.8) 0%,
-            rgba(49, 20, 80, 0.6) 100%
-          );
-          backdrop-filter: blur(10px);
-          border-radius: 12px;
-          box-shadow: 
-            0 8px 32px rgba(0, 0, 0, 0.6),
-            0 0 20px rgba(168, 85, 247, 0.1),
-            inset 0 1px 0 rgba(168, 85, 247, 0.1);
-        }
-        
-        .gothic-badge-purple {
-          background: linear-gradient(180deg, #a855f7 0%, #7c3aed 100%);
-          box-shadow: 
-            0 0 10px rgba(168, 85, 247, 0.5),
-            inset 0 1px 0 rgba(255, 255, 255, 0.2);
-          border-radius: 6px;
-          border: 1px solid #9333ea;
-        }
-        
-        .gothic-badge-red {
-          background: linear-gradient(180deg, #dc2626 0%, #991b1b 100%);
-          box-shadow: 
-            0 0 10px rgba(220, 38, 38, 0.5),
-            inset 0 1px 0 rgba(255, 255, 255, 0.2);
-          border-radius: 6px;
-          border: 1px solid #7f1d1d;
-        }
-        
-        .gothic-grid-header {
-          background: linear-gradient(180deg,
-            rgba(88, 28, 135, 0.8) 0%,
-            rgba(49, 20, 80, 0.9) 100%
-          );
-          box-shadow: 
-            0 0 15px rgba(168, 85, 247, 0.3),
-            inset 0 1px 0 rgba(168, 85, 247, 0.3);
-        }
-        
-        .gothic-grid-subheader {
-          background: linear-gradient(180deg,
-            rgba(49, 20, 80, 0.6) 0%,
-            rgba(24, 10, 40, 0.8) 100%
-          );
-          backdrop-filter: blur(5px);
-        }
-        
-        .gothic-cell {
-          background: linear-gradient(135deg,
-            rgba(24, 10, 40, 0.4) 0%,
-            rgba(49, 20, 80, 0.3) 100%
-          );
-          backdrop-filter: blur(3px);
-          border: 1px solid rgba(168, 85, 247, 0.1);
-        }
-        
-        .gothic-highlight {
-          background: linear-gradient(135deg,
-            rgba(88, 28, 135, 0.3) 0%,
-            rgba(49, 20, 80, 0.4) 100%
-          );
-          backdrop-filter: blur(5px);
-          border-radius: 12px;
-          box-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
-        }
-        
-        .gothic-tab-active {
-          background: linear-gradient(180deg, #a855f7 0%, #7c3aed 100%);
-          box-shadow: 
-            0 0 15px rgba(168, 85, 247, 0.6),
-            inset 0 1px 0 rgba(255, 255, 255, 0.2);
-          border-radius: 8px;
-          border: 1px solid #9333ea;
-        }
-        
-        .gothic-tab-inactive {
-          background: linear-gradient(135deg,
-            rgba(49, 20, 80, 0.5) 0%,
-            rgba(24, 10, 40, 0.7) 100%
-          );
-          backdrop-filter: blur(5px);
-          border-radius: 8px;
-          border: 1px solid rgba(168, 85, 247, 0.2);
-        }
-        
-        .gothic-button {
-          background: linear-gradient(180deg,
-            rgba(88, 28, 135, 0.6) 0%,
-            rgba(49, 20, 80, 0.8) 100%
-          );
-          backdrop-filter: blur(5px);
-          box-shadow: 
-            0 0 10px rgba(168, 85, 247, 0.3),
-            inset 0 1px 0 rgba(168, 85, 247, 0.2);
-          border: 1px solid rgba(168, 85, 247, 0.3);
-          border-radius: 50%;
-        }
-        
-        .gothic-button:hover {
-          background: linear-gradient(180deg,
-            rgba(88, 28, 135, 0.8) 0%,
-            rgba(49, 20, 80, 1) 100%
-          );
-          box-shadow: 0 0 20px rgba(168, 85, 247, 0.5);
-        }
-        
-        .gothic-dropdown {
-          background: linear-gradient(135deg,
-            rgba(24, 10, 40, 0.95) 0%,
-            rgba(49, 20, 80, 0.9) 100%
-          );
-          backdrop-filter: blur(20px);
-          border-radius: 12px;
-          box-shadow: 
-            0 12px 48px rgba(0, 0, 0, 0.8),
-            0 0 30px rgba(168, 85, 247, 0.2),
-            inset 0 1px 0 rgba(168, 85, 247, 0.2);
-        }
-        
-        .gothic-dropdown-active {
-          background: linear-gradient(90deg, #a855f7 0%, #7c3aed 100%);
-          border-radius: 6px;
-          box-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
-        }
-        
-        .gothic-section-header {
-          background: linear-gradient(135deg,
-            rgba(49, 20, 80, 0.5) 0%,
-            rgba(24, 10, 40, 0.7) 100%
-          );
-          backdrop-filter: blur(5px);
-          box-shadow: 0 0 10px rgba(168, 85, 247, 0.1);
-        }
-        
-        .gothic-info-purple {
-          background: linear-gradient(135deg,
-            rgba(88, 28, 135, 0.5) 0%,
-            rgba(49, 20, 80, 0.7) 100%
-          );
-          backdrop-filter: blur(8px);
-          border-radius: 12px;
-          box-shadow: 0 0 15px rgba(168, 85, 247, 0.3);
-        }
-        
-        .gothic-info-red {
-          background: linear-gradient(135deg,
-            rgba(127, 29, 29, 0.5) 0%,
-            rgba(69, 10, 10, 0.7) 100%
-          );
-          backdrop-filter: blur(8px);
-          border-radius: 12px;
-          box-shadow: 0 0 15px rgba(220, 38, 38, 0.3);
-        }
-        /* === STARDEW PIXEL FONT === */
-        @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
-        
-        .font-pixel {
-          font-family: 'VT323', monospace;
-          font-size: 1.15rem;
-          letter-spacing: 0.05em;
-        }
-
-        .stardew-bg .text-xl, .stardew-bg .text-2xl {
-          font-size: 1.5rem;
-          line-height: 1;
-        }
-      `}</style>
-      {isRetro && (
-        <style>{`
-          @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
-          .font-mono { font-family: 'VT323', monospace; font-size: 1.1em; }
-        `}</style>
-      )}
-      {isRetroAnim && (
-        <style>{`
-          @keyframes scanline {
-            0% { transform: translateY(-100%); }
-            100% { transform: translateY(100vh); }
-          }
-          
-          .retro-scanline::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 20px;
-            background: linear-gradient(to bottom, transparent 0%, rgba(0, 255, 0, 0.1) 50%, transparent 100%);
-            pointer-events: none;
-            z-index: 9999;
-            animation: scanline 8s linear infinite;
-          }
-          
-          .retro-screen {
-            animation: flicker 0.15s infinite;
-          }
-          
-          @keyframes flicker {
-            0% { opacity: 0.97; }
-            50% { opacity: 1; }
-            100% { opacity: 0.97; }
-          }
-          
-          .retro-glow {
-            text-shadow: 
-              0 0 5px rgba(0, 255, 0, 0.8),
-              0 0 10px rgba(0, 255, 0, 0.6),
-              0 0 20px rgba(0, 255, 0, 0.4);
-          }
-          
-          @keyframes blink {
-            0%, 49% { opacity: 1; }
-            50%, 100% { opacity: 0; }
-          }
-          
-          .retro-cursor::after {
-            content: '█';
-            animation: blink 1s infinite;
-            margin-left: 2px;
-          }
-          
-          @keyframes typing {
-            from { width: 0; }
-            to { width: 100%; }
-          }
-          
-          .retro-typing {
-            overflow: hidden;
-            white-space: nowrap;
-            animation: typing 2s steps(30) 1;
-          }
-          
-          .retro-screen-glow {
-            box-shadow: 
-              inset 0 0 100px rgba(0, 255, 0, 0.1),
-              0 0 50px rgba(0, 255, 0, 0.2);
-          }
-          
-          @keyframes border-pulse {
-            0%, 100% { border-color: #00ff00; }
-            50% { border-color: #00aa00; }
-          }
-          
-          .retro-border-pulse {
-            animation: border-pulse 2s infinite;
-          }
-          
-          @keyframes noise {
-            0%, 100% { background-position: 0 0; }
-            10% { background-position: -5% -10%; }
-            20% { background-position: -15% 5%; }
-            30% { background-position: 7% -25%; }
-            40% { background-position: 20% 25%; }
-            50% { background-position: -25% 10%; }
-            60% { background-position: 15% 5%; }
-            70% { background-position: 0 15%; }
-            80% { background-position: 25% 35%; }
-            90% { background-position: -10% 10%; }
-          }
-          
-          .retro-noise::after {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E");
-            pointer-events: none;
-            z-index: 9998;
-            animation: noise 0.2s infinite;
-          }
-        `}</style>
-      )}
-
-      <header className={`sticky top-0 z-50 shadow-sm transition-colors duration-300 ${theme.header}`}>
-        <div className="w-full max-w-7xl mx-auto px-4 md:px-6 py-4 flex flex-col items-center md:flex-row md:justify-between gap-4">
-          <div className="text-center md:text-left w-full md:w-auto">
-            <h1 className={`text-xl md:text-2xl font-black tracking-tight break-words ${theme.accentText} ${isRetroAnim ? 'retro-glow retro-cursor' : ''}`}>
-              INFO ENG GRUPA 1030
-            </h1>
-            <div className={`text-sm flex flex-wrap items-center justify-center md:justify-start gap-2 mt-1 ${theme.headerDateText}`}>
-              
-              <div className="flex items-center gap-1" title={isApiConnected ? "Sincronizat cu WorldTimeAPI" : "Offline / System Time"}>
-                {isLoadingApi ? (
-                  <span className="animate-pulse">●</span> 
-                ) : isApiConnected ? (
-                  <Globe size={14} className="text-green-500" />
-                ) : (
-                  <WifiOff size={14} className="text-red-500" />
-                )}
-              </div>
-
-              <Clock size={14} />
-              {now.toLocaleDateString('ro-RO', { weekday: 'long', day: 'numeric', month: 'long' })} 
-              <span className={`font-mono px-2 rounded ${isRetro ? 'bg-green-900 text-green-100' : 'bg-gray-100 text-gray-800'}`}>
-                {now.toLocaleTimeString('ro-RO', { hour: '2-digit', minute: '2-digit' })}
-              </span>
-            </div>
-          </div>
-          
-          <div className="flex flex-wrap items-center gap-3">
-            <div className={`px-4 py-2 text-sm shadow-sm flex items-center gap-2 whitespace-nowrap rounded-lg font-bold ${
-              isOddWeek ? theme.weekInfoOdd : theme.weekInfoEven
-            }`}>
-              <Info size={16} />
-              <span>Săpt. {isOddWeek ? 'IMPARĂ' : 'PARĂ'}</span>
-            </div>
-
-            <div className="relative z-[100]">
-              <button 
-                onClick={() => setShowThemeMenu(!showThemeMenu)}
-                className={`p-2 rounded-full transition-colors ${theme.buttonSecondary}`}
-              >
-                <Settings size={20} />
-              </button>
-
-              {showThemeMenu && (
-                <div className={`absolute right-0 top-full mt-2 w-48 rounded-lg shadow-xl z-[100] overflow-hidden border ${theme.dropdownBg}`}>
-                  
-                  <div className="p-2">
-                    <div className={`text-xs uppercase font-bold px-2 mb-2 ${theme.dropdownLabel}`}>
-                      Temă
-                    </div>
-                    <div className="space-y-1">
-                      {Object.entries(THEMES).map(([key, config]) => {
-                        const Icon = config.icon;
-                        return (
-                          <button
-                            key={key}
-                            onClick={() => changeTheme(key)}
-                            className={`w-full text-left px-3 py-2 flex items-center gap-2 rounded text-sm transition-colors ${
-                              themeMode === key 
-                                ? theme.dropdownItemActive
-                                : theme.dropdownItemInactive
-                            }`}
-                          >
-                            <Icon size={14} />
-                            {config.name}
-                          </button>
-                        )
-                      })}
-                    </div>
-                  </div>
-
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      </header>
-
-      <main className="w-full max-w-7xl mx-auto px-4 md:px-6 py-6 space-y-8 overflow-x-hidden">
-
-        <section className="grid md:grid-cols-2 gap-4">
-          <div className={`overflow-hidden transition-all ${isRetro ? 'border-2 border-green-600' : 'rounded-xl shadow-sm border border-gray-200'} ${isRetroAnim ? 'retro-border-pulse' : ''} ${theme.card}`}>
-            <div className={`px-4 py-2 flex justify-between items-center border-b ${theme.sectionHeaderBg}`}>
-              <h3 className={`font-bold text-sm uppercase flex items-center gap-2 ${theme.accentText} ${isRetroAnim ? 'retro-glow' : ''}`}>
-                <div className={`w-2 h-2 rounded-full animate-pulse ${isRetro ? 'bg-green-500' : 'bg-green-500'}`}></div>
-                Ora Curentă
-              </h3>
-              <span className={`text-xs font-mono ${theme.textSec} ${isRetroAnim ? 'retro-glow' : ''}`}>LIVE</span>
-            </div>
-            <div className="p-4 min-h-[120px] flex items-center justify-center">
-              {currentClass ? (
-                <div className="w-full">
-                   <ClassCard data={currentClass} />
-                </div>
-              ) : (
-                <div className={`text-center italic ${theme.textSec}`}>
-                  <p className="text-sm">Nicio oră curentă</p>
-                </div>
-              )}
-            </div>
-          </div>
-
-          <div className={`overflow-hidden transition-all ${isRetro ? 'border-2 border-green-800 border-dashed' : 'rounded-xl shadow-sm border border-gray-200'} ${isRetroAnim ? 'retro-border-pulse' : ''} ${theme.card}`}>
-             <div className={`px-4 py-2 border-b ${theme.sectionHeaderBg}`}>
-              <h3 className={`font-bold text-sm uppercase flex items-center gap-2 ${theme.textMain} ${isRetroAnim ? 'retro-glow' : ''}`}>
-                <ChevronRight size={16} />
-                Ora Următoare
-              </h3>
-            </div>
-            <div className="p-4 min-h-[120px] flex items-center justify-center">
-               {nextClass ? (
-                <div className="w-full">
-                   <ClassCard data={nextClass} />
-                </div>
-              ) : (
-                <div className={`text-center italic ${theme.textSec}`}>
-                  <p className="text-sm">Nu mai sunt ore azi</p>
-                </div>
-              )}
-            </div>
-          </div>
-        </section>
-
-        <section className={`overflow-hidden transition-all ${isRetro ? 'border-2 border-green-700' : 'rounded-xl shadow-lg border border-gray-200'} ${isRetroAnim ? 'retro-border-pulse' : ''} ${theme.card}`}>
-          <div className={`p-4 flex justify-between items-center ${isRetro ? 'border-b border-green-700' : `border-b ${theme.sectionHeaderBg}`}`}>
-            <h2 className={`font-bold flex items-center gap-2 ${theme.textMain} ${isRetroAnim ? 'retro-glow' : ''}`}>
-              <Calendar size={18} /> Orar
-            </h2>
-          </div>
-
-          <div className="hidden md:block overflow-x-auto">
-            <div className={`min-w-[700px] grid grid-cols-[80px_repeat(5,_1fr)] ${theme.gridLine} ${isRetro ? '' : 'border-b ' + theme.border}`}>
-              <div className={`p-3 font-bold text-sm flex items-center justify-center ${theme.gridHeader}`}>Ora</div>
-              {DAYS.map(day => (
-                <div key={day} className={`p-3 font-bold text-sm text-center ${
-                  normalizeStr(day) === normalizeStr(getDayName(now.getDay())) 
-                    ? (isRetro ? 'bg-green-900 text-green-100' : 'bg-blue-800 text-white ring-inset ring-2 ring-yellow-400')
-                    : theme.gridHeader
-                }`}>
-                  {day}
-                </div>
-              ))}
-            </div>
-
-            <div className={`min-w-[700px] divide-y ${theme.gridLine}`}>
-              {TIME_SLOTS.map((time) => (
-                <div key={time} className={`grid grid-cols-[80px_repeat(5,_1fr)] divide-x ${theme.gridLine} group`}>
-                  <div className={`p-3 text-xs font-bold flex items-center justify-center ${theme.gridSubHeader}`}>
-                    {time}
-                  </div>
-
-                  {DAYS.map(day => {
-                    const slotClasses = SCHEDULE_DATA.filter(c => c.day === day && c.time === time);
-                    return (
-                      <div key={`${day}-${time}`} className={`p-1 min-h-[100px] relative ${theme.gridCell}`}>
-                        {slotClasses.length > 0 && (
-                          <div className="flex flex-col gap-1 h-full">
-                            {slotClasses.map((cls, idx) => {
-                                const isActiveWeek = cls.parity === 'all' || 
-                                                    (isOddWeek && cls.parity === 'odd') || 
-                                                    (!isOddWeek && cls.parity === 'even');
-                                return (
-                                  <ClassCard 
-                                    key={idx} 
-                                    data={cls} 
-                                    faded={!isActiveWeek} 
-                                  />
-                                );
-                            })}
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="block md:hidden">
-            <div className={`flex flex-wrap justify-center p-2 gap-2 border-b ${theme.border}`}>
-              {DAYS.map(day => (
-                <button
-                  key={day}
-                  onClick={() => setMobileSelectedDay(day)}
-                  className={`px-3 py-2 rounded-lg text-sm font-bold whitespace-nowrap transition-colors ${
-                    mobileSelectedDay === day
-                      ? theme.activeTab
-                      : theme.inactiveTab
-                  }`}
-                >
-                  {day}
-                </button>
-              ))}
-            </div>
-
-            <div className="p-2 space-y-4">
-               {TIME_SLOTS.map(time => {
-                 const slotClasses = SCHEDULE_DATA.filter(c => c.day === mobileSelectedDay && c.time === time);
-                 if (slotClasses.length === 0) return null; 
-                 return (
-                   <div key={time} className="flex gap-3 items-center">
-                     <div className={`w-14 shrink-0 flex flex-col items-center justify-center rounded p-1 ${theme.gridSubHeader} ${isRetroAnim ? 'retro-border-pulse border-2' : ''}`}>
-                        <span className={`text-sm font-bold ${isRetroAnim ? 'retro-glow' : ''}`}>{time}</span>
-                     </div>
-                     <div className="flex-1 space-y-2">
-                        {slotClasses.map((cls, idx) => {
-                            const isActiveWeek = cls.parity === 'all' || 
-                                                (isOddWeek && cls.parity === 'odd') || 
-                                                (!isOddWeek && cls.parity === 'even');
-                            return (
-                              <ClassCard 
-                                key={idx} 
-                                data={cls} 
-                                faded={!isActiveWeek} 
-                              />
-                            );
-                        })}
-                     </div>
-                   </div>
-                 )
-               })}
-               
-               {TIME_SLOTS.every(time => SCHEDULE_DATA.filter(c => c.day === mobileSelectedDay && c.time === time).length === 0) && (
-                 <div className={`text-center py-8 opacity-60 ${theme.textSec}`}>
-                   <p>Nu sunt ore programate în această zi.</p>
-                 </div>
-               )}
-            </div>
-          </div>
-
-        </section>
-
-        <footer className={`text-center text-xs py-4 ${theme.textSec} ${isRetroAnim ? 'retro-glow' : ''}`}>
-          {isRetro ? (
-            <>
-              <p className="font-mono">{'>'} LAST_UPDATE: {now.toLocaleTimeString()}</p>
-              <p className="mt-1 font-mono">
-                {'>'} THEME_MODE: <span className="uppercase font-bold text-green-400">[{themeMode}]</span>
-              </p>
-              <p className="mt-1 font-mono">{'>'} SYSTEM_STATUS: <span className="text-green-400 animate-pulse">ONLINE</span></p>
-            </>
-          ) : (
-            <>
-              <p>Ultima actualizare: {now.toLocaleTimeString()}</p>
-              <p className="mt-1">
-                Tema: <span className="uppercase font-bold">{themeMode}</span>
-              </p>
-            </>
-          )}
-        </footer>
-
-      </main>
     </div>
   );
 }
