@@ -694,7 +694,7 @@ export default function App() {
 
   const handleLogin = (e) => {
     e.preventDefault();
-    if (passwordInput === 'linux') {
+    if (passwordInput === 'krfxK6') {
       setIsAuthenticated(true);
       setLoginError(false);
     } else {
