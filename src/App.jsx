@@ -572,7 +572,7 @@ export default function App() {
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   const question = activeQuestions[currentQuestionIndex];
-  const isChecked = checkedQuestions.includes(question?.id);
+  const isChecked = question ? checkedQuestions.includes(question.id) : false;
 
   const handleSingleSelect = (option) => {
     if (isChecked) return;
@@ -596,8 +596,11 @@ export default function App() {
     setUserAnswers({ ...userAnswers, [question.id]: e.target.value });
   };
 
+  // FIX: Changed quizData to activeQuestions to prevent the ReferenceError crash!
   const checkAnswer = (qId) => {
-    const q = quizData.find(x => x.id === qId);
+    const q = activeQuestions.find(x => x.id === qId);
+    if (!q) return false;
+    
     const uAns = userAnswers[qId];
     
     if (q.type === 'single') {
@@ -612,7 +615,7 @@ export default function App() {
   };
 
   const handleCheckQuestion = () => {
-    if (!checkedQuestions.includes(question.id)) {
+    if (question && !checkedQuestions.includes(question.id)) {
       setCheckedQuestions([...checkedQuestions, question.id]);
     }
   };
@@ -667,6 +670,7 @@ export default function App() {
     return currentAns.toString().trim() !== '';
   };
 
+  // FIX: Added explicit text colors to prevent white-on-white text issues
   const getOptionStyles = (option) => {
     const isSelected = question.type === 'multiple' 
       ? (userAnswers[question.id] || []).includes(option)
@@ -674,8 +678,8 @@ export default function App() {
     
     if (!isChecked) {
       return isSelected 
-        ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/40 dark:border-blue-400 shadow-sm' 
-        : 'border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50';
+        ? 'border-blue-500 bg-blue-50 text-blue-900 dark:bg-blue-900/40 dark:border-blue-400 dark:text-blue-100 shadow-sm' 
+        : 'border-gray-200 bg-white text-gray-800 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700/50';
     }
 
     const isCorrectOption = question.type === 'multiple'
@@ -683,18 +687,18 @@ export default function App() {
       : question.correctAnswer === option;
 
     if (isCorrectOption) {
-      return 'border-green-500 bg-green-50 dark:bg-green-900/40 text-green-800 dark:text-green-300 font-medium';
+      return 'border-green-500 bg-green-50 text-green-800 dark:bg-green-900/40 dark:text-green-300 font-medium';
     }
     if (isSelected && !isCorrectOption) {
-      return 'border-red-500 bg-red-50 dark:bg-red-900/40 text-red-800 dark:text-red-300 font-medium line-through decoration-red-400 opacity-80';
+      return 'border-red-500 bg-red-50 text-red-800 dark:bg-red-900/40 dark:text-red-300 font-medium line-through decoration-red-400 opacity-80';
     }
     
-    return 'border-gray-200 dark:border-gray-700 opacity-50 bg-gray-50 dark:bg-gray-800';
+    return 'border-gray-200 bg-gray-50 text-gray-500 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-500 opacity-50';
   };
 
   const handleLogin = (e) => {
     e.preventDefault();
-    if (passwordInput === 'krfxK6') {
+    if (passwordInput === 'linux') {
       setIsAuthenticated(true);
       setLoginError(false);
     } else {
@@ -721,49 +725,52 @@ export default function App() {
     setShowResults(false);
   };
 
-  if (!isAuthenticated) {
-    return (
-      <div className={`min-h-screen flex items-center justify-center p-4 transition-colors ${isDarkMode ? 'dark bg-gray-900' : 'bg-gray-100'}`}>
-        <div className="max-w-md w-full bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden p-8 text-center">
-          <div className="flex justify-end mb-4">
-            <button onClick={() => setIsDarkMode(!isDarkMode)} className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300 transition-colors">
-              {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-            </button>
-          </div>
-          <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900/50 rounded-full flex items-center justify-center mx-auto mb-6">
-            <Lock className="w-8 h-8 text-blue-600 dark:text-blue-400" />
-          </div>
-          <h1 className="text-2xl font-bold text-gray-800 dark:text-white mb-2">Private Access</h1>
-          <p className="text-gray-600 dark:text-gray-400 mb-8">Please enter the password to access the quizzes.</p>
-          
-          <form onSubmit={handleLogin} className="space-y-4">
-            <div>
-              <input
-                type="password"
-                value={passwordInput}
-                onChange={(e) => setPasswordInput(e.target.value)}
-                placeholder="Enter password..."
-                className={`w-full p-4 border rounded-xl text-lg outline-none transition-all ${
-                  loginError 
-                    ? 'border-red-500 bg-red-50 dark:bg-red-900/20 text-red-900 dark:text-red-200' 
-                    : 'border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 dark:text-white'
-                }`}
-              />
-              {loginError && <p className="text-red-500 text-sm mt-2 text-left">Incorrect password. Please try again.</p>}
-            </div>
-            <button type="submit" className="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition-colors text-lg">
-              Unlock
-            </button>
-          </form>
-        </div>
-      </div>
-    );
-  }
+  const isCurrentCorrect = isChecked && checkAnswer(question?.id);
 
-  if (!selectedQuizId) {
-    return (
-      <div className={`min-h-screen p-4 md:p-8 transition-colors ${isDarkMode ? 'dark bg-gray-900' : 'bg-gray-100'}`}>
-        <div className="max-w-4xl mx-auto">
+  // Consolidated render function to ensure global theme applies cleanly
+  const renderContent = () => {
+    if (!isAuthenticated) {
+      return (
+        <div className="flex items-center justify-center min-h-screen p-4">
+          <div className="max-w-md w-full bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden p-8 text-center transition-colors">
+            <div className="flex justify-end mb-4">
+              <button onClick={() => setIsDarkMode(!isDarkMode)} className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300 transition-colors">
+                {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+              </button>
+            </div>
+            <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900/50 rounded-full flex items-center justify-center mx-auto mb-6">
+              <Lock className="w-8 h-8 text-blue-600 dark:text-blue-400" />
+            </div>
+            <h1 className="text-2xl font-bold text-gray-800 dark:text-white mb-2">Private Access</h1>
+            <p className="text-gray-600 dark:text-gray-400 mb-8">Please enter the password to access the quizzes.</p>
+            
+            <form onSubmit={handleLogin} className="space-y-4">
+              <div>
+                <input
+                  type="password"
+                  value={passwordInput}
+                  onChange={(e) => setPasswordInput(e.target.value)}
+                  placeholder="Enter password..."
+                  className={`w-full p-4 border rounded-xl text-lg outline-none transition-all text-gray-900 dark:text-white ${
+                    loginError 
+                      ? 'border-red-500 bg-red-50 dark:bg-red-900/20' 
+                      : 'border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700'
+                  }`}
+                />
+                {loginError && <p className="text-red-500 text-sm mt-2 text-left">Incorrect password. Please try again.</p>}
+              </div>
+              <button type="submit" className="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition-colors text-lg">
+                Unlock
+              </button>
+            </form>
+          </div>
+        </div>
+      );
+    }
+
+    if (!selectedQuizId) {
+      return (
+        <div className="p-4 md:p-8 max-w-4xl mx-auto min-h-screen">
           <div className="flex justify-between items-center mb-12 mt-8">
             <div>
               <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">Your Quizzes</h1>
@@ -788,7 +795,7 @@ export default function App() {
               </div>
               <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-2">QUIZ 1</h2>
               <p className="text-gray-600 dark:text-gray-400 mb-4">Linux Essentials & OS Fundamentals</p>
-              <span className="inline-block px-3 py-1 bg-gray-100 dark:bg-gray-700 text-sm font-medium text-gray-600 dark:text-gray-300 rounded-full">
+              <span className="inline-block px-3 py-1 bg-gray-100 dark:bg-gray-700 text-sm font-medium text-gray-800 dark:text-gray-200 rounded-full">
                 {quiz1Data.length} Questions
               </span>
             </button>
@@ -806,45 +813,35 @@ export default function App() {
               </div>
               <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-2">QUIZ 2</h2>
               <p className="text-gray-600 dark:text-gray-400 mb-4">Coming Soon...</p>
-              <span className="inline-block px-3 py-1 bg-gray-100 dark:bg-gray-700 text-sm font-medium text-gray-600 dark:text-gray-300 rounded-full">
+              <span className="inline-block px-3 py-1 bg-gray-100 dark:bg-gray-700 text-sm font-medium text-gray-800 dark:text-gray-200 rounded-full">
                 {quiz2Data.length} Questions
               </span>
             </button>
           </div>
         </div>
-      </div>
-    );
-  }
+      );
+    }
 
-  if (showResults) {
-    const score = calculateScore();
-    const percentage = Math.round((score / activeQuestions.length) * 100);
-    const hasMissed = score < activeQuestions.length;
+    if (showResults) {
+      const score = calculateScore();
+      const percentage = Math.round((score / activeQuestions.length) * 100);
+      const hasMissed = score < activeQuestions.length;
 
-    return (
-      <div className={isDarkMode ? 'dark' : ''}>
-        <div className="min-h-screen bg-gray-100 dark:bg-gray-900 p-4 md:p-8 font-sans text-gray-800 dark:text-gray-100 transition-colors">
-          <div className="max-w-4xl mx-auto bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden transition-colors">
+      return (
+        <div className="p-4 md:p-8 max-w-4xl mx-auto min-h-screen">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden transition-colors">
             <div className="bg-blue-600 dark:bg-blue-800 p-8 text-center text-white relative">
               <div className="absolute top-4 right-4 flex gap-2">
-                <button 
-                  onClick={exitQuiz}
-                  className="p-2 rounded-full hover:bg-white/20 transition-colors"
-                  title="Back to Quizzes"
-                >
+                <button onClick={exitQuiz} className="p-2 rounded-full hover:bg-white/20 transition-colors" title="Back to Quizzes">
                   <Home className="w-6 h-6" />
                 </button>
-                <button 
-                  onClick={() => setIsDarkMode(!isDarkMode)}
-                  className="p-2 rounded-full hover:bg-white/20 transition-colors"
-                  title="Toggle Dark Mode"
-                >
+                <button onClick={() => setIsDarkMode(!isDarkMode)} className="p-2 rounded-full hover:bg-white/20 transition-colors" title="Toggle Dark Mode">
                   {isDarkMode ? <Sun className="w-6 h-6" /> : <Moon className="w-6 h-6" />}
                 </button>
               </div>
               <Award className="w-16 h-16 mx-auto mb-4" />
-              <h1 className="text-3xl font-bold mb-2">Exam Results</h1>
-              <p className="text-xl">You scored {score} out of {activeQuestions.length} ({percentage}%)</p>
+              <h1 className="text-3xl font-bold mb-2 text-white">Exam Results</h1>
+              <p className="text-xl text-white">You scored {score} out of {activeQuestions.length} ({percentage}%)</p>
               {percentage >= 80 ? (
                 <p className="mt-2 text-green-300 font-semibold">Excellent! You are ready for the exam! 🚀</p>
               ) : (
@@ -862,12 +859,12 @@ export default function App() {
                         {isCorrect ? <CheckCircle2 className="text-green-600 dark:text-green-400" /> : <XCircle className="text-red-600 dark:text-red-400" />}
                       </div>
                       <div className="flex-1">
-                        <h3 className="font-semibold text-lg mb-2 dark:text-white">Q{idx + 1}: {q.text}</h3>
+                        <h3 className="font-semibold text-lg mb-2 text-gray-900 dark:text-white">Q{idx + 1}: {q.text}</h3>
                         
                         <div className="mb-3 space-y-1 text-sm">
                           <p>
                             <span className="font-medium text-gray-600 dark:text-gray-400">Your Answer: </span>
-                            <span className={isCorrect ? 'text-green-700 dark:text-green-400' : 'text-red-700 dark:text-red-400 font-medium'}>
+                            <span className={isCorrect ? 'text-green-700 dark:text-green-400 font-medium' : 'text-red-700 dark:text-red-400 font-medium'}>
                               {q.type === 'multiple' 
                                 ? (userAnswers[q.id]?.join(', ') || 'None') 
                                 : (userAnswers[q.id] || 'None')}
@@ -883,7 +880,7 @@ export default function App() {
                           )}
                         </div>
                         
-                        <div className="mt-3 text-sm bg-white dark:bg-gray-800 p-3 rounded border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300">
+                        <div className="mt-3 text-sm bg-white dark:bg-gray-800 p-3 rounded border border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-200">
                           <span className="font-bold text-blue-800 dark:text-blue-400">Explanation:</span> {q.explanation}
                         </div>
                       </div>
@@ -894,83 +891,57 @@ export default function App() {
             </div>
 
             <div className="p-6 bg-gray-50 dark:bg-gray-800/80 border-t dark:border-gray-700 flex flex-wrap justify-center gap-4">
-              <button 
-                onClick={restartQuiz}
-                className="flex items-center gap-2 px-6 py-3 bg-blue-600 dark:bg-blue-700 text-white font-semibold rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors shadow-sm"
-              >
+              <button onClick={restartQuiz} className="flex items-center gap-2 px-6 py-3 bg-blue-600 dark:bg-blue-700 text-white font-semibold rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors shadow-sm">
                 <RotateCcw className="w-5 h-5" /> Retake All
               </button>
               {hasMissed && (
-                <button 
-                  onClick={retakeMissed}
-                  className="flex items-center gap-2 px-6 py-3 bg-amber-500 dark:bg-amber-600 text-white font-semibold rounded-lg hover:bg-amber-600 dark:hover:bg-amber-500 transition-colors shadow-sm"
-                >
+                <button onClick={retakeMissed} className="flex items-center gap-2 px-6 py-3 bg-amber-500 dark:bg-amber-600 text-white font-semibold rounded-lg hover:bg-amber-600 dark:hover:bg-amber-500 transition-colors shadow-sm">
                   <RefreshCw className="w-5 h-5" /> Retake Missed Only
                 </button>
               )}
             </div>
           </div>
         </div>
-      </div>
-    );
-  }
+      );
+    }
 
-  const isCurrentCorrect = isChecked && checkAnswer(question?.id);
+    if (!question) return null;
 
-  if (!question) return null;
-
-  return (
-    <div className={isDarkMode ? 'dark' : ''}>
-      <div className="min-h-screen bg-gray-100 dark:bg-gray-900 flex items-center justify-center p-4 font-sans text-gray-800 dark:text-gray-100 transition-colors">
+    return (
+      <div className="flex items-center justify-center p-4 min-h-screen">
         <div className="max-w-3xl w-full bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden flex flex-col min-h-[500px] transition-colors">
           {/* Header & Progress */}
           <div className="bg-blue-600 dark:bg-blue-800 text-white p-6 relative">
             <div className="absolute top-6 right-6 flex gap-3">
-              <button 
-                onClick={exitQuiz}
-                className="p-2 rounded-full hover:bg-white/20 transition-colors"
-                title="Back to Quizzes"
-              >
+              <button onClick={exitQuiz} className="p-2 rounded-full hover:bg-white/20 transition-colors" title="Back to Quizzes">
                 <Home className="w-5 h-5" />
               </button>
-              <button 
-                onClick={() => setIsDarkMode(!isDarkMode)}
-                className="p-2 rounded-full hover:bg-white/20 transition-colors"
-                title="Toggle Dark Mode"
-              >
+              <button onClick={() => setIsDarkMode(!isDarkMode)} className="p-2 rounded-full hover:bg-white/20 transition-colors" title="Toggle Dark Mode">
                 {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
               </button>
             </div>
             <div className="flex justify-between items-center mb-4 pr-24">
-              <h2 className="text-xl font-bold">
+              <h2 className="text-xl font-bold text-white">
                 {selectedQuizId === 'quiz1' ? 'QUIZ 1: Linux Essentials' : 'QUIZ 2'}
               </h2>
-              <span className="font-medium bg-blue-700 dark:bg-blue-900 px-3 py-1 rounded-full text-sm">
+              <span className="font-medium bg-blue-700 dark:bg-blue-900 px-3 py-1 rounded-full text-sm text-white">
                 Question {currentQuestionIndex + 1} of {activeQuestions.length}
               </span>
             </div>
             <div className="w-full bg-blue-800 dark:bg-blue-900 rounded-full h-2">
-              <div 
-                className="bg-green-400 h-2 rounded-full transition-all duration-300" 
-                style={{ width: `${((currentQuestionIndex) / activeQuestions.length) * 100}%` }}
-              ></div>
+              <div className="bg-green-400 h-2 rounded-full transition-all duration-300" style={{ width: `${((currentQuestionIndex) / activeQuestions.length) * 100}%` }}></div>
             </div>
           </div>
 
           {/* Question Area */}
           <div className="p-8 flex-1 flex flex-col">
-            <h3 className="text-2xl font-semibold mb-6 leading-snug dark:text-white">
+            <h3 className="text-2xl font-semibold mb-6 leading-snug text-gray-900 dark:text-white">
               {question.text}
             </h3>
 
             <div className="space-y-3 flex-1">
               {question.type === 'single' && question.options.map((option, idx) => (
-                <label 
-                  key={idx} 
-                  className={`flex items-center p-4 border rounded-xl transition-all ${
-                    isChecked ? 'cursor-default' : 'cursor-pointer'
-                  } ${getOptionStyles(option)}`}
-                >
+                <label key={idx} className={`flex items-center p-4 border rounded-xl transition-all ${isChecked ? 'cursor-default' : 'cursor-pointer'} ${getOptionStyles(option)}`}>
                   <input 
                     type="radio" 
                     name={`q-${question.id}`} 
@@ -990,12 +961,7 @@ export default function App() {
                   {question.options.map((option, idx) => {
                     const isOptionChecked = (userAnswers[question.id] || []).includes(option);
                     return (
-                      <label 
-                        key={idx} 
-                        className={`flex items-center p-4 border rounded-xl transition-all ${
-                          isChecked ? 'cursor-default' : 'cursor-pointer'
-                        } ${getOptionStyles(option)}`}
-                      >
+                      <label key={idx} className={`flex items-center p-4 border rounded-xl transition-all ${isChecked ? 'cursor-default' : 'cursor-pointer'} ${getOptionStyles(option)}`}>
                         <input 
                           type="checkbox" 
                           checked={isOptionChecked}
@@ -1023,7 +989,7 @@ export default function App() {
                         ? isCurrentCorrect 
                           ? 'bg-green-50 dark:bg-green-900/20 border-green-500 text-green-900 dark:text-green-300'
                           : 'bg-red-50 dark:bg-red-900/20 border-red-500 text-red-900 dark:text-red-300'
-                        : 'border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 dark:text-white'
+                        : 'border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white'
                     }`}
                   />
                 </div>
@@ -1031,9 +997,7 @@ export default function App() {
               
               {/* Immediate Feedback Container */}
               {isChecked && (
-                <div className={`mt-6 p-5 rounded-xl border-l-4 shadow-sm ${
-                  isCurrentCorrect ? 'bg-green-50 dark:bg-green-900/20 border-green-500' : 'bg-red-50 dark:bg-red-900/20 border-red-500'
-                }`}>
+                <div className={`mt-6 p-5 rounded-xl border-l-4 shadow-sm ${isCurrentCorrect ? 'bg-green-50 dark:bg-green-900/20 border-green-500' : 'bg-red-50 dark:bg-red-900/20 border-red-500'}`}>
                   <div className="flex items-start gap-4">
                     {isCurrentCorrect ? (
                       <CheckCircle2 className="w-8 h-8 text-green-600 dark:text-green-400 flex-shrink-0" />
@@ -1048,13 +1012,11 @@ export default function App() {
                       {!isCurrentCorrect && question.type !== 'single' && (
                         <p className="mt-2 text-red-900 dark:text-red-200 font-medium bg-white/60 dark:bg-black/20 inline-block px-3 py-1 rounded">
                           Correct Answer:{' '}
-                          {Array.isArray(question.correctAnswer) 
-                            ? question.correctAnswer.join(', ') 
-                            : question.correctAnswer}
+                          {Array.isArray(question.correctAnswer) ? question.correctAnswer.join(', ') : question.correctAnswer}
                         </p>
                       )}
                       
-                      <p className="mt-3 text-gray-700 dark:text-gray-300 leading-relaxed">
+                      <p className="mt-3 text-gray-800 dark:text-gray-200 leading-relaxed">
                         <span className="font-bold text-gray-900 dark:text-white block mb-1">Explanation:</span> 
                         {question.explanation}
                       </p>
@@ -1101,6 +1063,15 @@ export default function App() {
             )}
           </div>
         </div>
+      </div>
+    );
+  };
+
+  // The wrapper guarantees the "dark" class applies properly down the entire DOM tree
+  return (
+    <div className={isDarkMode ? 'dark' : ''}>
+      <div className="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-100 font-sans transition-colors duration-200">
+        {renderContent()}
       </div>
     </div>
   );
