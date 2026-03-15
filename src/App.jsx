@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { CheckCircle2, XCircle, ArrowRight, ArrowLeft, RotateCcw, Award, Moon, Sun, RefreshCw, Home, Lock, ChevronRight } from 'lucide-react';
+import React, { useState } from 'react';
+import { CheckCircle2, XCircle, ArrowRight, ArrowLeft, RotateCcw, Award, RefreshCw, Home, Lock, ChevronRight, Moon, Sun } from 'lucide-react';
 
 const quiz1Data = [
   // --- Fundamentals & OS ---
@@ -457,7 +457,6 @@ const quiz1Data = [
     correctAnswer: "0",
     explanation: "Because `grep` successfully found the record, it exits with a success status, which in Bash is 0."
   },
-  // --- NEW QUESTIONS ADDED FROM LATEST IMAGES ---
   {
     id: 40,
     text: "An ______ (Interrupt Request) is a hardware signal line used by devices to request CPU attention. The code that handles the interrupt is called an ______ (Interrupt Service Routine). The IVT stores the ______ of all ISRs.",
@@ -555,7 +554,303 @@ const quiz1Data = [
 ];
 
 const quiz2Data = [
-  // Empty for now, will add questions later
+  {
+    id: 101,
+    text: "Complete the Bash script to process all .txt files in the current directory:\n\n#!/bin/bash\n____ file in *.txt; do\n  echo \"Processing: $file\"\n  wc -l \"$file\"\n____",
+    type: "single",
+    options: [
+      "for / done",
+      "while / done",
+      "for / fi",
+      "if / fi"
+    ],
+    correctAnswer: "for / done",
+    explanation: "A `for` loop is used to iterate over a list of items, such as files matched by a glob (*.txt). The loop block is closed with the `done` keyword."
+  },
+  {
+    id: 102,
+    text: "With globstar enabled, what does `**` match in a path?",
+    type: "single",
+    options: [
+      "Same as single * (one directory level)",
+      "Files with any two-character extension",
+      "Two asterisks literally",
+      "All files and directories recursively through subdirectories"
+    ],
+    correctAnswer: "All files and directories recursively through subdirectories",
+    explanation: "When globstar is activated (using `shopt -s globstar`), the `**` pattern matches all files and zero or more directories and subdirectories recursively."
+  },
+  {
+    id: 103,
+    text: "Evaluate the following code that processes user input and deletes files. Which issue is the most serious?\n\nfiles=$(ls \"$input_dir\")\nfor f in $files; do\n  rm \"$f\"\ndone",
+    type: "single",
+    options: [
+      "Using ls for iteration is fragile; globbing or find-based iteration is preferable",
+      "Unquoted variables can cause word splitting and unintended glob expansion",
+      "A missing shebang affects portability but is not the primary safety risk",
+      "The presence/absence of -rf is not the core issue here"
+    ],
+    correctAnswer: "Using ls for iteration is fragile; globbing or find-based iteration is preferable",
+    explanation: "Parsing the output of `ls` is a major Bash anti-pattern. If any filename contains spaces or special characters, word splitting will cause `rm` to delete the wrong files, creating a massive safety risk."
+  },
+  {
+    id: 104,
+    text: "Complete the pipeline to compute word frequencies in file.txt and sort them by descending count:\n\ntr -s ' ' '\\n' < file.txt | ____ | ____ | ____",
+    type: "single",
+    options: [
+      "sort / uniq -c / sort -nr",
+      "uniq -c / sort / sort -n",
+      "sort / uniq / sort -r",
+      "uniq / sort -c / sort -nr"
+    ],
+    correctAnswer: "sort / uniq -c / sort -nr",
+    explanation: "To count frequencies: first `sort` to group identical words, then `uniq -c` to count them, and finally `sort -nr` (numeric, reverse) to order them from highest count to lowest."
+  },
+  {
+    id: 105,
+    text: "What does the `&>` redirection operator do in Bash?",
+    type: "single",
+    options: [
+      "Redirects stdout to a file (overwrite)",
+      "Redirects both stdout and stderr to a file",
+      "Reads input from a file",
+      "Redirects stdout to a file (append)"
+    ],
+    correctAnswer: "Redirects both stdout and stderr to a file",
+    explanation: "The `&>` operator is a Bash shortcut that redirects both standard output (stdout, descriptor 1) and standard error (stderr, descriptor 2) to the same location."
+  },
+  {
+    id: 106,
+    text: "With extglob enabled, which pattern matches files that do NOT end in .txt?",
+    type: "single",
+    options: [
+      "*.!txt",
+      "~(*.txt)",
+      "!(*.txt)",
+      "[!*.txt]"
+    ],
+    correctAnswer: "!(*.txt)",
+    explanation: "In Bash extended globbing (extglob), `!(pattern)` is used to match anything that does NOT match the given pattern."
+  },
+  {
+    id: 107,
+    text: "In general, for which of the following would you want to use lossless compression?",
+    type: "single",
+    options: [
+      "A log file",
+      "A movie",
+      "An mp3 audio file",
+      "A JPEG image"
+    ],
+    correctAnswer: "A log file",
+    explanation: "Lossless compression is required for text and data where every exact bit must be preserved (like a log file). Movies, MP3s, and JPEGs generally use lossy compression to save space."
+  },
+  {
+    id: 108,
+    text: "A process transitions to the 'ready' state from 'waiting' when:",
+    type: "single",
+    options: [
+      "The awaited event occurs",
+      "A higher priority process arrives",
+      "The scheduler selects it",
+      "The time quantum expires"
+    ],
+    correctAnswer: "The awaited event occurs",
+    explanation: "A process is in the 'waiting' (or blocked) state because it is waiting for some event like I/O. Once that event occurs, it transitions back to 'ready' to wait for CPU time."
+  },
+  {
+    id: 109,
+    text: "What is the primary purpose of the `xargs` command?",
+    type: "single",
+    options: [
+      "Exports variables to subprocesses",
+      "Builds and executes command lines from stdin",
+      "Parses XML arguments",
+      "Displays command arguments"
+    ],
+    correctAnswer: "Builds and executes command lines from stdin",
+    explanation: "`xargs` reads items from standard input (usually piped from another command like `find`) and builds/executes commands with those items as arguments."
+  },
+  {
+    id: 110,
+    text: "A CPU burst is:",
+    type: "single",
+    options: [
+      "The time spent waiting in ready queue",
+      "A period during which a process uses the CPU continuously",
+      "Time between creation and termination",
+      "Total execution time"
+    ],
+    correctAnswer: "A period during which a process uses the CPU continuously",
+    explanation: "Process execution consists of a cycle of CPU execution and I/O wait. The period of active, continuous CPU execution is called a CPU burst."
+  },
+  {
+    id: 111,
+    text: "Which two commands reload the `~/.bashrc` configuration in the current shell session? (Select two)",
+    type: "multiple",
+    options: [
+      "source ~/.bashrc",
+      "exec ~/.bashrc",
+      ". ~/.bashrc",
+      "bash ~/.bashrc"
+    ],
+    correctAnswer: [
+      "source ~/.bashrc",
+      ". ~/.bashrc"
+    ],
+    explanation: "Both `source ~/.bashrc` and `. ~/.bashrc` execute the file within the context of the current shell session. `bash ~/.bashrc` would run it in a new child shell."
+  },
+  {
+    id: 112,
+    text: "UNIX was created in ______ by Ken Thompson and Dennis Ritchie at ______. The Linux kernel was first released in ______ by Linus Torvalds.",
+    type: "single",
+    options: [
+      "1969 / Bell Labs / 1991",
+      "1970 / MIT / 1995",
+      "1969 / GNU / 1991",
+      "1980 / Berkeley / 1994"
+    ],
+    correctAnswer: "1969 / Bell Labs / 1991",
+    explanation: "UNIX was born at AT&T's Bell Labs in 1969. Linus Torvalds released the first version of the Linux kernel in 1991."
+  },
+  {
+    id: 113,
+    text: "Complete the commands to create an exported variable and verify it in a child process:\n\n____ MY_APP=\"running\"\nbash ____ 'echo ____'",
+    type: "single",
+    options: [
+      "export / -c / $MY_APP",
+      "set / -x / $MY_APP",
+      "declare / -e / MY_APP",
+      "env / -c / MY_APP"
+    ],
+    correctAnswer: "export / -c / $MY_APP",
+    explanation: "`export` makes the variable available to child processes. `bash -c` executes a command string in a new subshell, proving the variable was inherited."
+  },
+  {
+    id: 114,
+    text: "Which command displays lines 5-10 from a file?",
+    type: "single",
+    options: [
+      "head -n 10 file | tail -n 6",
+      "sed -n '5,10p' file (also correct but not using head/tail)",
+      "tail -n 10 file | head -n 6",
+      "cat file | lines 5-10"
+    ],
+    correctAnswer: "head -n 10 file | tail -n 6",
+    explanation: "`head -n 10` grabs the first 10 lines. Piping that into `tail -n 6` grabs the last 6 lines of that chunk (lines 5, 6, 7, 8, 9, 10), perfectly extracting the requested range."
+  },
+  {
+    id: 115,
+    text: "What command removes consecutive duplicate lines from sorted input?\n\nEnter the command name only.",
+    type: "text",
+    correctAnswer: "uniq",
+    explanation: "The `uniq` command filters out repeated lines in a file. It only detects duplicates if they are adjacent, which is why the input must be sorted first."
+  },
+  {
+    id: 116,
+    text: "In Bash filename expansion (globbing), what does the bracket expression `[^abc]` match?",
+    type: "single",
+    options: [
+      "Any character from a to c, including a and c",
+      "No character at all",
+      "Any character except a, b, or c",
+      "Only the letters a, b, and c"
+    ],
+    correctAnswer: "Any character except a, b, or c",
+    explanation: "In bracket expressions, a caret `^` (or an exclamation mark `!`) at the very beginning negates the set, meaning it matches any one character that is NOT listed."
+  },
+  {
+    id: 117,
+    text: "What is the name of the scheduling algorithm that selects the process with the shortest next CPU burst? \n\n(Note: The test platform options for this question mismatched the prompt, listing consequences instead of names.)",
+    type: "single",
+    options: [
+      "The algorithm degrades into FCFS behavior (this happens when quantum is too LARGE)",
+      "Physical memory consumption increases due to frequent swapping",
+      "Context switch overhead increases significantly",
+      "Processes enter starvation and never get enough CPU time"
+    ],
+    correctAnswer: "Processes enter starvation and never get enough CPU time",
+    explanation: "Shortest Job First (SJF) selects the shortest burst. A major consequence/disadvantage of SJF is that long processes can suffer from starvation if short processes keep arriving."
+  },
+  {
+    id: 118,
+    text: "Complete the properties of SJF scheduling:\n\nSJF selects the process with the ______ CPU burst. It is provably ______ for minimising average ______. The main challenge is that burst duration must be ______ using techniques like exponential averaging.",
+    type: "single",
+    options: [
+      "shortest / optimal / waiting time / predicted",
+      "longest / suboptimal / turnaround time / measured",
+      "shortest / optimal / response time / ignored",
+      "shortest / optimal / execution time / randomized"
+    ],
+    correctAnswer: "shortest / optimal / waiting time / predicted",
+    explanation: "SJF (Shortest Job First) is mathematically optimal for minimizing waiting time, but because we can't see the future, the next CPU burst length must be predicted/estimated."
+  },
+  {
+    id: 119,
+    text: "What does the `cut` filter do?",
+    type: "single",
+    options: [
+      "Changes the case of characters in a text stream.",
+      "Filters lines based on their length.",
+      "Extracts specific columns from a delimited file.",
+      "Converts numerical data into text."
+    ],
+    correctAnswer: "Extracts specific columns from a delimited file.",
+    explanation: "`cut` is used to extract sections (like columns or fields) from each line of input, typically using a delimiter (like a comma or colon)."
+  },
+  {
+    id: 120,
+    text: "Which of the following commands will create a zipfile with the contents of your Documents directory?",
+    type: "single",
+    options: [
+      "zip -c mydocs.zip Documents",
+      "zip -f mydocs.zip Documents",
+      "zip -r mydocs.zip Documents",
+      "zip mydocs.zip Documents",
+      "zip -cf mydocs.zip Documents"
+    ],
+    correctAnswer: "zip -r mydocs.zip Documents",
+    explanation: "The `-r` (recursive) flag is required for `zip` to traverse into the Documents directory and include all of its files and subdirectories."
+  },
+  {
+    id: 121,
+    text: "To send a signal to a set of processes with the same name, you can run:",
+    type: "single",
+    options: [
+      "sigkill",
+      "allkill",
+      "grpkill",
+      "killall"
+    ],
+    correctAnswer: "killall",
+    explanation: "`killall` allows you to terminate processes by specifying their exact name (e.g., `killall firefox`) rather than their PID."
+  },
+  {
+    id: 122,
+    text: "What does exit code 0 indicate?",
+    type: "single",
+    options: [
+      "Warning",
+      "Success",
+      "Error",
+      "Interrupted"
+    ],
+    correctAnswer: "Success",
+    explanation: "In POSIX systems (like Linux), an exit code of 0 always indicates that the command executed successfully without errors."
+  },
+  {
+    id: 123,
+    text: "The command `cmd1 && cmd2` runs cmd2 only if cmd1 ______, while `cmd1 || cmd2` runs cmd2 only if cmd1 ______.",
+    type: "single",
+    options: [
+      "succeeds / fails",
+      "fails / succeeds",
+      "executes / terminates",
+      "starts / finishes"
+    ],
+    correctAnswer: "succeeds / fails",
+    explanation: "`&&` is a logical AND (cmd2 runs if cmd1 succeeds). `||` is a logical OR (cmd2 acts as a fallback and runs only if cmd1 fails)."
+  }
 ];
 
 export default function App() {
@@ -569,7 +864,6 @@ export default function App() {
   const [userAnswers, setUserAnswers] = useState({});
   const [checkedQuestions, setCheckedQuestions] = useState([]);
   const [showResults, setShowResults] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false);
 
   const question = activeQuestions[currentQuestionIndex];
   const isChecked = question ? checkedQuestions.includes(question.id) : false;
@@ -596,7 +890,6 @@ export default function App() {
     setUserAnswers({ ...userAnswers, [question.id]: e.target.value });
   };
 
-  // FIX: Changed quizData to activeQuestions to prevent the ReferenceError crash!
   const checkAnswer = (qId) => {
     const q = activeQuestions.find(x => x.id === qId);
     if (!q) return false;
@@ -670,7 +963,6 @@ export default function App() {
     return currentAns.toString().trim() !== '';
   };
 
-  // FIX: Added explicit text colors to prevent white-on-white text issues
   const getOptionStyles = (option) => {
     const isSelected = question.type === 'multiple' 
       ? (userAnswers[question.id] || []).includes(option)
@@ -678,8 +970,8 @@ export default function App() {
     
     if (!isChecked) {
       return isSelected 
-        ? 'border-blue-500 bg-blue-50 text-blue-900 dark:bg-blue-900/40 dark:border-blue-400 dark:text-blue-100 shadow-sm' 
-        : 'border-gray-200 bg-white text-gray-800 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700/50';
+        ? 'border-blue-500 shadow-sm bg-blue-50 dark:bg-blue-900/40 text-blue-900 dark:text-blue-100' 
+        : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700';
     }
 
     const isCorrectOption = question.type === 'multiple'
@@ -687,18 +979,18 @@ export default function App() {
       : question.correctAnswer === option;
 
     if (isCorrectOption) {
-      return 'border-green-500 bg-green-50 text-green-800 dark:bg-green-900/40 dark:text-green-300 font-medium';
+      return 'font-medium border-green-500 bg-green-50 dark:bg-green-900/40 text-green-800 dark:text-green-300';
     }
     if (isSelected && !isCorrectOption) {
-      return 'border-red-500 bg-red-50 text-red-800 dark:bg-red-900/40 dark:text-red-300 font-medium line-through decoration-red-400 opacity-80';
+      return 'font-medium line-through decoration-red-400 opacity-80 border-red-500 bg-red-50 dark:bg-red-900/40 text-red-800 dark:text-red-300';
     }
     
-    return 'border-gray-200 bg-gray-50 text-gray-500 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-500 opacity-50';
+    return 'opacity-50 border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-500 dark:text-gray-400';
   };
 
   const handleLogin = (e) => {
     e.preventDefault();
-    if (passwordInput === 'linux') {
+    if (passwordInput === 'krfxK6') {
       setIsAuthenticated(true);
       setLoginError(false);
     } else {
@@ -727,351 +1019,326 @@ export default function App() {
 
   const isCurrentCorrect = isChecked && checkAnswer(question?.id);
 
-  // Consolidated render function to ensure global theme applies cleanly
-  const renderContent = () => {
-    if (!isAuthenticated) {
-      return (
-        <div className="flex items-center justify-center min-h-screen p-4">
-          <div className="max-w-md w-full bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden p-8 text-center transition-colors">
-            <div className="flex justify-end mb-4">
-              <button onClick={() => setIsDarkMode(!isDarkMode)} className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300 transition-colors">
-                {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-              </button>
-            </div>
-            <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900/50 rounded-full flex items-center justify-center mx-auto mb-6">
-              <Lock className="w-8 h-8 text-blue-600 dark:text-blue-400" />
-            </div>
-            <h1 className="text-2xl font-bold text-gray-800 dark:text-white mb-2">Private Access</h1>
-            <p className="text-gray-600 dark:text-gray-400 mb-8">Please enter the password to access the quizzes.</p>
-            
-            <form onSubmit={handleLogin} className="space-y-4">
-              <div>
-                <input
-                  type="password"
-                  value={passwordInput}
-                  onChange={(e) => setPasswordInput(e.target.value)}
-                  placeholder="Enter password..."
-                  className={`w-full p-4 border rounded-xl text-lg outline-none transition-all text-gray-900 dark:text-white ${
-                    loginError 
-                      ? 'border-red-500 bg-red-50 dark:bg-red-900/20' 
-                      : 'border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700'
-                  }`}
-                />
-                {loginError && <p className="text-red-500 text-sm mt-2 text-left">Incorrect password. Please try again.</p>}
-              </div>
-              <button type="submit" className="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition-colors text-lg">
-                Unlock
-              </button>
-            </form>
+  if (!isAuthenticated) {
+    return (
+      <div className="flex items-center justify-center min-h-screen p-4 transition-colors duration-300 bg-gray-100 dark:bg-gray-900">
+        <div className="max-w-md w-full rounded-2xl shadow-xl overflow-hidden p-8 text-center bg-white dark:bg-gray-800 transition-colors duration-300">
+          <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6 bg-blue-100 dark:bg-blue-900/50">
+            <Lock className="w-8 h-8 text-blue-600 dark:text-blue-400" />
           </div>
+          <h1 className="text-2xl font-bold mb-2 text-gray-800 dark:text-white">Private Access</h1>
+          <p className="mb-8 text-gray-600 dark:text-gray-400">Please enter the password to access the quizzes.</p>
+          
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div>
+              <input
+                type="password"
+                value={passwordInput}
+                onChange={(e) => setPasswordInput(e.target.value)}
+                placeholder="Enter password..."
+                className={`w-full p-4 border rounded-xl text-lg outline-none transition-all text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 ${
+                  loginError 
+                    ? 'border-red-500 bg-red-50 dark:bg-red-900/20 text-red-900 dark:text-red-200' 
+                    : 'border-gray-300 dark:border-gray-600 focus:ring-blue-500 bg-white dark:bg-gray-700'
+                }`}
+              />
+              {loginError && <p className="text-red-500 text-sm mt-2 text-left">Incorrect password. Please try again.</p>}
+            </div>
+            <button type="submit" className="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition-colors text-lg">
+              Unlock
+            </button>
+          </form>
         </div>
-      );
-    }
+      </div>
+    );
+  }
 
-    if (!selectedQuizId) {
-      return (
-        <div className="p-4 md:p-8 max-w-4xl mx-auto min-h-screen">
+  if (!selectedQuizId) {
+    return (
+      <div className="p-4 md:p-8 min-h-screen transition-colors duration-300 bg-gray-100 dark:bg-gray-900">
+        <div className="max-w-4xl mx-auto">
           <div className="flex justify-between items-center mb-12 mt-8">
             <div>
-              <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-2">Your Quizzes</h1>
+              <h1 className="text-4xl font-bold mb-2 text-gray-900 dark:text-white">Your Quizzes</h1>
               <p className="text-lg text-gray-600 dark:text-gray-400">Select a quiz module to begin your practice.</p>
             </div>
-            <button onClick={() => setIsDarkMode(!isDarkMode)} className="p-3 rounded-full bg-white dark:bg-gray-800 shadow-sm hover:shadow-md text-gray-600 dark:text-gray-300 transition-all">
-              {isDarkMode ? <Sun className="w-6 h-6" /> : <Moon className="w-6 h-6" />}
-            </button>
           </div>
 
           <div className="grid md:grid-cols-2 gap-6">
-            {/* QUIZ 1 CARD */}
             <button 
               onClick={() => handleSelectQuiz('quiz1')}
-              className="group bg-white dark:bg-gray-800 rounded-2xl p-6 text-left shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all border border-transparent hover:border-blue-500 dark:hover:border-blue-400"
+              className="group rounded-2xl p-6 text-left shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all border border-transparent bg-white dark:bg-gray-800 hover:border-blue-500 dark:hover:border-blue-500"
             >
               <div className="flex justify-between items-start mb-4">
-                <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/50 rounded-xl flex items-center justify-center">
-                  <span className="font-bold text-blue-600 dark:text-blue-400 text-xl">1</span>
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-blue-100 dark:bg-blue-900/50">
+                  <span className="font-bold text-xl text-blue-600 dark:text-blue-400">1</span>
                 </div>
                 <ChevronRight className="w-6 h-6 text-gray-400 group-hover:text-blue-500 transition-colors" />
               </div>
-              <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-2">QUIZ 1</h2>
-              <p className="text-gray-600 dark:text-gray-400 mb-4">Linux Essentials & OS Fundamentals</p>
-              <span className="inline-block px-3 py-1 bg-gray-100 dark:bg-gray-700 text-sm font-medium text-gray-800 dark:text-gray-200 rounded-full">
+              <h2 className="text-2xl font-bold mb-2 text-gray-800 dark:text-white">QUIZ 1</h2>
+              <p className="mb-4 text-gray-600 dark:text-gray-400">Linux Essentials & OS Fundamentals</p>
+              <span className="inline-block px-3 py-1 text-sm font-medium rounded-full bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200">
                 {quiz1Data.length} Questions
               </span>
             </button>
 
-            {/* QUIZ 2 CARD */}
             <button 
               onClick={() => handleSelectQuiz('quiz2')}
-              className="group bg-white dark:bg-gray-800 rounded-2xl p-6 text-left shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all border border-transparent hover:border-amber-500 dark:hover:border-amber-400"
+              className="group rounded-2xl p-6 text-left shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all border border-transparent bg-white dark:bg-gray-800 hover:border-amber-500 dark:hover:border-amber-500"
             >
               <div className="flex justify-between items-start mb-4">
-                <div className="w-12 h-12 bg-amber-100 dark:bg-amber-900/50 rounded-xl flex items-center justify-center">
-                  <span className="font-bold text-amber-600 dark:text-amber-400 text-xl">2</span>
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-amber-100 dark:bg-amber-900/50">
+                  <span className="font-bold text-xl text-amber-600 dark:text-amber-400">2</span>
                 </div>
                 <ChevronRight className="w-6 h-6 text-gray-400 group-hover:text-amber-500 transition-colors" />
               </div>
-              <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-2">QUIZ 2</h2>
-              <p className="text-gray-600 dark:text-gray-400 mb-4">Coming Soon...</p>
-              <span className="inline-block px-3 py-1 bg-gray-100 dark:bg-gray-700 text-sm font-medium text-gray-800 dark:text-gray-200 rounded-full">
+              <h2 className="text-2xl font-bold mb-2 text-gray-800 dark:text-white">QUIZ 2</h2>
+              <p className="mb-4 text-gray-600 dark:text-gray-400">Bash Scripts, Architectures & Operations</p>
+              <span className="inline-block px-3 py-1 text-sm font-medium rounded-full bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200">
                 {quiz2Data.length} Questions
               </span>
             </button>
           </div>
         </div>
-      );
-    }
+      </div>
+    );
+  }
 
-    if (showResults) {
-      const score = calculateScore();
-      const percentage = Math.round((score / activeQuestions.length) * 100);
-      const hasMissed = score < activeQuestions.length;
-
-      return (
-        <div className="p-4 md:p-8 max-w-4xl mx-auto min-h-screen">
-          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden transition-colors">
-            <div className="bg-blue-600 dark:bg-blue-800 p-8 text-center text-white relative">
-              <div className="absolute top-4 right-4 flex gap-2">
-                <button onClick={exitQuiz} className="p-2 rounded-full hover:bg-white/20 transition-colors" title="Back to Quizzes">
-                  <Home className="w-6 h-6" />
-                </button>
-                <button onClick={() => setIsDarkMode(!isDarkMode)} className="p-2 rounded-full hover:bg-white/20 transition-colors" title="Toggle Dark Mode">
-                  {isDarkMode ? <Sun className="w-6 h-6" /> : <Moon className="w-6 h-6" />}
-                </button>
-              </div>
-              <Award className="w-16 h-16 mx-auto mb-4" />
-              <h1 className="text-3xl font-bold mb-2 text-white">Exam Results</h1>
-              <p className="text-xl text-white">You scored {score} out of {activeQuestions.length} ({percentage}%)</p>
-              {percentage >= 80 ? (
-                <p className="mt-2 text-green-300 font-semibold">Excellent! You are ready for the exam! 🚀</p>
-              ) : (
-                <p className="mt-2 text-yellow-300 font-semibold">Good effort! Review the missed questions below to perfect your knowledge.</p>
-              )}
-            </div>
-            
-            <div className="p-8 space-y-8 h-[60vh] overflow-y-auto">
-              {activeQuestions.map((q, idx) => {
-                const isCorrect = checkAnswer(q.id);
-                return (
-                  <div key={q.id} className={`p-6 rounded-lg border-l-4 ${isCorrect ? 'bg-green-50 dark:bg-green-900/20 border-green-500' : 'bg-red-50 dark:bg-red-900/20 border-red-500'}`}>
-                    <div className="flex items-start gap-3">
-                      <div className="mt-1">
-                        {isCorrect ? <CheckCircle2 className="text-green-600 dark:text-green-400" /> : <XCircle className="text-red-600 dark:text-red-400" />}
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="font-semibold text-lg mb-2 text-gray-900 dark:text-white">Q{idx + 1}: {q.text}</h3>
-                        
-                        <div className="mb-3 space-y-1 text-sm">
-                          <p>
-                            <span className="font-medium text-gray-600 dark:text-gray-400">Your Answer: </span>
-                            <span className={isCorrect ? 'text-green-700 dark:text-green-400 font-medium' : 'text-red-700 dark:text-red-400 font-medium'}>
-                              {q.type === 'multiple' 
-                                ? (userAnswers[q.id]?.join(', ') || 'None') 
-                                : (userAnswers[q.id] || 'None')}
-                            </span>
-                          </p>
-                          {!isCorrect && (
-                            <p>
-                              <span className="font-medium text-gray-600 dark:text-gray-400">Correct Answer: </span>
-                              <span className="text-green-700 dark:text-green-400 font-medium">
-                                {q.type === 'multiple' ? q.correctAnswer.join(', ') : q.correctAnswer}
-                              </span>
-                            </p>
-                          )}
-                        </div>
-                        
-                        <div className="mt-3 text-sm bg-white dark:bg-gray-800 p-3 rounded border border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-200">
-                          <span className="font-bold text-blue-800 dark:text-blue-400">Explanation:</span> {q.explanation}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            <div className="p-6 bg-gray-50 dark:bg-gray-800/80 border-t dark:border-gray-700 flex flex-wrap justify-center gap-4">
-              <button onClick={restartQuiz} className="flex items-center gap-2 px-6 py-3 bg-blue-600 dark:bg-blue-700 text-white font-semibold rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors shadow-sm">
-                <RotateCcw className="w-5 h-5" /> Retake All
-              </button>
-              {hasMissed && (
-                <button onClick={retakeMissed} className="flex items-center gap-2 px-6 py-3 bg-amber-500 dark:bg-amber-600 text-white font-semibold rounded-lg hover:bg-amber-600 dark:hover:bg-amber-500 transition-colors shadow-sm">
-                  <RefreshCw className="w-5 h-5" /> Retake Missed Only
-                </button>
-              )}
-            </div>
-          </div>
-        </div>
-      );
-    }
-
-    if (!question) return null;
+  if (showResults) {
+    const score = calculateScore();
+    const percentage = Math.round((score / activeQuestions.length) * 100);
+    const hasMissed = score < activeQuestions.length;
 
     return (
-      <div className="flex items-center justify-center p-4 min-h-screen">
-        <div className="max-w-3xl w-full bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden flex flex-col min-h-[500px] transition-colors">
-          {/* Header & Progress */}
-          <div className="bg-blue-600 dark:bg-blue-800 text-white p-6 relative">
-            <div className="absolute top-6 right-6 flex gap-3">
+      <div className="p-4 md:p-8 min-h-screen transition-colors duration-300 bg-gray-100 dark:bg-gray-900">
+        <div className="max-w-4xl mx-auto rounded-2xl shadow-xl overflow-hidden bg-white dark:bg-gray-800 transition-colors">
+          <div className="p-8 text-center text-white relative bg-blue-600 dark:bg-blue-800">
+            <div className="absolute top-4 right-4 flex gap-2">
               <button onClick={exitQuiz} className="p-2 rounded-full hover:bg-white/20 transition-colors" title="Back to Quizzes">
-                <Home className="w-5 h-5" />
-              </button>
-              <button onClick={() => setIsDarkMode(!isDarkMode)} className="p-2 rounded-full hover:bg-white/20 transition-colors" title="Toggle Dark Mode">
-                {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+                <Home className="w-6 h-6" />
               </button>
             </div>
-            <div className="flex justify-between items-center mb-4 pr-24">
-              <h2 className="text-xl font-bold text-white">
-                {selectedQuizId === 'quiz1' ? 'QUIZ 1: Linux Essentials' : 'QUIZ 2'}
-              </h2>
-              <span className="font-medium bg-blue-700 dark:bg-blue-900 px-3 py-1 rounded-full text-sm text-white">
-                Question {currentQuestionIndex + 1} of {activeQuestions.length}
-              </span>
-            </div>
-            <div className="w-full bg-blue-800 dark:bg-blue-900 rounded-full h-2">
-              <div className="bg-green-400 h-2 rounded-full transition-all duration-300" style={{ width: `${((currentQuestionIndex) / activeQuestions.length) * 100}%` }}></div>
-            </div>
+            <Award className="w-16 h-16 mx-auto mb-4 text-white" />
+            <h1 className="text-3xl font-bold mb-2 text-white">Exam Results</h1>
+            <p className="text-xl text-white">You scored {score} out of {activeQuestions.length} ({percentage}%)</p>
+            {percentage >= 80 ? (
+              <p className="mt-2 text-green-300 font-semibold">Excellent! You are ready for the exam! 🚀</p>
+            ) : (
+              <p className="mt-2 text-yellow-300 font-semibold">Good effort! Review the missed questions below to perfect your knowledge.</p>
+            )}
           </div>
-
-          {/* Question Area */}
-          <div className="p-8 flex-1 flex flex-col">
-            <h3 className="text-2xl font-semibold mb-6 leading-snug text-gray-900 dark:text-white">
-              {question.text}
-            </h3>
-
-            <div className="space-y-3 flex-1">
-              {question.type === 'single' && question.options.map((option, idx) => (
-                <label key={idx} className={`flex items-center p-4 border rounded-xl transition-all ${isChecked ? 'cursor-default' : 'cursor-pointer'} ${getOptionStyles(option)}`}>
-                  <input 
-                    type="radio" 
-                    name={`q-${question.id}`} 
-                    value={option}
-                    checked={userAnswers[question.id] === option}
-                    onChange={() => handleSingleSelect(option)}
-                    disabled={isChecked}
-                    className="w-5 h-5 text-blue-600 dark:text-blue-500 border-gray-300 dark:border-gray-600 focus:ring-blue-500 disabled:opacity-50 dark:bg-gray-700"
-                  />
-                  <span className="ml-3 text-lg">{option}</span>
-                </label>
-              ))}
-
-              {question.type === 'multiple' && (
-                <>
-                  <p className="text-sm text-blue-600 dark:text-blue-400 font-medium mb-3">Select all that apply:</p>
-                  {question.options.map((option, idx) => {
-                    const isOptionChecked = (userAnswers[question.id] || []).includes(option);
-                    return (
-                      <label key={idx} className={`flex items-center p-4 border rounded-xl transition-all ${isChecked ? 'cursor-default' : 'cursor-pointer'} ${getOptionStyles(option)}`}>
-                        <input 
-                          type="checkbox" 
-                          checked={isOptionChecked}
-                          onChange={() => handleMultiSelect(option)}
-                          disabled={isChecked}
-                          className="w-5 h-5 text-blue-600 dark:text-blue-500 rounded border-gray-300 dark:border-gray-600 focus:ring-blue-500 disabled:opacity-50 dark:bg-gray-700"
-                        />
-                        <span className="ml-3 text-lg">{option}</span>
-                      </label>
-                    );
-                  })}
-                </>
-              )}
-
-              {question.type === 'text' && (
-                <div className="mt-4">
-                  <input 
-                    type="text"
-                    value={userAnswers[question.id] || ''}
-                    onChange={handleTextChange}
-                    disabled={isChecked}
-                    placeholder="Type your answer here..."
-                    className={`w-full p-4 border rounded-xl text-lg outline-none transition-all ${
-                      isChecked 
-                        ? isCurrentCorrect 
-                          ? 'bg-green-50 dark:bg-green-900/20 border-green-500 text-green-900 dark:text-green-300'
-                          : 'bg-red-50 dark:bg-red-900/20 border-red-500 text-red-900 dark:text-red-300'
-                        : 'border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white'
-                    }`}
-                  />
-                </div>
-              )}
-              
-              {/* Immediate Feedback Container */}
-              {isChecked && (
-                <div className={`mt-6 p-5 rounded-xl border-l-4 shadow-sm ${isCurrentCorrect ? 'bg-green-50 dark:bg-green-900/20 border-green-500' : 'bg-red-50 dark:bg-red-900/20 border-red-500'}`}>
-                  <div className="flex items-start gap-4">
-                    {isCurrentCorrect ? (
-                      <CheckCircle2 className="w-8 h-8 text-green-600 dark:text-green-400 flex-shrink-0" />
-                    ) : (
-                      <XCircle className="w-8 h-8 text-red-600 dark:text-red-400 flex-shrink-0" />
-                    )}
-                    <div>
-                      <h4 className={`text-lg font-bold ${isCurrentCorrect ? 'text-green-800 dark:text-green-300' : 'text-red-800 dark:text-red-300'}`}>
-                        {isCurrentCorrect ? 'Correct!' : 'Incorrect'}
-                      </h4>
+          
+          <div className="p-8 space-y-8 h-[60vh] overflow-y-auto">
+            {activeQuestions.map((q, idx) => {
+              const isCorrect = checkAnswer(q.id);
+              return (
+                <div key={q.id} className={`p-6 rounded-lg border-l-4 ${isCorrect ? 'bg-green-50 dark:bg-green-900/20 border-green-500' : 'bg-red-50 dark:bg-red-900/20 border-red-500'}`}>
+                  <div className="flex items-start gap-3">
+                    <div className="mt-1">
+                      {isCorrect ? <CheckCircle2 className="text-green-600 dark:text-green-400" /> : <XCircle className="text-red-600 dark:text-red-400" />}
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-lg mb-2 text-gray-900 dark:text-white whitespace-pre-wrap">Q{idx + 1}: {q.text}</h3>
                       
-                      {!isCurrentCorrect && question.type !== 'single' && (
-                        <p className="mt-2 text-red-900 dark:text-red-200 font-medium bg-white/60 dark:bg-black/20 inline-block px-3 py-1 rounded">
-                          Correct Answer:{' '}
-                          {Array.isArray(question.correctAnswer) ? question.correctAnswer.join(', ') : question.correctAnswer}
+                      <div className="mb-3 space-y-1 text-sm">
+                        <p>
+                          <span className="font-medium text-gray-600 dark:text-gray-400">Your Answer: </span>
+                          <span className={`font-medium ${isCorrect ? 'text-green-700 dark:text-green-400' : 'text-red-700 dark:text-red-400'}`}>
+                            {q.type === 'multiple' 
+                              ? (userAnswers[q.id]?.join(', ') || 'None') 
+                              : (userAnswers[q.id] || 'None')}
+                          </span>
                         </p>
-                      )}
+                        {!isCorrect && (
+                          <p>
+                            <span className="font-medium text-gray-600 dark:text-gray-400">Correct Answer: </span>
+                            <span className="font-medium text-green-700 dark:text-green-400">
+                              {q.type === 'multiple' ? q.correctAnswer.join(', ') : q.correctAnswer}
+                            </span>
+                          </p>
+                        )}
+                      </div>
                       
-                      <p className="mt-3 text-gray-800 dark:text-gray-200 leading-relaxed">
-                        <span className="font-bold text-gray-900 dark:text-white block mb-1">Explanation:</span> 
-                        {question.explanation}
-                      </p>
+                      <div className="mt-3 text-sm p-3 rounded border bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-300">
+                        <span className="font-bold text-blue-800 dark:text-blue-400">Explanation:</span> {q.explanation}
+                      </div>
                     </div>
                   </div>
                 </div>
-              )}
-            </div>
+              );
+            })}
           </div>
 
-          {/* Footer Navigation */}
-          <div className="p-6 bg-gray-50 dark:bg-gray-800/80 border-t dark:border-gray-700 flex justify-between items-center">
-            <button 
-              onClick={prevQuestion}
-              disabled={currentQuestionIndex === 0}
-              className={`flex items-center gap-2 px-5 py-2.5 rounded-lg font-medium transition-colors ${
-                currentQuestionIndex === 0 
-                ? 'text-gray-400 dark:text-gray-600 cursor-not-allowed' 
-                : 'text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
-              }`}
-            >
-              <ArrowLeft className="w-5 h-5" /> Previous
+          <div className="p-6 border-t flex flex-wrap justify-center gap-4 bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700">
+            <button onClick={restartQuiz} className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors shadow-sm">
+              <RotateCcw className="w-5 h-5" /> Retake All
             </button>
-            
-            {!isChecked ? (
-              <button 
-                onClick={handleCheckQuestion}
-                disabled={!isCurrentQuestionAnswered()}
-                className={`flex items-center gap-2 px-6 py-2.5 rounded-lg font-semibold transition-all shadow-sm ${
-                  isCurrentQuestionAnswered() 
-                  ? 'bg-amber-500 text-white hover:bg-amber-600 dark:bg-amber-600 dark:hover:bg-amber-500' 
-                  : 'bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-500 cursor-not-allowed'
-                }`}
-              >
-                Check Answer
-              </button>
-            ) : (
-              <button 
-                onClick={nextQuestion}
-                className="flex items-center gap-2 px-6 py-2.5 bg-blue-600 dark:bg-blue-700 text-white rounded-lg font-medium hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors shadow-sm"
-              >
-                {currentQuestionIndex === activeQuestions.length - 1 ? 'Finish Quiz' : 'Next'} <ArrowRight className="w-5 h-5" />
+            {hasMissed && (
+              <button onClick={retakeMissed} className="flex items-center gap-2 px-6 py-3 bg-amber-500 text-white font-semibold rounded-lg hover:bg-amber-600 transition-colors shadow-sm">
+                <RefreshCw className="w-5 h-5" /> Retake Missed Only
               </button>
             )}
           </div>
         </div>
       </div>
     );
-  };
+  }
 
-  // The wrapper guarantees the "dark" class applies properly down the entire DOM tree
+  if (!question) return null;
+
   return (
-    <div className={isDarkMode ? 'dark' : ''}>
-      <div className="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-100 font-sans transition-colors duration-200">
-        {renderContent()}
+    <div className="flex items-center justify-center p-4 min-h-screen transition-colors duration-300 bg-gray-100 dark:bg-gray-900">
+      <div className="max-w-3xl w-full rounded-2xl shadow-xl overflow-hidden flex flex-col min-h-[500px] bg-white dark:bg-gray-800 transition-colors">
+        {/* Header & Progress */}
+        <div className="text-white p-6 relative bg-blue-600 dark:bg-blue-800">
+          <div className="absolute top-6 right-6 flex gap-3">
+            <button onClick={exitQuiz} className="p-2 rounded-full hover:bg-white/20 transition-colors" title="Back to Quizzes">
+              <Home className="w-5 h-5" />
+            </button>
+          </div>
+          <div className="flex justify-between items-center mb-4 pr-16">
+            <h2 className="text-xl font-bold text-white">
+              {selectedQuizId === 'quiz1' ? 'QUIZ 1: Linux Essentials' : 'QUIZ 2'}
+            </h2>
+            <span className="font-medium px-3 py-1 rounded-full text-sm text-white bg-blue-700 dark:bg-blue-900">
+              Question {currentQuestionIndex + 1} of {activeQuestions.length}
+            </span>
+          </div>
+          <div className="w-full rounded-full h-2 bg-blue-800 dark:bg-blue-900">
+            <div className="bg-green-400 h-2 rounded-full transition-all duration-300" style={{ width: `${((currentQuestionIndex) / activeQuestions.length) * 100}%` }}></div>
+          </div>
+        </div>
+
+        {/* Question Area */}
+        <div className="p-8 flex-1 flex flex-col">
+          {/* Note: Added whitespace-pre-wrap to make code snippets render newlines properly */}
+          <h3 className="text-2xl font-semibold mb-6 leading-snug text-gray-900 dark:text-white whitespace-pre-wrap">
+            {question.text}
+          </h3>
+
+          <div className="space-y-3 flex-1">
+            {question.type === 'single' && question.options.map((option, idx) => (
+              <label key={idx} className={`flex items-center p-4 border rounded-xl transition-all ${isChecked ? 'cursor-default' : 'cursor-pointer'} ${getOptionStyles(option)}`}>
+                <input 
+                  type="radio" 
+                  name={`q-${question.id}`} 
+                  value={option}
+                  checked={userAnswers[question.id] === option}
+                  onChange={() => handleSingleSelect(option)}
+                  disabled={isChecked}
+                  className="w-5 h-5 rounded-full focus:ring-blue-500 disabled:opacity-50 text-blue-600 bg-white border-gray-300 dark:text-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                />
+                <span className="ml-3 text-lg">{option}</span>
+              </label>
+            ))}
+
+            {question.type === 'multiple' && (
+              <>
+                <p className="text-sm font-medium mb-3 text-blue-600 dark:text-blue-400">Select all that apply:</p>
+                {question.options.map((option, idx) => {
+                  const isOptionChecked = (userAnswers[question.id] || []).includes(option);
+                  return (
+                    <label key={idx} className={`flex items-center p-4 border rounded-xl transition-all ${isChecked ? 'cursor-default' : 'cursor-pointer'} ${getOptionStyles(option)}`}>
+                      <input 
+                        type="checkbox" 
+                        checked={isOptionChecked}
+                        onChange={() => handleMultiSelect(option)}
+                        disabled={isChecked}
+                        className="w-5 h-5 rounded focus:ring-blue-500 disabled:opacity-50 text-blue-600 bg-white border-gray-300 dark:text-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                      />
+                      <span className="ml-3 text-lg">{option}</span>
+                    </label>
+                  );
+                })}
+              </>
+            )}
+
+            {question.type === 'text' && (
+              <div className="mt-4">
+                <input 
+                  type="text"
+                  value={userAnswers[question.id] || ''}
+                  onChange={handleTextChange}
+                  disabled={isChecked}
+                  placeholder="Type your answer here..."
+                  className={`w-full p-4 border rounded-xl text-lg outline-none transition-all ${
+                    isChecked 
+                      ? isCurrentCorrect 
+                        ? 'bg-green-50 border-green-500 text-green-900 dark:bg-green-900/20 dark:text-green-300'
+                        : 'bg-red-50 border-red-500 text-red-900 dark:bg-red-900/20 dark:text-red-300'
+                      : 'border-gray-300 focus:ring-blue-500 bg-white text-gray-900 placeholder-gray-400 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-500'
+                  }`}
+                />
+              </div>
+            )}
+            
+            {/* Immediate Feedback Container */}
+            {isChecked && (
+              <div className={`mt-6 p-5 rounded-xl border-l-4 shadow-sm ${isCurrentCorrect ? 'bg-green-50 border-green-500 dark:bg-green-900/20' : 'bg-red-50 border-red-500 dark:bg-red-900/20'}`}>
+                <div className="flex items-start gap-4">
+                  {isCurrentCorrect ? (
+                    <CheckCircle2 className="w-8 h-8 flex-shrink-0 text-green-600 dark:text-green-400" />
+                  ) : (
+                    <XCircle className="w-8 h-8 flex-shrink-0 text-red-600 dark:text-red-400" />
+                  )}
+                  <div>
+                    <h4 className={`text-lg font-bold ${isCurrentCorrect ? 'text-green-800 dark:text-green-300' : 'text-red-800 dark:text-red-300'}`}>
+                      {isCurrentCorrect ? 'Correct!' : 'Incorrect'}
+                    </h4>
+                    
+                    {!isCurrentCorrect && question.type !== 'single' && (
+                      <p className="mt-2 font-medium inline-block px-3 py-1 rounded bg-white/60 text-red-900 dark:bg-black/30 dark:text-red-200">
+                        Correct Answer:{' '}
+                        {Array.isArray(question.correctAnswer) ? question.correctAnswer.join(', ') : question.correctAnswer}
+                      </p>
+                    )}
+                    
+                    <p className="mt-3 leading-relaxed text-gray-800 dark:text-gray-300">
+                      <span className="font-bold block mb-1 text-gray-900 dark:text-white">Explanation:</span> 
+                      {question.explanation}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Footer Navigation */}
+        <div className="p-6 border-t flex justify-between items-center bg-gray-50 border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+          <button 
+            onClick={prevQuestion}
+            disabled={currentQuestionIndex === 0}
+            className={`flex items-center gap-2 px-5 py-2.5 rounded-lg font-medium transition-colors ${
+              currentQuestionIndex === 0 
+              ? 'text-gray-400 cursor-not-allowed dark:text-gray-600'
+              : 'text-gray-700 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-700'
+            }`}
+          >
+            <ArrowLeft className="w-5 h-5" /> Previous
+          </button>
+          
+          {!isChecked ? (
+            <button 
+              onClick={handleCheckQuestion}
+              disabled={!isCurrentQuestionAnswered()}
+              className={`flex items-center gap-2 px-6 py-2.5 rounded-lg font-semibold transition-all shadow-sm ${
+                isCurrentQuestionAnswered() 
+                ? 'bg-amber-500 text-white hover:bg-amber-600' 
+                : 'cursor-not-allowed bg-gray-300 text-gray-500 dark:bg-gray-700 dark:text-gray-500'
+              }`}
+            >
+              Check Answer
+            </button>
+          ) : (
+            <button 
+              onClick={nextQuestion}
+              className="flex items-center gap-2 px-6 py-2.5 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors shadow-sm"
+            >
+              {currentQuestionIndex === activeQuestions.length - 1 ? 'Finish Quiz' : 'Next'} <ArrowRight className="w-5 h-5" />
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );
