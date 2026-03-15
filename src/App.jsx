@@ -1037,7 +1037,7 @@ export default function App() {
             <Lock className="w-8 h-8 text-blue-600 dark:text-blue-400" />
           </div>
           <h1 className="text-2xl font-bold mb-2 text-gray-800 dark:text-white">Private Access</h1>
-          <p className="mb-8 text-gray-600 dark:text-gray-400">Please enter the password to access the quizzes.</p>
+          <p className="mb-8 text-gray-600 dark:text-gray-400">You need a password broski</p>
           
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
