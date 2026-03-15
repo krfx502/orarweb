@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { CheckCircle2, XCircle, ArrowRight, ArrowLeft, RotateCcw, Award, RefreshCw, Home, Lock, ChevronRight, Moon, Sun } from 'lucide-react';
+import { CheckCircle2, XCircle, ArrowRight, ArrowLeft, RotateCcw, Award, RefreshCw, Home, Lock, ChevronRight } from 'lucide-react';
 
 const quiz1Data = [
   // --- Fundamentals & OS ---
@@ -865,6 +865,16 @@ export default function App() {
   const [checkedQuestions, setCheckedQuestions] = useState([]);
   const [showResults, setShowResults] = useState(false);
 
+  // Function to randomize array order (Fisher-Yates shuffle)
+  const shuffleArray = (array) => {
+    const newArray = [...array];
+    for (let i = newArray.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+    }
+    return newArray;
+  };
+
   const question = activeQuestions[currentQuestionIndex];
   const isChecked = question ? checkedQuestions.includes(question.id) : false;
 
@@ -929,7 +939,7 @@ export default function App() {
 
   const restartQuiz = () => {
     const data = selectedQuizId === 'quiz1' ? quiz1Data : quiz2Data;
-    setActiveQuestions(data);
+    setActiveQuestions(shuffleArray(data)); // Randomize on restart
     setCurrentQuestionIndex(0);
     setUserAnswers({});
     setCheckedQuestions([]);
@@ -939,7 +949,7 @@ export default function App() {
   const retakeMissed = () => {
     const missed = activeQuestions.filter(q => !checkAnswer(q.id));
     if (missed.length > 0) {
-      setActiveQuestions(missed);
+      setActiveQuestions(shuffleArray(missed)); // Randomize missed questions
       setCurrentQuestionIndex(0);
       setUserAnswers({});
       setCheckedQuestions([]);
@@ -1005,7 +1015,7 @@ export default function App() {
       return;
     }
     setSelectedQuizId(quizId);
-    setActiveQuestions(data);
+    setActiveQuestions(shuffleArray(data)); // Randomize immediately on start
     setCurrentQuestionIndex(0);
     setUserAnswers({});
     setCheckedQuestions([]);
@@ -1211,7 +1221,6 @@ export default function App() {
 
         {/* Question Area */}
         <div className="p-8 flex-1 flex flex-col">
-          {/* Note: Added whitespace-pre-wrap to make code snippets render newlines properly */}
           <h3 className="text-2xl font-semibold mb-6 leading-snug text-gray-900 dark:text-white whitespace-pre-wrap">
             {question.text}
           </h3>
