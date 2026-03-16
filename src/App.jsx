@@ -850,6 +850,145 @@ const quiz2Data = [
     ],
     correctAnswer: "succeeds / fails",
     explanation: "`&&` is a logical AND (cmd2 runs if cmd1 succeeds). `||` is a logical OR (cmd2 acts as a fallback and runs only if cmd1 fails)."
+  },
+  {
+    id: 124,
+    text: "Which of the following is not a valid way to send the force kill signal to a process?",
+    type: "single",
+    options: [
+      "kill -FORCE PID",
+      "kill -SIGKILL PID",
+      "kill -9 PID",
+      "kill -KILL PID"
+    ],
+    correctAnswer: "kill -FORCE PID",
+    explanation: "`-FORCE` is not a valid signal name. The force kill signal (SIGKILL) can be sent with `kill -9 PID`, `kill -SIGKILL PID`, or `kill -KILL PID`."
+  },
+  {
+    id: 125,
+    text: "In Bash, ______ exits the current loop entirely, while ______ skips to the next iteration.",
+    type: "single",
+    options: [
+      "break / continue",
+      "continue / break",
+      "exit / skip",
+      "stop / next"
+    ],
+    correctAnswer: "break / continue",
+    explanation: "`break` terminates the loop completely and execution continues after the `done` keyword. `continue` skips the rest of the current iteration and jumps to the next one."
+  },
+  {
+    id: 126,
+    text: "Which command would you use to archive the Documents directory and compress it with bzip2 compression?",
+    type: "single",
+    options: [
+      "tar -fzc Documents documents.tbz",
+      "tar -cf Documents documents.tbz",
+      "tar -cjf documents.tbz Documents",
+      "tar -cjf Documents",
+      "tar -czf documents.tbz"
+    ],
+    correctAnswer: "tar -cjf documents.tbz Documents",
+    explanation: "The flags for this task are: `c` (create), `j` (bzip2 compression), `f` (specify filename). The output file comes before the source directory: `tar -cjf documents.tbz Documents`."
+  },
+  {
+    id: 127,
+    text: "Complete the command sequence to save the process list and then count how many lines match `python`:\n\nps aux > procs.log; grep python procs.log | ______ -l",
+    type: "single",
+    options: [
+      "wc",
+      "cut",
+      "awk",
+      "sort",
+      "uniq"
+    ],
+    correctAnswer: "wc",
+    explanation: "`wc -l` counts the number of lines. After grepping for 'python', piping to `wc -l` gives the count of matching lines."
+  },
+  {
+    id: 128,
+    text: "Assume a Bash script enables strict mode with `set -euo pipefail` and then executes `x=\"${UNDEFINED_VAR}\"`. What happens next?",
+    type: "single",
+    options: [
+      "Depends on Bash version",
+      "Displays 'Continues...' with x=\"\"",
+      "Error: unbound variable",
+      "Displays 'Continues...' with x=\"UNDEFINED_VAR\""
+    ],
+    correctAnswer: "Error: unbound variable",
+    explanation: "The `-u` flag in `set -euo pipefail` treats unset variables as an error. Referencing `${UNDEFINED_VAR}` will cause the script to immediately exit with an 'unbound variable' error."
+  },
+  {
+    id: 129,
+    text: "You type `gzip myfile.tar`. What happens? (Select TWO)",
+    type: "multiple",
+    options: [
+      "myfile.tar is removed",
+      "myfile.tar is unarchived into the current directory",
+      "myfile.tar.gz holds a compressed version of myfile.tar",
+      "An error; you forgot to pass the name of the output file",
+      "An error; you forgot to specify the file with -f"
+    ],
+    correctAnswer: [
+      "myfile.tar is removed",
+      "myfile.tar.gz holds a compressed version of myfile.tar"
+    ],
+    explanation: "`gzip` compresses the file in place. By default it removes the original and creates a `.gz` file. So `myfile.tar` is deleted and `myfile.tar.gz` is created."
+  },
+  {
+    id: 130,
+    text: "Waiting time is calculated as:",
+    type: "single",
+    options: [
+      "Priority level",
+      "CPU burst length",
+      "Memory requirements",
+      "Order of arrival in ready queue"
+    ],
+    correctAnswer: "Order of arrival in ready queue",
+    explanation: "Waiting time is the total time a process spends waiting in the ready queue before it gets CPU time. It is determined by the order of arrival and the scheduling algorithm."
+  },
+  {
+    id: 131,
+    text: "Which redirection writes a command's standard error (stderr) to `errors.log`, overwriting the file if it already exists, while leaving standard output (stdout) on the terminal?",
+    type: "single",
+    options: [
+      "command 2>> errors.log",
+      "command 2> errors.log",
+      "command > errors.log",
+      "command &> errors.log"
+    ],
+    correctAnswer: "command 2> errors.log",
+    explanation: "`2>` redirects file descriptor 2 (stderr) to a file, overwriting it. `2>>` would append. `>` redirects stdout only. `&>` redirects both stdout and stderr."
+  },
+  {
+    id: 132,
+    text: "Complete the pipeline to count how many unique user names appear in `/etc/passwd`:\n\ngrep -d: -f1 /etc/passwd | awk | cut | ______ | ______ | ______",
+    type: "single",
+    options: [
+      "wc -l / sort",
+      "sort / uniq -c / sort -nr",
+      "sort / uniq / wc -l",
+      "uniq -c / sort -nr / wc -w"
+    ],
+    correctAnswer: "sort / uniq / wc -l",
+    explanation: "To count unique usernames: `sort` to bring duplicates together, `uniq` to collapse them, then `wc -l` to count the resulting unique lines."
+  },
+  {
+    id: 133,
+    text: "Which versions of regular expression syntax are commonly distinguished? (Select all that apply)",
+    type: "multiple",
+    options: [
+      "There is only one standard syntax",
+      "The syntax depends on the specific tool being used",
+      "BRE and ERE are the same",
+      "Basic (BRE), Extended (ERE), Perl Compatible (PCRE)"
+    ],
+    correctAnswer: [
+      "The syntax depends on the specific tool being used",
+      "Basic (BRE), Extended (ERE), Perl Compatible (PCRE)"
+    ],
+    explanation: "Regex has multiple flavours: BRE (Basic), ERE (Extended, used with `grep -E` or `egrep`), and PCRE (Perl Compatible, used in many modern languages). Different tools support different flavours."
   }
 ];
 
