@@ -2491,36 +2491,6 @@ export default function App() {
   const [secretPasswordInput, setSecretPasswordInput] = useState('');
   const [secretPasswordError, setSecretPasswordError] = useState(false);
   const [showSecretPrompt, setShowSecretPrompt] = useState(false);
-  const [aiExplanations, setAiExplanations] = useState({});
-  const [aiLoading, setAiLoading] = useState(false);
-
-  const fetchAiExplanation = async (q) => {
-    if (aiExplanations[q.id] || aiLoading) return;
-    setAiLoading(true);
-    try {
-      const correctStr = Array.isArray(q.correctAnswer) ? q.correctAnswer.join(', ') : q.correctAnswer;
-      const optionsStr = q.options.join('\n- ');
-      const prompt = `You are a Linux/IT study assistant. Give a concise 1-2 sentence explanation for why the correct answer is correct for this quiz question.\n\nQuestion: ${q.text}\nOptions:\n- ${optionsStr}\nCorrect answer: ${correctStr}\n\nExplanation (be direct, no preamble):`;
-      const response = await fetch("https://api.anthropic.com/v1/messages", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          model: "claude-sonnet-4-20250514",
-          max_tokens: 1000,
-          messages: [{ role: "user", content: prompt }]
-        })
-      });
-      const data = await response.json();
-      const text = data.content?.find(b => b.type === 'text')?.text || '';
-      if (text) {
-        setAiExplanations(prev => ({ ...prev, [q.id]: text.trim() }));
-      }
-    } catch (e) {
-      console.error('AI explanation error:', e);
-    } finally {
-      setAiLoading(false);
-    }
-  };
 
   const [activeQuestions, setActiveQuestions] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -2583,9 +2553,6 @@ export default function App() {
   const handleCheckQuestion = () => {
     if (question && !checkedQuestions.includes(question.id)) {
       setCheckedQuestions([...checkedQuestions, question.id]);
-      if (selectedQuizId === 'secret' && !aiExplanations[question.id]) {
-        fetchAiExplanation(question);
-      }
     }
   };
 
@@ -3044,19 +3011,10 @@ export default function App() {
                       </p>
                     )}
                     
-                    {selectedQuizId === 'secret' ? (
-                      <p className="mt-3 leading-relaxed text-gray-800 dark:text-gray-300">
-                        <span className="font-bold block mb-1 text-gray-900 dark:text-white">Explanation:</span>
-                        {aiExplanations[question.id]
-                          ? aiExplanations[question.id]
-                          : <span className="italic text-gray-400 dark:text-gray-500">Generating explanation…</span>}
-                      </p>
-                    ) : (
-                      <p className="mt-3 leading-relaxed text-gray-800 dark:text-gray-300">
-                        <span className="font-bold block mb-1 text-gray-900 dark:text-white">Explanation:</span>
-                        {question.explanation}
-                      </p>
-                    )}
+                    <p className="mt-3 leading-relaxed text-gray-800 dark:text-gray-300">
+                      <span className="font-bold block mb-1 text-gray-900 dark:text-white">Explanation:</span> 
+                      {question.explanation}
+                    </p>
                   </div>
                 </div>
               </div>
