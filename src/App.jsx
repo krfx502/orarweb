@@ -1211,18 +1211,18 @@ export default function App() {
 
   // Reusable theme switch button to inject in every view
   const themeToggleButton = (
-    <div className="fixed bottom-6 right-6 z-50">
+    <div className="absolute top-4 right-4 z-50">
       <button
         onClick={() => setTheme(t => t === 'default' ? 'kindle' : 'default')}
-        className={`p-4 rounded-full shadow-2xl flex items-center gap-3 transition-transform hover:scale-105 ${
+        className={`p-3 rounded flex items-center gap-2 transition-transform ${
           theme === 'kindle' 
-            ? 'bg-black text-white border-4 border-black' 
-            : 'bg-indigo-600 text-white hover:bg-indigo-700'
+            ? 'bg-white text-black border-2 border-black active:bg-black active:text-white' 
+            : 'bg-indigo-600 text-white hover:bg-indigo-700 rounded-full shadow-lg'
         }`}
       >
-        {theme === 'kindle' ? <Palette className="w-6 h-6" /> : <BookOpen className="w-6 h-6" />}
+        {theme === 'kindle' ? <Palette className="w-5 h-5" /> : <BookOpen className="w-5 h-5" />}
         <span className="font-bold hidden sm:inline">
-          {theme === 'kindle' ? 'Color Theme' : 'Kindle Theme'}
+          {theme === 'kindle' ? 'Color' : 'Kindle'}
         </span>
       </button>
     </div>
@@ -1231,8 +1231,8 @@ export default function App() {
   if (showSecretPrompt) {
     return (
       <div className={theme === 'kindle' 
-        ? "flex items-center justify-center min-h-screen p-4 bg-white text-black font-serif"
-        : "flex items-center justify-center min-h-screen p-4 transition-colors duration-300 bg-gray-100 dark:bg-gray-900"
+        ? "flex items-center justify-center min-h-screen p-4 bg-white text-black font-serif relative"
+        : "flex items-center justify-center min-h-screen p-4 transition-colors duration-300 bg-gray-100 dark:bg-gray-900 relative"
       }>
         {themeToggleButton}
         <div className={theme === 'kindle'
@@ -1277,13 +1277,13 @@ export default function App() {
             </div>
             <div className="flex gap-4">
               <button type="button" onClick={() => setShowSecretPrompt(false)} className={theme === 'kindle'
-                ? "flex-1 py-4 border-4 border-black text-black font-bold text-xl uppercase tracking-wider"
+                ? "flex-1 py-4 border-4 border-black text-black font-bold text-xl uppercase tracking-wider active:bg-black active:text-white"
                 : "flex-1 py-4 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-bold rounded-xl transition-colors text-lg hover:bg-gray-50 dark:hover:bg-gray-700"
               }>
                 Cancel
               </button>
               <button type="submit" className={theme === 'kindle'
-                ? "flex-1 py-4 bg-black text-white font-bold text-xl uppercase tracking-wider"
+                ? "flex-1 py-4 bg-black text-white font-bold text-xl uppercase tracking-wider active:bg-white active:text-black border-4 border-black"
                 : "flex-1 py-4 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-xl transition-colors text-lg"
               }>
                 Unlock
@@ -1298,8 +1298,8 @@ export default function App() {
   if (!isAuthenticated) {
     return (
       <div className={theme === 'kindle'
-        ? "flex items-center justify-center min-h-screen p-4 bg-white text-black font-serif"
-        : "flex items-center justify-center min-h-screen p-4 transition-colors duration-300 bg-gray-100 dark:bg-gray-900"
+        ? "flex items-center justify-center min-h-screen p-4 bg-white text-black font-serif relative"
+        : "flex items-center justify-center min-h-screen p-4 transition-colors duration-300 bg-gray-100 dark:bg-gray-900 relative"
       }>
         {themeToggleButton}
         <div className={theme === 'kindle'
@@ -1344,7 +1344,7 @@ export default function App() {
               )}
             </div>
             <button type="submit" className={theme === 'kindle'
-              ? "w-full py-4 bg-black text-white font-bold text-xl uppercase tracking-widest"
+              ? "w-full py-4 bg-black text-white font-bold text-xl uppercase tracking-widest active:bg-white active:text-black border-4 border-black"
               : "w-full py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition-colors text-lg"
             }>
               Unlock
@@ -1358,11 +1358,11 @@ export default function App() {
   if (!selectedQuizId) {
     return (
       <div className={theme === 'kindle'
-        ? "p-4 md:p-8 min-h-screen bg-white text-black font-serif"
-        : "p-4 md:p-8 min-h-screen transition-colors duration-300 bg-gray-100 dark:bg-gray-900"
+        ? "p-4 md:p-8 min-h-screen bg-white text-black font-serif relative"
+        : "p-4 md:p-8 min-h-screen transition-colors duration-300 bg-gray-100 dark:bg-gray-900 relative"
       }>
         {themeToggleButton}
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-4xl mx-auto pt-10">
           <div className={theme === 'kindle' ? "border-b-4 border-black pb-6 mb-10 mt-8" : "flex justify-between items-center mb-12 mt-8"}>
             <div>
               <h1 className={theme === 'kindle'
@@ -1384,8 +1384,8 @@ export default function App() {
             <button 
               onClick={() => handleSelectQuiz('quiz1')}
               className={theme === 'kindle'
-                ? "border-4 border-black rounded-lg p-6 text-left bg-white active:bg-black active:text-white group"
-                : "group rounded-2xl p-6 text-left shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all border border-transparent bg-white dark:bg-gray-800 hover:border-blue-500 dark:hover:border-blue-500"
+                ? "border-4 border-black rounded-lg p-6 text-left bg-white active:bg-black active:text-white group block w-full"
+                : "group rounded-2xl p-6 text-left shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all border border-transparent bg-white dark:bg-gray-800 hover:border-blue-500 dark:hover:border-blue-500 block w-full"
               }
             >
               <div className="flex justify-between items-start mb-6">
@@ -1419,8 +1419,8 @@ export default function App() {
             <button 
               onClick={() => handleSelectQuiz('quiz2')}
               className={theme === 'kindle'
-                ? "border-4 border-black rounded-lg p-6 text-left bg-white active:bg-black active:text-white group"
-                : "group rounded-2xl p-6 text-left shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all border border-transparent bg-white dark:bg-gray-800 hover:border-amber-500 dark:hover:border-amber-500"
+                ? "border-4 border-black rounded-lg p-6 text-left bg-white active:bg-black active:text-white group block w-full"
+                : "group rounded-2xl p-6 text-left shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all border border-transparent bg-white dark:bg-gray-800 hover:border-amber-500 dark:hover:border-amber-500 block w-full"
               }
             >
               <div className="flex justify-between items-start mb-6">
@@ -1454,8 +1454,8 @@ export default function App() {
             <button 
               onClick={() => handleSelectQuiz('secret')}
               className={theme === 'kindle'
-                ? "border-4 border-black rounded-lg p-6 text-left bg-white active:bg-black active:text-white group"
-                : "group rounded-2xl p-6 text-left shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all border border-transparent bg-white dark:bg-gray-800 hover:border-purple-500 dark:hover:border-purple-500"
+                ? "border-4 border-black rounded-lg p-6 text-left bg-white active:bg-black active:text-white group block w-full"
+                : "group rounded-2xl p-6 text-left shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all border border-transparent bg-white dark:bg-gray-800 hover:border-purple-500 dark:hover:border-purple-500 block w-full"
               }
             >
               <div className="flex justify-between items-start mb-6">
@@ -1498,10 +1498,9 @@ export default function App() {
 
     return (
       <div className={theme === 'kindle'
-        ? "p-4 md:p-8 min-h-screen bg-white text-black font-serif"
-        : "p-4 md:p-8 min-h-screen transition-colors duration-300 bg-gray-100 dark:bg-gray-900"
+        ? "p-4 md:p-8 min-h-screen bg-white text-black font-serif relative"
+        : "p-4 md:p-8 min-h-screen transition-colors duration-300 bg-gray-100 dark:bg-gray-900 relative"
       }>
-        {themeToggleButton}
         <div className={theme === 'kindle'
           ? "max-w-4xl mx-auto border-4 border-black bg-white"
           : "max-w-4xl mx-auto rounded-2xl shadow-xl overflow-hidden bg-white dark:bg-gray-800 transition-colors"
@@ -1510,15 +1509,21 @@ export default function App() {
             ? "p-8 text-center relative border-b-4 border-black"
             : "p-8 text-center text-white relative bg-blue-600 dark:bg-blue-800"
           }>
-            <div className="absolute top-4 right-4 flex gap-2">
+            <div className={`absolute flex gap-4 ${theme === 'kindle' ? 'top-4 right-4' : 'top-4 right-4'}`}>
+              <button onClick={() => setTheme(t => t === 'default' ? 'kindle' : 'default')} className={theme === 'kindle'
+                ? "p-3 border-2 border-black bg-white active:bg-black active:text-white"
+                : "p-2 rounded-full hover:bg-white/20 transition-colors text-white"
+              } title="Toggle Theme">
+                {theme === 'kindle' ? <Palette className="w-6 h-6" /> : <BookOpen className="w-5 h-5" />}
+              </button>
               <button onClick={exitQuiz} className={theme === 'kindle'
-                ? "p-3 border-2 border-black rounded-none active:bg-black active:text-white"
-                : "p-2 rounded-full hover:bg-white/20 transition-colors"
+                ? "p-3 border-2 border-black bg-white active:bg-black active:text-white"
+                : "p-2 rounded-full hover:bg-white/20 transition-colors text-white"
               } title="Home">
                 <Home className={theme === 'kindle' ? "w-8 h-8" : "w-6 h-6"} />
               </button>
             </div>
-            <Award className={`mx-auto mb-6 ${theme === 'kindle' ? 'w-20 h-20 text-black' : 'w-16 h-16 text-white'}`} />
+            <Award className={`mx-auto mb-6 mt-10 ${theme === 'kindle' ? 'w-20 h-20 text-black' : 'w-16 h-16 text-white'}`} />
             <h1 className={theme === 'kindle' ? "text-4xl font-bold mb-4 text-black uppercase tracking-widest" : "text-3xl font-bold mb-2 text-white"}>
               Results
             </h1>
@@ -1638,10 +1643,9 @@ export default function App() {
       ? "flex items-center justify-center p-2 md:p-4 min-h-screen bg-white text-black font-serif"
       : "flex items-center justify-center p-4 min-h-screen transition-colors duration-300 bg-gray-100 dark:bg-gray-900"
     }>
-      {themeToggleButton}
       <div className={theme === 'kindle'
-        ? "max-w-4xl w-full border-4 border-black flex flex-col min-h-[600px] bg-white"
-        : "max-w-3xl w-full rounded-2xl shadow-xl overflow-hidden flex flex-col min-h-[500px] bg-white dark:bg-gray-800 transition-colors"
+        ? "max-w-4xl w-full border-4 border-black flex flex-col min-h-[600px] bg-white relative"
+        : "max-w-3xl w-full rounded-2xl shadow-xl overflow-hidden flex flex-col min-h-[500px] bg-white dark:bg-gray-800 transition-colors relative"
       }>
         {/* Header & Progress */}
         <div className={theme === 'kindle'
@@ -1649,15 +1653,21 @@ export default function App() {
           : "text-white p-6 relative bg-blue-600 dark:bg-blue-800"
         }>
           <div className={`absolute flex gap-4 ${theme === 'kindle' ? 'top-6 md:top-8 right-6 md:right-8' : 'top-6 right-6'}`}>
+            <button onClick={() => setTheme(t => t === 'default' ? 'kindle' : 'default')} className={theme === 'kindle'
+              ? "p-2 border-2 border-black bg-white active:bg-black active:text-white"
+              : "p-2 rounded-full hover:bg-white/20 transition-colors text-white"
+            } title="Toggle Theme">
+              {theme === 'kindle' ? <Palette className="w-6 h-6" /> : <BookOpen className="w-5 h-5" />}
+            </button>
             <button onClick={exitQuiz} className={theme === 'kindle'
               ? "p-2 border-2 border-black bg-white active:bg-black active:text-white"
-              : "p-2 rounded-full hover:bg-white/20 transition-colors"
+              : "p-2 rounded-full hover:bg-white/20 transition-colors text-white"
             } title="Exit">
               <Home className={theme === 'kindle' ? "w-6 h-6" : "w-5 h-5"} />
             </button>
           </div>
           
-          <div className={theme === 'kindle' ? "mb-6 pr-20" : "flex justify-between items-center mb-4 pr-16"}>
+          <div className={theme === 'kindle' ? "mb-6 pr-32" : "flex justify-between items-center mb-4 pr-24"}>
             <h2 className={theme === 'kindle'
               ? "text-2xl font-bold text-black uppercase tracking-widest mb-3"
               : "text-xl font-bold text-white"
@@ -1694,25 +1704,25 @@ export default function App() {
 
           <div className="space-y-4 flex-1">
             {question.type === 'single' && question.options.map((option, idx) => (
-              <label key={idx} className={`flex items-center transition-all ${theme === 'kindle' ? 'p-5 rounded-none' : 'p-4 border rounded-xl'} ${isChecked ? 'cursor-default' : 'cursor-pointer'} ${getOptionStyles(option)}`}>
+              <button 
+                key={idx}
+                type="button"
+                onClick={() => handleSingleSelect(option)}
+                disabled={isChecked}
+                className={`w-full text-left flex items-center transition-all ${theme === 'kindle' ? 'p-5 rounded-none' : 'p-4 border rounded-xl'} ${isChecked ? 'cursor-default' : 'cursor-pointer'} ${getOptionStyles(option)}`}
+              >
                 
                 {theme === 'kindle' ? (
                   <div className="w-8 h-8 flex-shrink-0 border-2 border-black rounded-full flex items-center justify-center mr-4 bg-white">
                      {userAnswers[question.id] === option && <div className="w-4 h-4 bg-black rounded-full"></div>}
                   </div>
                 ) : (
-                  <input 
-                    type="radio" 
-                    name={`q-${question.id}`} 
-                    value={option}
-                    checked={userAnswers[question.id] === option}
-                    onChange={() => handleSingleSelect(option)}
-                    disabled={isChecked}
-                    className="w-5 h-5 rounded-full focus:ring-blue-500 disabled:opacity-50 text-blue-600 bg-white border-gray-300 dark:text-blue-500 dark:bg-gray-700 dark:border-gray-600"
-                  />
+                  <div className={`w-5 h-5 flex-shrink-0 rounded-full border-2 flex items-center justify-center mr-3 ${userAnswers[question.id] === option ? 'border-blue-600 bg-white' : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700'}`}>
+                     {userAnswers[question.id] === option && <div className="w-2.5 h-2.5 bg-blue-600 rounded-full"></div>}
+                  </div>
                 )}
                 <span className={theme === 'kindle' ? "text-2xl" : "ml-3 text-lg"}>{option}</span>
-              </label>
+              </button>
             ))}
 
             {question.type === 'multiple' && (
@@ -1725,24 +1735,26 @@ export default function App() {
                 {question.options.map((option, idx) => {
                   const isOptionChecked = (userAnswers[question.id] || []).includes(option);
                   return (
-                    <label key={idx} className={`flex items-center transition-all ${theme === 'kindle' ? 'p-5 rounded-none' : 'p-4 border rounded-xl'} ${isChecked ? 'cursor-default' : 'cursor-pointer'} ${getOptionStyles(option)}`}>
+                    <button 
+                      key={idx}
+                      type="button"
+                      onClick={() => handleMultiSelect(option)}
+                      disabled={isChecked}
+                      className={`w-full text-left flex items-center transition-all ${theme === 'kindle' ? 'p-5 rounded-none' : 'p-4 border rounded-xl'} ${isChecked ? 'cursor-default' : 'cursor-pointer'} ${getOptionStyles(option)}`}
+                    >
                       
                       {theme === 'kindle' ? (
                         <div className="w-8 h-8 flex-shrink-0 border-2 border-black flex items-center justify-center mr-4 bg-white">
                           {isOptionChecked && <CheckCircle2 className="w-6 h-6 text-black" />}
                         </div>
                       ) : (
-                        <input 
-                          type="checkbox" 
-                          checked={isOptionChecked}
-                          onChange={() => handleMultiSelect(option)}
-                          disabled={isChecked}
-                          className="w-5 h-5 rounded focus:ring-blue-500 disabled:opacity-50 text-blue-600 bg-white border-gray-300 dark:text-blue-500 dark:bg-gray-700 dark:border-gray-600"
-                        />
+                        <div className={`w-5 h-5 flex-shrink-0 rounded border-2 flex items-center justify-center mr-3 ${isOptionChecked ? 'border-blue-600 bg-blue-600' : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700'}`}>
+                          {isOptionChecked && <CheckCircle2 className="w-4 h-4 text-white" />}
+                        </div>
                       )}
                       
                       <span className={theme === 'kindle' ? "text-2xl" : "ml-3 text-lg"}>{option}</span>
-                    </label>
+                    </button>
                   );
                 })}
               </>
