@@ -2877,7 +2877,7 @@ export default function App() {
                 </div>
                 <ChevronRight className="w-6 h-6 text-gray-400 group-hover:text-blue-500" />
               </div>
-              <h2 className="text-2xl font-bold mb-2 text-gray-800 dark:text-white">Essentials</h2>
+              <h2 className="text-2xl font-bold mb-2 text-gray-800 dark:text-white">QUIZ 1</h2>
               <p className="mb-4 text-gray-600 dark:text-gray-400">OS Fundamentals & Shell basics</p>
               <span className="inline-block px-3 py-1 text-sm font-medium rounded-full bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200">
                 {quiz1Data.length} Questions
@@ -2891,7 +2891,7 @@ export default function App() {
                 </div>
                 <ChevronRight className="w-6 h-6 text-gray-400 group-hover:text-amber-500" />
               </div>
-              <h2 className="text-2xl font-bold mb-2 text-gray-800 dark:text-white">Advanced Operations</h2>
+              <h2 className="text-2xl font-bold mb-2 text-gray-800 dark:text-white">QUIZ 2</h2>
               <p className="mb-4 text-gray-600 dark:text-gray-400">Pipelines, Redirection & Scheduling</p>
               <span className="inline-block px-3 py-1 text-sm font-medium rounded-full bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200">
                 {quiz2Data.length} Questions
@@ -2905,8 +2905,8 @@ export default function App() {
                 </div>
                 <ChevronRight className="w-6 h-6 text-gray-400 group-hover:text-purple-500" />
               </div>
-              <h2 className="text-2xl font-bold mb-2 text-gray-800 dark:text-white">Security & Hardware</h2>
-              <p className="mb-4 text-gray-600 dark:text-gray-400">Certified Hardware Interaction Quiz</p>
+              <h2 className="text-2xl font-bold mb-2 text-gray-800 dark:text-white">SECRET</h2>
+              <p className="mb-4 text-gray-600 dark:text-gray-400">IDK</p>
               <span className="inline-block px-3 py-1 text-sm font-medium rounded-full bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200">
                 {secretQuizData.length} Questions
               </span>
