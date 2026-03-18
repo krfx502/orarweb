@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { CheckCircle2, XCircle, ArrowRight, ArrowLeft, RotateCcw, Award, RefreshCw, Home, Lock, ChevronRight } from 'lucide-react';
 
 const quiz1Data = [
@@ -22,7 +22,7 @@ const quiz1Data = [
     type: "single",
     options: [":", "/", "~", ";"],
     correctAnswer: ":",
-    explanation: "In Linux/Unix, directories in the PATH variable are separated by a colon (:). You previously selected '/', which is the directory separator for file paths, not the PATH list separator."
+    explanation: "In Linux/Unix, directories in the PATH variable are separated by a colon (:). '/' is the directory separator for file paths, not the PATH list separator."
   },
   {
     id: 3,
@@ -37,7 +37,7 @@ const quiz1Data = [
     text: "What is the ASCII decimal code of the character that marks files as hidden in Linux (the dot/period)?",
     type: "text",
     correctAnswer: "46",
-    explanation: "The ASCII decimal value for a dot/period (.) is 46. You previously entered a literal dot."
+    explanation: "The ASCII decimal value for a dot/period (.) is 46."
   },
   {
     id: 5,
@@ -70,7 +70,7 @@ const quiz1Data = [
       "Tends to offer more features than compiled languages",
       "Is converted into machine specific instructions as the program runs"
     ],
-    explanation: "Interpreted languages are translated on the fly (as they run) and generally offer higher-level features (like dynamic typing) at the cost of using MORE resources, not fewer."
+    explanation: "Interpreted languages are translated on the fly and generally offer higher-level features (like dynamic typing) at the cost of using more resources."
   },
   {
     id: 8,
@@ -83,7 +83,7 @@ const quiz1Data = [
       "Globs are faster than brace expansion"
     ],
     correctAnswer: "Braces generate strings unconditionally; globs match existing files",
-    explanation: "Brace expansion creates the strings regardless of what is on your hard drive. Globs (*, ?, []) only return results if files actually exist matching that pattern."
+    explanation: "Brace expansion creates strings regardless of file existence. Globs (*, ?, []) only return results if files actually exist matching that pattern."
   },
   {
     id: 9,
@@ -99,7 +99,7 @@ const quiz1Data = [
       "GPT (GUID Partition Table) — modern, >2TB support",
       "MBR (Master Boot Record) — legacy, up to 2TB"
     ],
-    explanation: "MBR and GPT are the two actual structures written to a disk to define partitions. BIOS and UEFI are motherboard firmwares."
+    explanation: "MBR and GPT are the actual structures defining partitions on a disk."
   },
   {
     id: 10,
@@ -107,7 +107,7 @@ const quiz1Data = [
     type: "single",
     options: ["Adevărat (True)", "Fals (False)"],
     correctAnswer: "Adevărat (True)",
-    explanation: "fdisk is the classic tool for MBR. gdisk is typically used for GPT disks."
+    explanation: "fdisk is the classic tool for MBR partitioning."
   },
   {
     id: 11,
@@ -115,7 +115,7 @@ const quiz1Data = [
     type: "multiple",
     options: ["gdisk", "sfdisk", "fdisk", "cfdisk", "gfdisk"],
     correctAnswer: ["sfdisk", "fdisk", "cfdisk"],
-    explanation: "fdisk, cfdisk, and sfdisk all manipulate MBR partition tables. gdisk is for GPT. You missed sfdisk and cfdisk previously!"
+    explanation: "fdisk, cfdisk, and sfdisk all manipulate MBR partition tables. gdisk is for GPT."
   },
   {
     id: 12,
@@ -128,10 +128,8 @@ const quiz1Data = [
       "user / process / supervisor"
     ],
     correctAnswer: "user / system call / kernel",
-    explanation: "Standard apps run in 'user' mode. They use a 'system call' to ask the 'kernel' to do privileged hardware tasks."
+    explanation: "Standard apps run in 'user' mode and use 'system calls' to request services from the 'kernel'."
   },
-  
-  // --- Navigation & Commands ---
   {
     id: 13,
     text: "The `cd` command by itself will take you to what directory?",
@@ -143,7 +141,7 @@ const quiz1Data = [
       "Your home directory"
     ],
     correctAnswer: "Your home directory",
-    explanation: "Typing just `cd` and pressing enter defaults to taking you straight to your home directory (~)."
+    explanation: "Typing `cd` without arguments defaults to taking you to your home directory (~)."
   },
   {
     id: 14,
@@ -157,399 +155,6 @@ const quiz1Data = [
     ],
     correctAnswer: "The directory above the current working directory",
     explanation: "The double dot (..) refers to the parent directory."
-  },
-  {
-    id: 15,
-    text: "In Bash, which symbol represents the home directory, which refers to the parent directory, and which denotes the current directory?",
-    type: "single",
-    options: [
-      "~ (home), - (parent), . (current)",
-      "~ (home), .. (parent), . (current)",
-      "/ (home), .. (parent), * (current)",
-      "~ (home), . (parent), .. (current)"
-    ],
-    correctAnswer: "~ (home), .. (parent), . (current)",
-    explanation: "Tilde (~) is home. Double dot (..) is parent. Single dot (.) is current directory. (A single dash '-' takes you to your PREVIOUS directory, not necessarily parent)."
-  },
-  {
-    id: 16,
-    text: "Which option for the `ls` command, when used in conjunction with the `-l` option, will display human-readable file sizes?",
-    type: "single",
-    options: ["-h", "-M", "-H", "-S"],
-    correctAnswer: "-h",
-    explanation: "-h stands for human-readable (shows KB, MB, GB instead of just bytes)."
-  },
-  {
-    id: 17,
-    text: "What does the -r option do with the `ls` command?",
-    type: "single",
-    options: [
-      "Groups files by their extension type",
-      "Displays detailed information about files",
-      "Shows hidden files including dotfiles",
-      "Lists files in reverse alphabetical order"
-    ],
-    correctAnswer: "Lists files in reverse alphabetical order",
-    explanation: "-r reverses the sort order. (-R uppercase is recursive, -a is hidden, -l is detailed)."
-  },
-  {
-    id: 18,
-    text: "The `ls` command without options or arguments:",
-    type: "single",
-    options: [
-      "...lists the contents of the current directory.",
-      "...prompts for a directory to list.",
-      "...generates an error as this command requires arguments.",
-      "...lists the contents of a user's home directory."
-    ],
-    correctAnswer: "...lists the contents of the current directory.",
-    explanation: "By default, ls lists visible files and directories in your current location."
-  },
-  {
-    id: 19,
-    text: "Which of the following commands will prevent any aliased options to the `ls` command?",
-    type: "single",
-    options: ["\"ls\"", "\\ls", "/ls", "%ls"],
-    correctAnswer: "\\ls",
-    explanation: "Prepending a backslash (\\) temporarily bypasses any alias set for that command."
-  },
-  {
-    id: 20,
-    text: "The `touch` command can be used to: (choose two)",
-    type: "multiple",
-    options: [
-      "Update the timestamp of existing files",
-      "Rename a file",
-      "Create new files",
-      "Change ownership of a file"
-    ],
-    correctAnswer: [
-      "Update the timestamp of existing files",
-      "Create new files"
-    ],
-    explanation: "If the file doesn't exist, touch creates it. If it does exist, touch updates its modified/accessed timestamps."
-  },
-
-  // --- Help, Globbing & Advanced ---
-  {
-    id: 21,
-    text: "What is the standard option to view a command's built-in help?",
-    type: "single",
-    options: ["-h", "--info", "--help", "--manual"],
-    correctAnswer: "--help",
-    explanation: "--help is the GNU standard long option for built-in command documentation."
-  },
-  {
-    id: 22,
-    text: "To get help on using the `info` command, execute: (choose two)",
-    type: "multiple",
-    options: ["help info", "info info", "man info", "info -q"],
-    correctAnswer: ["info info", "man info"],
-    explanation: "`info` is a standalone program, not a bash builtin, so `help info` doesn't work. You use `man info` or `info info`."
-  },
-  {
-    id: 23,
-    text: "In which section number of the man pages are regular user commands documented?",
-    type: "text",
-    correctAnswer: "1",
-    explanation: "Section 1 is for user commands. Section 8 is usually for sysadmin commands. Section 5 is for configuration files."
-  },
-  {
-    id: 24,
-    text: "To search the man page sections for the keyword 'example', which of the following command lines could you execute? (choose two)",
-    type: "multiple",
-    options: ["man -k example", "whatis example", "man -f example", "apropos example"],
-    correctAnswer: ["man -k example", "apropos example"],
-    explanation: "`apropos` and `man -k` search the name AND DESCRIPTION of man pages for a keyword. `whatis` and `man -f` only search the exact command names."
-  },
-  {
-    id: 25,
-    text: "The ______ command displays complete manual pages, while ______ provides a quick summary of command options.",
-    type: "single",
-    options: [
-      "man / apropos",
-      "man / whatis",
-      "info / man",
-      "whatis / apropos"
-    ],
-    correctAnswer: "man / whatis",
-    explanation: "`man` shows the full page. `whatis` shows a one-line summary (the NAME section of the man page)."
-  },
-  {
-    id: 26,
-    text: "Which glob character matches exactly one character?",
-    type: "single",
-    options: ["*", "?", ".", "["],
-    correctAnswer: "?",
-    explanation: "The question mark (?) matches exactly one character in globbing. Asterisk (*) matches zero or more."
-  },
-  {
-    id: 27,
-    text: "Which of the following are glob characters? (choose three)",
-    type: "multiple",
-    options: [
-      "The asterisk *",
-      "The dash character -",
-      "The question mark ?",
-      "The square brackets [ and ]"
-    ],
-    correctAnswer: [
-      "The asterisk *",
-      "The question mark ?",
-      "The square brackets [ and ]"
-    ],
-    explanation: "*, ?, and [] are the fundamental shell globbing characters."
-  },
-  {
-    id: 28,
-    text: "What will the following statement do? `for name in \\`cat /root/users\\``",
-    type: "single",
-    options: [
-      "Run for two values: cat and /root/users",
-      "Report a syntax error due to missing backtick closure",
-      "Assign to the name variable each value in the specified file",
-      "Enter an infinite loop reading the file continuously"
-    ],
-    correctAnswer: "Assign to the name variable each value in the specified file",
-    explanation: "The backticks execute the command `cat /root/users` first. The `for` loop then iterates over every word/line returned by that command."
-  },
-  
-  // --- Variables, Permissions & Distros ---
-  {
-    id: 29,
-    text: "What is the key difference between `source script.sh` and `./script.sh`?",
-    type: "single",
-    options: [
-      "source is faster because it skips the fork() system call",
-      "source requires execute permission",
-      "They are identical — both execute in the current shell environment",
-      "source runs in current shell; ./script.sh runs in subshell"
-    ],
-    correctAnswer: "source runs in current shell; ./script.sh runs in subshell",
-    explanation: "Using `./` creates a new child process (subshell) so variables don't persist. `source` runs it in your CURRENT shell, so variable changes stay active."
-  },
-  {
-    id: 30,
-    text: "You define `SECRET=password` without export. What happens in a subshell?",
-    type: "single",
-    options: [
-      "The subshell inherits all variables",
-      "An error occurs",
-      "The variable SECRET is undefined",
-      "The variable has value 'password'"
-    ],
-    correctAnswer: "The variable SECRET is undefined",
-    explanation: "Local variables (not exported) are NOT passed down to child processes/subshells."
-  },
-  {
-    id: 31,
-    text: "To make a variable accessible in child processes, use the ______ command. To remove a variable entirely, use ______.",
-    type: "single",
-    options: [
-      "export / delete",
-      "env / remove",
-      "export / unset",
-      "set / unset"
-    ],
-    correctAnswer: "export / unset",
-    explanation: "`export` makes it global to children. `unset` completely removes a variable."
-  },
-  {
-    id: 32,
-    text: "Which chmod ensures ONLY the owner can execute a script?",
-    type: "single",
-    options: [
-      "`chmod +x script`",
-      "`chmod u+x,go-x script`",
-      "`chmod a+x script`",
-      "`chmod 755 script`"
-    ],
-    correctAnswer: "`chmod u+x,go-x script`",
-    explanation: "`u+x` adds execution for the User (owner). `go-x` explicitly removes execution for Group and Others."
-  },
-  {
-    id: 33,
-    text: "Apple's OS X is: (choose three)",
-    type: "multiple",
-    options: [
-      "Partially based on code from the FreeBSD project",
-      "Derived from Linux",
-      "Able to natively run Windows binaries",
-      "A fully certified UNIX distribution",
-      "Tightly integrated with Apple hardware",
-      "Primarily used to manage network services"
-    ],
-    correctAnswer: [
-      "Partially based on code from the FreeBSD project",
-      "A fully certified UNIX distribution",
-      "Tightly integrated with Apple hardware"
-    ],
-    explanation: "macOS (OS X) is NOT Linux. It is a certified UNIX, heavily based on FreeBSD, and tied to Apple hardware."
-  },
-  {
-    id: 34,
-    text: "Linux source code is available to:",
-    type: "single",
-    options: [
-      "Anyone who has the knowledge needed to access it",
-      "Only university researchers with a government grant",
-      "Employees of the FBI, CIA and NSA with top secret clearance",
-      "Only employees of the Linux Foundation"
-    ],
-    correctAnswer: "Anyone who has the knowledge needed to access it",
-    explanation: "Linux is open source. Anyone can view and modify the source code."
-  },
-  {
-    id: 35,
-    text: "Open source licenses differ, but generally agree that: (choose two)",
-    type: "multiple",
-    options: [
-      "You should have access to the source code of software",
-      "You are not allowed to sell the software",
-      "You must redistribute your changes",
-      "You should be able to modify the software as you wish"
-    ],
-    correctAnswer: [
-      "You should have access to the source code of software",
-      "You should be able to modify the software as you wish"
-    ],
-    explanation: "Open source guarantees access to code and the right to modify it. You ARE actually allowed to sell open source software, and you don't always have to redistribute changes (depends on the specific license)."
-  },
-  {
-    id: 36,
-    text: "What does the `alias` command do?",
-    type: "single",
-    options: [
-      "Runs a specific program",
-      "Shows information about a command",
-      "Creates a shortcut for a longer command",
-      "Lists all available commands"
-    ],
-    correctAnswer: "Creates a shortcut for a longer command",
-    explanation: "Aliases are custom shortcuts, e.g., `alias update='sudo apt update && sudo apt upgrade'`."
-  },
-  {
-    id: 37,
-    text: "A user defines `alias cls='clear'` directly in the terminal. After closing and reopening the terminal, the alias no longer works. What is the most likely cause?",
-    type: "single",
-    options: [
-      "The alias was not saved in ~/.bashrc or another initialisation file",
-      "The alias definition used incorrect syntax or missing quotes",
-      "Aliases require root privileges to be saved permanently across sessions",
-      "The clear command does not exist on this system"
-    ],
-    correctAnswer: "The alias was not saved in ~/.bashrc or another initialisation file",
-    explanation: "Commands typed directly into the terminal are volatile. To make them permanent, they must be saved in a startup script like ~/.bashrc."
-  },
-  {
-    id: 38,
-    text: "Which of the following commands will execute the last command that started with `ec`:",
-    type: "single",
-    options: ["!-ec", "!!", "!?ec", "!ec"],
-    correctAnswer: "!ec",
-    explanation: "`!string` executes the most recent command starting with that string. `!!` runs the very last command. `!?string` runs a command CONTAINING the string."
-  },
-  {
-    id: 39,
-    text: "The `jamie` user already exists in the system. The command `grep jamie /etc/passwd` displays one user record. Running the `echo $?` command immediately after would result in what output?",
-    type: "single",
-    options: ["1", "5", "2", "0"],
-    correctAnswer: "0",
-    explanation: "Because `grep` successfully found the record, it exits with a success status, which in Bash is 0."
-  },
-  {
-    id: 40,
-    text: "An ______ (Interrupt Request) is a hardware signal line used by devices to request CPU attention. The code that handles the interrupt is called an ______ (Interrupt Service Routine). The IVT stores the ______ of all ISRs.",
-    type: "single",
-    options: [
-      "interrupt request / interrupt service routine / memory addresses",
-      "interrupt signal / interrupt handler / process IDs",
-      "interrupt request / system call / memory addresses",
-      "I/O request / interrupt service routine / IRQ numbers"
-    ],
-    correctAnswer: "interrupt request / interrupt service routine / memory addresses",
-    explanation: "Hardware sends an Interrupt Request (IRQ). The CPU runs the Interrupt Service Routine (ISR) to handle it. The Interrupt Vector Table (IVT) holds the memory addresses of these routines."
-  },
-  {
-    id: 41,
-    text: "______ quotes prevent all interpretation by the shell, while ______ quotes allow variable expansion but prevent word splitting.",
-    type: "single",
-    options: [
-      "Double / Single",
-      "Single / Double",
-      "Backtick / Single",
-      "Single / Backtick"
-    ],
-    correctAnswer: "Single / Double",
-    explanation: "Single quotes ('') are literal and prevent ALL interpretation. Double quotes (\"\") allow variables like $USER to be expanded while keeping the string together as one argument."
-  },
-  {
-    id: 42,
-    text: "Which correctly distinguishes monolithic and microkernel architectures?",
-    type: "single",
-    options: [
-      "Microkernels achieve higher performance due to minimal kernel-space footprint",
-      "Linux implements a pure microkernel design with all drivers in user space",
-      "Monolithic kernels cannot load or unload any modules during runtime",
-      "Monolithic runs services in kernel space; microkernel moves most to user space"
-    ],
-    correctAnswer: "Monolithic runs services in kernel space; microkernel moves most to user space",
-    explanation: "Monolithic kernels (like Linux) run OS services in a single large kernel space. Microkernels run only the bare minimum in kernel space and move services/drivers to user space."
-  },
-  {
-    id: 43,
-    text: "Linux uses a ______ kernel architecture, where all services run in the same ______. In contrast, Minix uses a ______ design.",
-    type: "single",
-    options: [
-      "monolithic / virtual machine / microkernel",
-      "monolithic / address space / microkernel",
-      "microkernel / address space / monolithic",
-      "supervisor / kernel space / monolithic"
-    ],
-    correctAnswer: "monolithic / address space / microkernel",
-    explanation: "Linux is monolithic, sharing a single kernel address space for its services. Minix is the classic example of a microkernel architecture. (You previously selected 'virtual machine' which is incorrect here)."
-  },
-  {
-    id: 44,
-    text: "Complete the help-seeking commands:\n1. Read the manual page for ls: ___ ls\n2. Search manuals by keyword: ___ network\n3. Brief description of a command: ___ grep\n4. Built-in help for cd: ___ cd",
-    type: "single",
-    options: [
-      "man / apropos / whatis / help",
-      "read / apropos / whatis / help",
-      "man / grep / info / man",
-      "info / find / whatis / info"
-    ],
-    correctAnswer: "man / apropos / whatis / help",
-    explanation: "man = manual pages. apropos = search man page descriptions by keyword. whatis = brief one-line description. help = documentation for shell built-ins like cd."
-  },
-  {
-    id: 45,
-    text: "Environment variables cannot be created by which command?",
-    type: "single",
-    options: [
-      "declare",
-      "export",
-      "set",
-      "typeset"
-    ],
-    correctAnswer: "set",
-    explanation: "The `set` command (without -a) creates local shell variables, not environment variables. `export`, `declare -x`, and `typeset -x` can all create environment variables."
-  },
-  {
-    id: 46,
-    text: "Environment variables can be viewed by running: (choose two)",
-    type: "multiple",
-    options: [
-      "env",
-      "printenv",
-      "setenv",
-      "showenv"
-    ],
-    correctAnswer: [
-      "env",
-      "printenv"
-    ],
-    explanation: "Both `env` and `printenv` will print out all currently exported environment variables in Linux."
   }
 ];
 
@@ -565,7 +170,7 @@ const quiz2Data = [
       "if / fi"
     ],
     correctAnswer: "for / done",
-    explanation: "A `for` loop is used to iterate over a list of items, such as files matched by a glob (*.txt). The loop block is closed with the `done` keyword."
+    explanation: "A `for` loop iterates over a list of items; the loop is closed with the `done` keyword."
   },
   {
     id: 102,
@@ -578,7 +183,7 @@ const quiz2Data = [
       "All files and directories recursively through subdirectories"
     ],
     correctAnswer: "All files and directories recursively through subdirectories",
-    explanation: "When globstar is activated (using `shopt -s globstar`), the `**` pattern matches all files and zero or more directories and subdirectories recursively."
+    explanation: "With `shopt -s globstar`, `**` matches files and subdirectories recursively."
   },
   {
     id: 103,
@@ -591,7 +196,7 @@ const quiz2Data = [
       "The presence/absence of -rf is not the core issue here"
     ],
     correctAnswer: "Using ls for iteration is fragile; globbing or find-based iteration is preferable",
-    explanation: "Parsing the output of `ls` is a major Bash anti-pattern. If any filename contains spaces or special characters, word splitting will cause `rm` to delete the wrong files, creating a massive safety risk."
+    explanation: "Parsing `ls` is a major anti-pattern. If filenames contain spaces, the loop will split them into multiple arguments and potentially delete the wrong files."
   },
   {
     id: 104,
@@ -604,7 +209,7 @@ const quiz2Data = [
       "uniq / sort -c / sort -nr"
     ],
     correctAnswer: "sort / uniq -c / sort -nr",
-    explanation: "To count frequencies: first `sort` to group identical words, then `uniq -c` to count them, and finally `sort -nr` (numeric, reverse) to order them from highest count to lowest."
+    explanation: "First `sort` groups identical lines, `uniq -c` counts them, and `sort -nr` sorts the results numerically in reverse."
   },
   {
     id: 105,
@@ -617,7 +222,7 @@ const quiz2Data = [
       "Redirects stdout to a file (append)"
     ],
     correctAnswer: "Redirects both stdout and stderr to a file",
-    explanation: "The `&>` operator is a Bash shortcut that redirects both standard output (stdout, descriptor 1) and standard error (stderr, descriptor 2) to the same location."
+    explanation: "`&>` is a shortcut to redirect both file descriptor 1 (stdout) and 2 (stderr) to the same file."
   },
   {
     id: 106,
@@ -630,7 +235,7 @@ const quiz2Data = [
       "[!*.txt]"
     ],
     correctAnswer: "!(*.txt)",
-    explanation: "In Bash extended globbing (extglob), `!(pattern)` is used to match anything that does NOT match the given pattern."
+    explanation: "In extended globbing, `!(pattern)` negates the match."
   },
   {
     id: 107,
@@ -643,7 +248,7 @@ const quiz2Data = [
       "A JPEG image"
     ],
     correctAnswer: "A log file",
-    explanation: "Lossless compression is required for text and data where every exact bit must be preserved (like a log file). Movies, MP3s, and JPEGs generally use lossy compression to save space."
+    explanation: "Data integrity is critical for text/logs, requiring lossless compression. Multimedia often uses lossy compression."
   },
   {
     id: 108,
@@ -656,7 +261,7 @@ const quiz2Data = [
       "The time quantum expires"
     ],
     correctAnswer: "The awaited event occurs",
-    explanation: "A process is in the 'waiting' (or blocked) state because it is waiting for some event like I/O. Once that event occurs, it transitions back to 'ready' to wait for CPU time."
+    explanation: "When the event (like I/O completion) that blocked the process happens, it moves to the ready queue."
   },
   {
     id: 109,
@@ -669,7 +274,7 @@ const quiz2Data = [
       "Displays command arguments"
     ],
     correctAnswer: "Builds and executes command lines from stdin",
-    explanation: "`xargs` reads items from standard input (usually piped from another command like `find`) and builds/executes commands with those items as arguments."
+    explanation: "`xargs` transforms standard input into arguments for other commands."
   },
   {
     id: 110,
@@ -682,7 +287,7 @@ const quiz2Data = [
       "Total execution time"
     ],
     correctAnswer: "A period during which a process uses the CPU continuously",
-    explanation: "Process execution consists of a cycle of CPU execution and I/O wait. The period of active, continuous CPU execution is called a CPU burst."
+    explanation: "A CPU burst is the duration of active processing before the process blocks or is preempted."
   },
   {
     id: 111,
@@ -698,7 +303,7 @@ const quiz2Data = [
       "source ~/.bashrc",
       ". ~/.bashrc"
     ],
-    explanation: "Both `source ~/.bashrc` and `. ~/.bashrc` execute the file within the context of the current shell session. `bash ~/.bashrc` would run it in a new child shell."
+    explanation: "`source` and `.` execute scripts in the current shell environment."
   },
   {
     id: 112,
@@ -711,7 +316,7 @@ const quiz2Data = [
       "1980 / Berkeley / 1994"
     ],
     correctAnswer: "1969 / Bell Labs / 1991",
-    explanation: "UNIX was born at AT&T's Bell Labs in 1969. Linus Torvalds released the first version of the Linux kernel in 1991."
+    explanation: "UNIX originated at Bell Labs in 1969; Linux was released in 1991."
   },
   {
     id: 113,
@@ -724,7 +329,7 @@ const quiz2Data = [
       "env / -c / MY_APP"
     ],
     correctAnswer: "export / -c / $MY_APP",
-    explanation: "`export` makes the variable available to child processes. `bash -c` executes a command string in a new subshell, proving the variable was inherited."
+    explanation: "`export` makes the variable available to subshells like `bash -c`."
   },
   {
     id: 114,
@@ -732,19 +337,18 @@ const quiz2Data = [
     type: "single",
     options: [
       "head -n 10 file | tail -n 6",
-      "sed -n '5,10p' file (also correct but not using head/tail)",
       "tail -n 10 file | head -n 6",
       "cat file | lines 5-10"
     ],
     correctAnswer: "head -n 10 file | tail -n 6",
-    explanation: "`head -n 10` grabs the first 10 lines. Piping that into `tail -n 6` grabs the last 6 lines of that chunk (lines 5, 6, 7, 8, 9, 10), perfectly extracting the requested range."
+    explanation: "Grabbing the first 10 lines and then taking the last 6 gives you lines 5 through 10."
   },
   {
     id: 115,
     text: "What command removes consecutive duplicate lines from sorted input?\n\nEnter the command name only.",
     type: "text",
     correctAnswer: "uniq",
-    explanation: "The `uniq` command filters out repeated lines in a file. It only detects duplicates if they are adjacent, which is why the input must be sorted first."
+    explanation: "`uniq` removes adjacent duplicate lines."
   },
   {
     id: 116,
@@ -757,20 +361,20 @@ const quiz2Data = [
       "Only the letters a, b, and c"
     ],
     correctAnswer: "Any character except a, b, or c",
-    explanation: "In bracket expressions, a caret `^` (or an exclamation mark `!`) at the very beginning negates the set, meaning it matches any one character that is NOT listed."
+    explanation: "The caret `^` at the start of brackets negates the set."
   },
   {
     id: 117,
-    text: "What is the name of the scheduling algorithm that selects the process with the shortest next CPU burst? \n\n(Note: The test platform options for this question mismatched the prompt, listing consequences instead of names.)",
+    text: "What is the name of the scheduling algorithm that selects the process with the shortest next CPU burst? \n\n(Consequence Selection)",
     type: "single",
     options: [
-      "The algorithm degrades into FCFS behavior (this happens when quantum is too LARGE)",
-      "Physical memory consumption increases due to frequent swapping",
+      "The algorithm degrades into FCFS behavior",
+      "Physical memory consumption increases",
       "Context switch overhead increases significantly",
       "Processes enter starvation and never get enough CPU time"
     ],
     correctAnswer: "Processes enter starvation and never get enough CPU time",
-    explanation: "Shortest Job First (SJF) selects the shortest burst. A major consequence/disadvantage of SJF is that long processes can suffer from starvation if short processes keep arriving."
+    explanation: "Shortest Job First (SJF) can lead to starvation for long processes."
   },
   {
     id: 118,
@@ -783,7 +387,7 @@ const quiz2Data = [
       "shortest / optimal / execution time / randomized"
     ],
     correctAnswer: "shortest / optimal / waiting time / predicted",
-    explanation: "SJF (Shortest Job First) is mathematically optimal for minimizing waiting time, but because we can't see the future, the next CPU burst length must be predicted/estimated."
+    explanation: "SJF is optimal for waiting time but requires burst prediction."
   },
   {
     id: 119,
@@ -796,7 +400,7 @@ const quiz2Data = [
       "Converts numerical data into text."
     ],
     correctAnswer: "Extracts specific columns from a delimited file.",
-    explanation: "`cut` is used to extract sections (like columns or fields) from each line of input, typically using a delimiter (like a comma or colon)."
+    explanation: "`cut` extracts fields or columns from text."
   },
   {
     id: 120,
@@ -810,7 +414,7 @@ const quiz2Data = [
       "zip -cf mydocs.zip Documents"
     ],
     correctAnswer: "zip -r mydocs.zip Documents",
-    explanation: "The `-r` (recursive) flag is required for `zip` to traverse into the Documents directory and include all of its files and subdirectories."
+    explanation: "The `-r` flag is required for recursive directory zipping."
   },
   {
     id: 121,
@@ -823,7 +427,7 @@ const quiz2Data = [
       "killall"
     ],
     correctAnswer: "killall",
-    explanation: "`killall` allows you to terminate processes by specifying their exact name (e.g., `killall firefox`) rather than their PID."
+    explanation: "`killall` targets processes by name rather than PID."
   },
   {
     id: 122,
@@ -836,7 +440,7 @@ const quiz2Data = [
       "Interrupted"
     ],
     correctAnswer: "Success",
-    explanation: "In POSIX systems (like Linux), an exit code of 0 always indicates that the command executed successfully without errors."
+    explanation: "0 represents successful completion."
   },
   {
     id: 123,
@@ -849,11 +453,11 @@ const quiz2Data = [
       "starts / finishes"
     ],
     correctAnswer: "succeeds / fails",
-    explanation: "`&&` is a logical AND (cmd2 runs if cmd1 succeeds). `||` is a logical OR (cmd2 acts as a fallback and runs only if cmd1 fails)."
+    explanation: "&& is logical AND; || is logical OR/fallback."
   },
   {
     id: 124,
-    text: "Which of the following is not a valid way to send the force kill signal to a process?",
+    text: "Which of the following is NOT a valid way to send the force kill signal to a process?",
     type: "single",
     options: [
       "kill -FORCE PID",
@@ -862,7 +466,7 @@ const quiz2Data = [
       "kill -KILL PID"
     ],
     correctAnswer: "kill -FORCE PID",
-    explanation: "`-FORCE` is not a valid signal name. The force kill signal (SIGKILL) can be sent with `kill -9 PID`, `kill -SIGKILL PID`, or `kill -KILL PID`."
+    explanation: "There is no '-FORCE' flag in the standard kill command. Valid ways include numeric '-9' or names like '-KILL' or '-SIGKILL'."
   },
   {
     id: 125,
@@ -870,12 +474,12 @@ const quiz2Data = [
     type: "single",
     options: [
       "break / continue",
-      "continue / break",
       "exit / skip",
+      "continue / break",
       "stop / next"
     ],
     correctAnswer: "break / continue",
-    explanation: "`break` terminates the loop completely and execution continues after the `done` keyword. `continue` skips the rest of the current iteration and jumps to the next one."
+    explanation: "`break` breaks the loop entirely; `continue` skips the rest of the current loop body and moves to the next iteration."
   },
   {
     id: 126,
@@ -889,21 +493,15 @@ const quiz2Data = [
       "tar -czf documents.tbz"
     ],
     correctAnswer: "tar -cjf documents.tbz Documents",
-    explanation: "The flags for this task are: `c` (create), `j` (bzip2 compression), `f` (specify filename). The output file comes before the source directory: `tar -cjf documents.tbz Documents`."
+    explanation: "`-c` creates, `-j` uses bzip2, and `-f` specifies the filename. The destination file must come before the source directory in this syntax."
   },
   {
     id: 127,
-    text: "Complete the command sequence to save the process list and then count how many lines match `python`:\n\nps aux > procs.log; grep python procs.log | ______ -l",
+    text: "Complete the command sequence to save the process list and then count how many lines match python:\n\nps aux > procs.log; grep python procs.log | ____ -l",
     type: "single",
-    options: [
-      "wc",
-      "cut",
-      "awk",
-      "sort",
-      "uniq"
-    ],
+    options: ["wc", "cut", "awk", "sort", "uniq"],
     correctAnswer: "wc",
-    explanation: "`wc -l` counts the number of lines. After grepping for 'python', piping to `wc -l` gives the count of matching lines."
+    explanation: "`wc -l` counts the number of lines resulting from the grep filter."
   },
   {
     id: 128,
@@ -916,7 +514,7 @@ const quiz2Data = [
       "Displays 'Continues...' with x=\"UNDEFINED_VAR\""
     ],
     correctAnswer: "Error: unbound variable",
-    explanation: "The `-u` flag in `set -euo pipefail` treats unset variables as an error. Referencing `${UNDEFINED_VAR}` will cause the script to immediately exit with an 'unbound variable' error."
+    explanation: "The `-u` option in `set -u` causes the script to exit immediately with an error if it attempts to use an undefined variable."
   },
   {
     id: 129,
@@ -933,24 +531,24 @@ const quiz2Data = [
       "myfile.tar is removed",
       "myfile.tar.gz holds a compressed version of myfile.tar"
     ],
-    explanation: "`gzip` compresses the file in place. By default it removes the original and creates a `.gz` file. So `myfile.tar` is deleted and `myfile.tar.gz` is created."
+    explanation: "By default, `gzip` compresses the file, adds the `.gz` extension, and deletes the original file."
   },
   {
     id: 130,
-    text: "Waiting time is calculated as:",
+    text: "Waiting time in process scheduling is calculated as:",
     type: "single",
     options: [
       "Priority level",
       "CPU burst length",
       "Memory requirements",
-      "Order of arrival in ready queue"
+      "Time spent waiting in the ready queue"
     ],
-    correctAnswer: "Order of arrival in ready queue",
-    explanation: "Waiting time is the total time a process spends waiting in the ready queue before it gets CPU time. It is determined by the order of arrival and the scheduling algorithm."
+    correctAnswer: "Time spent waiting in the ready queue",
+    explanation: "Waiting time is the total sum of periods a process spends waiting in the ready queue to get access to the CPU."
   },
   {
     id: 131,
-    text: "Which redirection writes a command's standard error (stderr) to `errors.log`, overwriting the file if it already exists, while leaving standard output (stdout) on the terminal?",
+    text: "Which redirection writes a command's standard error (stderr) to errors.log, overwriting the file if it exists, while leaving standard output (stdout) on the terminal?",
     type: "single",
     options: [
       "command 2>> errors.log",
@@ -959,42 +557,177 @@ const quiz2Data = [
       "command &> errors.log"
     ],
     correctAnswer: "command 2> errors.log",
-    explanation: "`2>` redirects file descriptor 2 (stderr) to a file, overwriting it. `2>>` would append. `>` redirects stdout only. `&>` redirects both stdout and stderr."
+    explanation: "Descriptor `2>` specifically targets standard error and `>` overwrites the file. `&>` would redirect both stdout and stderr."
   },
   {
     id: 132,
-    text: "Complete the pipeline to count how many unique user names appear in `/etc/passwd`:\n\ngrep -d: -f1 /etc/passwd | awk | cut | ______ | ______ | ______",
+    text: "Complete the pipeline to count how many unique user names appear in /etc/passwd:\n\n____ -d: -f1 /etc/passwd | ____ | ____ | ____ -l",
     type: "single",
     options: [
-      "wc -l / sort",
-      "sort / uniq -c / sort -nr",
-      "sort / uniq / wc -l",
-      "uniq -c / sort -nr / wc -w"
+      "cut / sort / uniq / wc",
+      "grep / awk / cut / uniq",
+      "awk / cut / sort / uniq",
+      "sort / uniq / wc / grep"
     ],
-    correctAnswer: "sort / uniq / wc -l",
-    explanation: "To count unique usernames: `sort` to bring duplicates together, `uniq` to collapse them, then `wc -l` to count the resulting unique lines."
+    correctAnswer: "cut / sort / uniq / wc",
+    explanation: "1. `cut` extracts the first field (usernames). 2. `sort` groups identical names. 3. `uniq` removes duplicates. 4. `wc -l` counts the lines."
   },
   {
     id: 133,
-    text: "Which versions of regular expression syntax are commonly distinguished? (Select all that apply)",
-    type: "multiple",
+    text: "Which versions of regular expression syntax are commonly distinguished?",
+    type: "single",
     options: [
       "There is only one standard syntax",
       "The syntax depends on the specific tool being used",
       "BRE and ERE are the same",
       "Basic (BRE), Extended (ERE), Perl Compatible (PCRE)"
     ],
-    correctAnswer: [
-      "The syntax depends on the specific tool being used",
-      "Basic (BRE), Extended (ERE), Perl Compatible (PCRE)"
+    correctAnswer: "Basic (BRE), Extended (ERE), Perl Compatible (PCRE)",
+    explanation: "Linux tools typically distinguish between Basic (standard grep), Extended (egrep/-E), and Perl-style (grep -P) regex."
+  },
+  {
+    id: 134,
+    text: "What does a range (e.g., a-z) within square brackets match in shell scripting?",
+    type: "single",
+    options: [
+      "Any single character within the range",
+      "A random character from the range",
+      "The exact sequence of characters in the range",
+      "None of the characters in the range"
     ],
-    explanation: "Regex has multiple flavours: BRE (Basic), ERE (Extended, used with `grep -E` or `egrep`), and PCRE (Perl Compatible, used in many modern languages). Different tools support different flavours."
+    correctAnswer: "Any single character within the range",
+    explanation: "Bracket ranges like [a-z] match exactly one character from the specified set/range."
+  },
+  {
+    id: 135,
+    text: "Complete the fork() return value logic:\n\npid_t pid = fork();\nif (pid == ____ ) { // Child process\n} else if (pid > 0) { // Parent process\n  // pid contains the ____'s PID\n}",
+    type: "single",
+    options: [
+      "0 / child",
+      "1 / child",
+      "0 / parent",
+      "-1 / sibling"
+    ],
+    correctAnswer: "0 / child",
+    explanation: "fork() returns 0 to the child process and the child's PID to the parent process."
+  },
+  {
+    id: 136,
+    text: "What command translates or deletes characters from input?",
+    type: "text",
+    correctAnswer: "tr",
+    explanation: "The 'tr' (translate) command is used for translating or deleting characters from a stream."
+  },
+  {
+    id: 137,
+    text: "Response time in CPU scheduling is calculated as:",
+    type: "single",
+    options: [
+      "Average waiting time",
+      "Time from submission until the first response is produced",
+      "Total time taken from submission to completion",
+      "CPU utilization percentage"
+    ],
+    correctAnswer: "Time from submission until the first response is produced",
+    explanation: "Response time measures the time between submitting a request and the first response being generated (not the final output)."
+  },
+  {
+    id: 138,
+    text: "Compression of a file works by:",
+    type: "single",
+    options: [
+      "Eliminating gaps within the file",
+      "Consolidating multiple files into one",
+      "Removing the high order bit from each byte",
+      "Removing redundant information"
+    ],
+    correctAnswer: "Removing redundant information",
+    explanation: "Compression algorithms identify and remove or encode repetitive/redundant data patterns to reduce file size."
+  },
+  {
+    id: 139,
+    text: "What does the expression file{1,2,3}.txt expand to in Bash?",
+    type: "single",
+    options: [
+      "file123.txt",
+      "file[1-3].txt",
+      "file1.txt file2.txt file3.txt",
+      "file(1,2,3).txt"
+    ],
+    correctAnswer: "file1.txt file2.txt file3.txt",
+    explanation: "Brace expansion generates multiple strings by prepending and appending text to the items listed inside the braces."
+  },
+  {
+    id: 140,
+    text: "How can you force grep to interpret a string as an Extended Regular Expression (ERE)?",
+    type: "single",
+    options: [
+      "Use the -E flag with grep",
+      "Use the -P flag with grep",
+      "ERE is the default; no option needed",
+      "You cannot force ERE in grep"
+    ],
+    correctAnswer: "Use the -E flag with grep",
+    explanation: "The -E flag (or using the 'egrep' command) enables Extended Regular Expression support."
+  },
+  {
+    id: 141,
+    text: "Consider the following script executed as './test.sh SCRIPT':\n\nshow_arg() { echo \"$1\"; }\necho \"$1\"\nshow_arg \"FUNC\"\n\nWhat does the function 'show_arg' print?",
+    type: "single",
+    options: [
+      "(empty)",
+      "$1",
+      "SCRIPT",
+      "FUNC"
+    ],
+    correctAnswer: "FUNC",
+    explanation: "Inside a function, $1 refers to the function's own first argument, which is 'FUNC' in this call."
+  },
+  {
+    id: 142,
+    text: "Match system types to their best scheduling algorithm:\n1. Batch systems: ____\n2. Interactive systems: ____\n3. Mixed workloads: ____",
+    type: "single",
+    options: [
+      "SJF / Round Robin / MLFQ",
+      "Round Robin / FCFS / SJF",
+      "FCFS / MLFQ / Round Robin",
+      "Priority / SJF / Round Robin"
+    ],
+    correctAnswer: "SJF / Round Robin / MLFQ",
+    explanation: "Shortest Job First is great for Batch (minimizing turnaround). Round Robin is ideal for Interactive (response time). Multi-Level Feedback Queues (MLFQ) handle mixed loads."
+  },
+  {
+    id: 143,
+    text: "What does shopt -s dotglob enable?",
+    type: "single",
+    options: [
+      "Enables graphical glob interface",
+      "Globs match hidden files [dotfiles]",
+      "Shows dots instead of unmatched patterns",
+      "Enables pattern debugging"
+    ],
+    correctAnswer: "Globs match hidden files [dotfiles]",
+    explanation: "By default, shell wildcards (globs) do not match files starting with a dot (hidden files). Enabling 'dotglob' allows patterns like '*' to include them."
+  },
+  {
+    id: 144,
+    text: "What is the correct way to save the current directory to a variable?",
+    type: "single",
+    options: [
+      "A=cwd",
+      "pwd | $A",
+      "pwd $A",
+      "A=pwd",
+      "A=`pwd`"
+    ],
+    correctAnswer: "A=`pwd`",
+    explanation: "Command substitution using backticks (or $( )) executes the command and assigns its standard output to the variable."
   }
 ];
 
 const secretQuizData = [
   { id: 2001, text: "What does CLI stand for?", type: "single", options: ["Core Learning Interface", "Command Learning Interface", "Core Line Interface", "Command Line Interface"], correctAnswer: "Command Line Interface", explanation: "" },
-  { id: 2002, text: "Commands are case-sensitive. True or False?", type: "single", options: ["True", "False"], correctAnswer: "True", explanation: "" },
+    { id: 2002, text: "Commands are case-sensitive. True or False?", type: "single", options: ["True", "False"], correctAnswer: "True", explanation: "" },
   { id: 2003, text: "When entering a command, do arguments or options typically come first?", type: "single", options: ["Options", "Arguments"], correctAnswer: "Options", explanation: "" },
   { id: 2004, text: "Which of the following is NOT a correct way to combine options?", type: "single", options: ["-l -r", "-lr", "-r l", "-rl"], correctAnswer: "-r l", explanation: "" },
   { id: 2005, text: "Which command will print your current location in the filesystem?", type: "single", options: ["pcl", "pwd", "pd", "cd"], correctAnswer: "pwd", explanation: "" },
@@ -2498,7 +2231,6 @@ export default function App() {
   const [checkedQuestions, setCheckedQuestions] = useState([]);
   const [showResults, setShowResults] = useState(false);
 
-  // Function to randomize array order (Fisher-Yates shuffle)
   const shuffleArray = (array) => {
     const newArray = [...array];
     for (let i = newArray.length - 1; i > 0; i--) {
@@ -2572,7 +2304,7 @@ export default function App() {
 
   const restartQuiz = () => {
     const data = selectedQuizId === 'quiz1' ? quiz1Data : selectedQuizId === 'quiz2' ? quiz2Data : secretQuizData;
-    setActiveQuestions(shuffleArray(data)); // Randomize on restart
+    setActiveQuestions(shuffleArray(data));
     setCurrentQuestionIndex(0);
     setUserAnswers({});
     setCheckedQuestions([]);
@@ -2582,7 +2314,7 @@ export default function App() {
   const retakeMissed = () => {
     const missed = activeQuestions.filter(q => !checkAnswer(q.id));
     if (missed.length > 0) {
-      setActiveQuestions(shuffleArray(missed)); // Randomize missed questions
+      setActiveQuestions(shuffleArray(missed));
       setCurrentQuestionIndex(0);
       setUserAnswers({});
       setCheckedQuestions([]);
@@ -2649,10 +2381,6 @@ export default function App() {
       return;
     }
     const data = quizId === 'quiz1' ? quiz1Data : quiz2Data;
-    if (data.length === 0) {
-      alert("QUIZ 2 is currently empty. Questions will be added later!");
-      return;
-    }
     setSelectedQuizId(quizId);
     setActiveQuestions(shuffleArray(data));
     setCurrentQuestionIndex(0);
@@ -2685,27 +2413,23 @@ export default function App() {
 
   if (showSecretPrompt) {
     return (
-      <div className="flex items-center justify-center min-h-screen p-4 transition-colors duration-300 bg-gray-100 dark:bg-gray-900">
-        <div className="max-w-md w-full rounded-2xl shadow-xl overflow-hidden p-8 text-center bg-white dark:bg-gray-800 transition-colors duration-300">
+      <div className="flex items-center justify-center min-h-screen p-4 bg-gray-100 dark:bg-gray-900">
+        <div className="max-w-md w-full rounded-2xl shadow-xl overflow-hidden p-8 text-center bg-white dark:bg-gray-800 transition-colors">
           <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6 bg-purple-100 dark:bg-purple-900/50">
             <Lock className="w-8 h-8 text-purple-600 dark:text-purple-400" />
           </div>
           <h1 className="text-2xl font-bold mb-2 text-gray-800 dark:text-white">SECRET Quiz</h1>
-          <p className="mb-8 text-gray-600 dark:text-gray-400">Enter the secret password to unlock this quiz</p>
+          <p className="mb-8 text-gray-600 dark:text-gray-400">Restricted module access.</p>
           <form onSubmit={handleSecretPassword} className="space-y-4">
             <div>
               <input
                 type="password"
                 value={secretPasswordInput}
                 onChange={(e) => setSecretPasswordInput(e.target.value)}
-                placeholder="Enter secret password..."
-                className={`w-full p-4 border rounded-xl text-lg outline-none transition-all text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 ${
-                  secretPasswordError
-                    ? 'border-red-500 bg-red-50 dark:bg-red-900/20 text-red-900 dark:text-red-200'
-                    : 'border-gray-300 dark:border-gray-600 focus:ring-purple-500 bg-white dark:bg-gray-700'
-                }`}
+                placeholder="Enter password..."
+                className={`w-full p-4 border rounded-xl text-lg outline-none transition-all text-gray-900 dark:text-white ${secretPasswordError ? 'border-red-500 bg-red-50 dark:bg-red-900/20' : 'border-gray-300 dark:border-gray-600 focus:ring-purple-500 bg-white dark:bg-gray-700'}`}
               />
-              {secretPasswordError && <p className="text-red-500 text-sm mt-2 text-left">Incorrect password. Try again.</p>}
+              {secretPasswordError && <p className="text-red-500 text-sm mt-2 text-left">Access denied.</p>}
             </div>
             <div className="flex gap-3">
               <button type="button" onClick={() => setShowSecretPrompt(false)} className="flex-1 py-4 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-bold rounded-xl transition-colors text-lg hover:bg-gray-50 dark:hover:bg-gray-700">
@@ -2723,30 +2447,22 @@ export default function App() {
 
   if (!isAuthenticated) {
     return (
-      <div className="flex items-center justify-center min-h-screen p-4 transition-colors duration-300 bg-gray-100 dark:bg-gray-900">
-        <div className="max-w-md w-full rounded-2xl shadow-xl overflow-hidden p-8 text-center bg-white dark:bg-gray-800 transition-colors duration-300">
+      <div className="flex items-center justify-center min-h-screen p-4 bg-gray-100 dark:bg-gray-900">
+        <div className="max-w-md w-full rounded-2xl shadow-xl overflow-hidden p-8 text-center bg-white dark:bg-gray-800 transition-colors">
           <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6 bg-blue-100 dark:bg-blue-900/50">
             <Lock className="w-8 h-8 text-blue-600 dark:text-blue-400" />
           </div>
-          <h1 className="text-2xl font-bold mb-2 text-gray-800 dark:text-white">Private Access</h1>
-          <p className="mb-8 text-gray-600 dark:text-gray-400">You need a password broski</p>
-          
+          <h1 className="text-2xl font-bold mb-2 text-gray-800 dark:text-white">Linux Exam Prep</h1>
+          <p className="mb-8 text-gray-600 dark:text-gray-400">Authentication required for practice materials.</p>
           <form onSubmit={handleLogin} className="space-y-4">
-            <div>
-              <input
-                type="password"
-                value={passwordInput}
-                onChange={(e) => setPasswordInput(e.target.value)}
-                placeholder="Enter password..."
-                className={`w-full p-4 border rounded-xl text-lg outline-none transition-all text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 ${
-                  loginError 
-                    ? 'border-red-500 bg-red-50 dark:bg-red-900/20 text-red-900 dark:text-red-200' 
-                    : 'border-gray-300 dark:border-gray-600 focus:ring-blue-500 bg-white dark:bg-gray-700'
-                }`}
-              />
-              {loginError && <p className="text-red-500 text-sm mt-2 text-left">Incorrect password. Please try again.</p>}
-            </div>
-            <button type="submit" className="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition-colors text-lg">
+            <input
+              type="password"
+              value={passwordInput}
+              onChange={(e) => setPasswordInput(e.target.value)}
+              placeholder="Enter access code..."
+              className={`w-full p-4 border rounded-xl text-lg outline-none transition-all ${loginError ? 'border-red-500 bg-red-50 dark:bg-red-900/20' : 'border-gray-300 dark:border-gray-600 focus:ring-blue-500 bg-white dark:bg-gray-700 dark:text-white'}`}
+            />
+            <button type="submit" className="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition-colors text-lg shadow-md">
               Unlock
             </button>
           </form>
@@ -2757,62 +2473,51 @@ export default function App() {
 
   if (!selectedQuizId) {
     return (
-      <div className="p-4 md:p-8 min-h-screen transition-colors duration-300 bg-gray-100 dark:bg-gray-900">
-        <div className="max-w-4xl mx-auto">
-          <div className="flex justify-between items-center mb-12 mt-8">
-            <div>
-              <h1 className="text-4xl font-bold mb-2 text-gray-900 dark:text-white">Your Quizzes</h1>
-              <p className="text-lg text-gray-600 dark:text-gray-400">Select a quiz module to begin your practice.</p>
-            </div>
+      <div className="p-4 md:p-8 min-h-screen bg-gray-100 dark:bg-gray-900">
+        <div className="max-w-5xl mx-auto">
+          <div className="mb-12 mt-8 text-center md:text-left">
+            <h1 className="text-4xl font-bold mb-2 text-gray-900 dark:text-white">Study Dashboard</h1>
+            <p className="text-lg text-gray-600 dark:text-gray-400">Prepare for the exam by completing these modules.</p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-6">
-            <button 
-              onClick={() => handleSelectQuiz('quiz1')}
-              className="group rounded-2xl p-6 text-left shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all border border-transparent bg-white dark:bg-gray-800 hover:border-blue-500 dark:hover:border-blue-500"
-            >
+          <div className="grid md:grid-cols-3 gap-6">
+            <button onClick={() => handleSelectQuiz('quiz1')} className="group rounded-2xl p-6 text-left shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all border border-transparent bg-white dark:bg-gray-800 hover:border-blue-500">
               <div className="flex justify-between items-start mb-4">
                 <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-blue-100 dark:bg-blue-900/50">
                   <span className="font-bold text-xl text-blue-600 dark:text-blue-400">1</span>
                 </div>
-                <ChevronRight className="w-6 h-6 text-gray-400 group-hover:text-blue-500 transition-colors" />
+                <ChevronRight className="w-6 h-6 text-gray-400 group-hover:text-blue-500" />
               </div>
               <h2 className="text-2xl font-bold mb-2 text-gray-800 dark:text-white">QUIZ 1</h2>
-              <p className="mb-4 text-gray-600 dark:text-gray-400">Linux Essentials & OS Fundamentals</p>
+              <p className="mb-4 text-gray-600 dark:text-gray-400">OS Fundamentals & Shell basics</p>
               <span className="inline-block px-3 py-1 text-sm font-medium rounded-full bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200">
                 {quiz1Data.length} Questions
               </span>
             </button>
 
-            <button 
-              onClick={() => handleSelectQuiz('quiz2')}
-              className="group rounded-2xl p-6 text-left shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all border border-transparent bg-white dark:bg-gray-800 hover:border-amber-500 dark:hover:border-amber-500"
-            >
+            <button onClick={() => handleSelectQuiz('quiz2')} className="group rounded-2xl p-6 text-left shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all border border-transparent bg-white dark:bg-gray-800 hover:border-amber-500">
               <div className="flex justify-between items-start mb-4">
                 <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-amber-100 dark:bg-amber-900/50">
                   <span className="font-bold text-xl text-amber-600 dark:text-amber-400">2</span>
                 </div>
-                <ChevronRight className="w-6 h-6 text-gray-400 group-hover:text-amber-500 transition-colors" />
+                <ChevronRight className="w-6 h-6 text-gray-400 group-hover:text-amber-500" />
               </div>
-              <h2 className="text-2xl font-bold mb-2 text-gray-800 dark:text-white">QUIZ 2</h2>
-              <p className="mb-4 text-gray-600 dark:text-gray-400">Bash Scripts, Architectures & Operations</p>
+              <h2 className="text-2xl font-bold mb-2 text-gray-800 dark:text-white">QUIZ2</h2>
+              <p className="mb-4 text-gray-600 dark:text-gray-400">Pipelines, Redirection & Scheduling</p>
               <span className="inline-block px-3 py-1 text-sm font-medium rounded-full bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200">
                 {quiz2Data.length} Questions
               </span>
             </button>
 
-            <button 
-              onClick={() => handleSelectQuiz('secret')}
-              className="group rounded-2xl p-6 text-left shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all border border-transparent bg-white dark:bg-gray-800 hover:border-purple-500 dark:hover:border-purple-500"
-            >
+            <button onClick={() => handleSelectQuiz('secret')} className="group rounded-2xl p-6 text-left shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all border border-transparent bg-white dark:bg-gray-800 hover:border-purple-500">
               <div className="flex justify-between items-start mb-4">
                 <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-purple-100 dark:bg-purple-900/50">
                   <Lock className="w-6 h-6 text-purple-600 dark:text-purple-400" />
                 </div>
-                <ChevronRight className="w-6 h-6 text-gray-400 group-hover:text-purple-500 transition-colors" />
+                <ChevronRight className="w-6 h-6 text-gray-400 group-hover:text-purple-500" />
               </div>
               <h2 className="text-2xl font-bold mb-2 text-gray-800 dark:text-white">SECRET</h2>
-              <p className="mb-4 text-gray-600 dark:text-gray-400">Password protected quiz module</p>
+              <p className="mb-4 text-gray-600 dark:text-gray-400">idk</p>
               <span className="inline-block px-3 py-1 text-sm font-medium rounded-full bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200">
                 {secretQuizData.length} Questions
               </span>
@@ -2829,22 +2534,15 @@ export default function App() {
     const hasMissed = score < activeQuestions.length;
 
     return (
-      <div className="p-4 md:p-8 min-h-screen transition-colors duration-300 bg-gray-100 dark:bg-gray-900">
+      <div className="p-4 md:p-8 min-h-screen bg-gray-100 dark:bg-gray-900">
         <div className="max-w-4xl mx-auto rounded-2xl shadow-xl overflow-hidden bg-white dark:bg-gray-800 transition-colors">
           <div className="p-8 text-center text-white relative bg-blue-600 dark:bg-blue-800">
-            <div className="absolute top-4 right-4 flex gap-2">
-              <button onClick={exitQuiz} className="p-2 rounded-full hover:bg-white/20 transition-colors" title="Back to Quizzes">
-                <Home className="w-6 h-6" />
-              </button>
-            </div>
-            <Award className="w-16 h-16 mx-auto mb-4 text-white" />
-            <h1 className="text-3xl font-bold mb-2 text-white">Exam Results</h1>
-            <p className="text-xl text-white">You scored {score} out of {activeQuestions.length} ({percentage}%)</p>
-            {percentage >= 80 ? (
-              <p className="mt-2 text-green-300 font-semibold">Excellent! You are ready for the exam! 🚀</p>
-            ) : (
-              <p className="mt-2 text-yellow-300 font-semibold">Good effort! Review the missed questions below to perfect your knowledge.</p>
-            )}
+            <button onClick={exitQuiz} className="absolute top-4 right-4 p-2 rounded-full hover:bg-white/20 transition-colors">
+              <Home className="w-6 h-6" />
+            </button>
+            <Award className="w-16 h-16 mx-auto mb-4" />
+            <h1 className="text-3xl font-bold mb-2">Quiz Results</h1>
+            <p className="text-xl">Score: {score} / {activeQuestions.length} ({percentage}%)</p>
           </div>
           
           <div className="p-8 space-y-8 h-[60vh] overflow-y-auto">
@@ -2858,29 +2556,25 @@ export default function App() {
                     </div>
                     <div className="flex-1">
                       <h3 className="font-semibold text-lg mb-2 text-gray-900 dark:text-white whitespace-pre-wrap">Q{idx + 1}: {q.text}</h3>
-                      
-                      <div className="mb-3 space-y-1 text-sm">
-                        <p>
-                          <span className="font-medium text-gray-600 dark:text-gray-400">Your Answer: </span>
-                          <span className={`font-medium ${isCorrect ? 'text-green-700 dark:text-green-400' : 'text-red-700 dark:text-red-400'}`}>
-                            {q.type === 'multiple' 
-                              ? (userAnswers[q.id]?.join(', ') || 'None') 
-                              : (userAnswers[q.id] || 'None')}
+                      <p className="text-sm">
+                        <span className="font-bold text-gray-600 dark:text-gray-400">Answer: </span>
+                        <span className={isCorrect ? 'text-green-700 dark:text-green-400' : 'text-red-700 dark:text-red-400'}>
+                          {q.type === 'multiple' ? (userAnswers[q.id]?.join(', ') || 'None') : (userAnswers[q.id] || 'None')}
+                        </span>
+                      </p>
+                      {!isCorrect && (
+                        <p className="text-sm mt-1">
+                          <span className="font-bold text-gray-600 dark:text-gray-400">Correct: </span>
+                          <span className="text-green-700 dark:text-green-400">
+                            {q.type === 'multiple' ? q.correctAnswer.join(', ') : q.correctAnswer}
                           </span>
                         </p>
-                        {!isCorrect && (
-                          <p>
-                            <span className="font-medium text-gray-600 dark:text-gray-400">Correct Answer: </span>
-                            <span className="font-medium text-green-700 dark:text-green-400">
-                              {q.type === 'multiple' ? q.correctAnswer.join(', ') : q.correctAnswer}
-                            </span>
-                          </p>
-                        )}
-                      </div>
-                      
-                      <div className="mt-3 text-sm p-3 rounded border bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-300">
-                        <span className="font-bold text-blue-800 dark:text-blue-400">Explanation:</span> {q.explanation}
-                      </div>
+                      )}
+                      {q.explanation && (
+                        <div className="mt-3 text-sm p-3 rounded border bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700">
+                          <span className="font-bold text-blue-600">Note:</span> {q.explanation}
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -2889,12 +2583,12 @@ export default function App() {
           </div>
 
           <div className="p-6 border-t flex flex-wrap justify-center gap-4 bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700">
-            <button onClick={restartQuiz} className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors shadow-sm">
+            <button onClick={restartQuiz} className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 shadow-sm">
               <RotateCcw className="w-5 h-5" /> Retake All
             </button>
             {hasMissed && (
-              <button onClick={retakeMissed} className="flex items-center gap-2 px-6 py-3 bg-amber-500 text-white font-semibold rounded-lg hover:bg-amber-600 transition-colors shadow-sm">
-                <RefreshCw className="w-5 h-5" /> Retake Missed Only
+              <button onClick={retakeMissed} className="flex items-center gap-2 px-6 py-3 bg-amber-500 text-white font-semibold rounded-lg hover:bg-amber-600 shadow-sm">
+                <RefreshCw className="w-5 h-5" /> Retake Missed
               </button>
             )}
           </div>
@@ -2906,29 +2600,25 @@ export default function App() {
   if (!question) return null;
 
   return (
-    <div className="flex items-center justify-center p-4 min-h-screen transition-colors duration-300 bg-gray-100 dark:bg-gray-900">
+    <div className="flex items-center justify-center p-4 min-h-screen bg-gray-100 dark:bg-gray-900">
       <div className="max-w-3xl w-full rounded-2xl shadow-xl overflow-hidden flex flex-col min-h-[500px] bg-white dark:bg-gray-800 transition-colors">
-        {/* Header & Progress */}
-        <div className="text-white p-6 relative bg-blue-600 dark:bg-blue-800">
-          <div className="absolute top-6 right-6 flex gap-3">
-            <button onClick={exitQuiz} className="p-2 rounded-full hover:bg-white/20 transition-colors" title="Back to Quizzes">
-              <Home className="w-5 h-5" />
-            </button>
-          </div>
+        <div className="text-white p-6 relative bg-blue-600 dark:bg-blue-800 shadow-lg">
+          <button onClick={exitQuiz} className="absolute top-6 right-6 p-2 rounded-full hover:bg-white/20 transition-colors">
+            <Home className="w-5 h-5" />
+          </button>
           <div className="flex justify-between items-center mb-4 pr-16">
-            <h2 className="text-xl font-bold text-white">
-              {selectedQuizId === 'quiz1' ? 'QUIZ 1: Linux Essentials' : selectedQuizId === 'quiz2' ? 'QUIZ 2' : '🔒 SECRET'}
+            <h2 className="text-xl font-bold">
+              {selectedQuizId === 'quiz1' ? 'Essentials' : selectedQuizId === 'quiz2' ? 'Operations' : '🔒 Hardware'}
             </h2>
-            <span className="font-medium px-3 py-1 rounded-full text-sm text-white bg-blue-700 dark:bg-blue-900">
-              Question {currentQuestionIndex + 1} of {activeQuestions.length}
+            <span className="font-medium px-3 py-1 rounded-full text-sm bg-blue-700">
+              Q{currentQuestionIndex + 1} / {activeQuestions.length}
             </span>
           </div>
-          <div className="w-full rounded-full h-2 bg-blue-800 dark:bg-blue-900">
+          <div className="w-full rounded-full h-2 bg-blue-800">
             <div className="bg-green-400 h-2 rounded-full transition-all duration-300" style={{ width: `${((currentQuestionIndex) / activeQuestions.length) * 100}%` }}></div>
           </div>
         </div>
 
-        {/* Question Area */}
         <div className="p-8 flex-1 flex flex-col">
           <h3 className="text-2xl font-semibold mb-6 leading-snug text-gray-900 dark:text-white whitespace-pre-wrap">
             {question.text}
@@ -2944,7 +2634,7 @@ export default function App() {
                   checked={userAnswers[question.id] === option}
                   onChange={() => handleSingleSelect(option)}
                   disabled={isChecked}
-                  className="w-5 h-5 rounded-full focus:ring-blue-500 disabled:opacity-50 text-blue-600 bg-white border-gray-300 dark:text-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                  className="w-5 h-5 focus:ring-blue-500 text-blue-600 border-gray-300 dark:bg-gray-700"
                 />
                 <span className="ml-3 text-lg">{option}</span>
               </label>
@@ -2962,7 +2652,7 @@ export default function App() {
                         checked={isOptionChecked}
                         onChange={() => handleMultiSelect(option)}
                         disabled={isChecked}
-                        className="w-5 h-5 rounded focus:ring-blue-500 disabled:opacity-50 text-blue-600 bg-white border-gray-300 dark:text-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                        className="w-5 h-5 rounded focus:ring-blue-500 text-blue-600"
                       />
                       <span className="ml-3 text-lg">{option}</span>
                     </label>
@@ -2978,43 +2668,24 @@ export default function App() {
                   value={userAnswers[question.id] || ''}
                   onChange={handleTextChange}
                   disabled={isChecked}
-                  placeholder="Type your answer here..."
-                  className={`w-full p-4 border rounded-xl text-lg outline-none transition-all ${
-                    isChecked 
-                      ? isCurrentCorrect 
-                        ? 'bg-green-50 border-green-500 text-green-900 dark:bg-green-900/20 dark:text-green-300'
-                        : 'bg-red-50 border-red-500 text-red-900 dark:bg-red-900/20 dark:text-red-300'
-                      : 'border-gray-300 focus:ring-blue-500 bg-white text-gray-900 placeholder-gray-400 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-500'
-                  }`}
+                  placeholder="Type answer here..."
+                  className={`w-full p-4 border rounded-xl text-lg outline-none transition-all ${isChecked ? (isCurrentCorrect ? 'bg-green-50 border-green-500' : 'bg-red-50 border-red-500') : 'border-gray-300 focus:ring-blue-500 dark:bg-gray-700 dark:text-white'}`}
                 />
               </div>
             )}
             
-            {/* Immediate Feedback Container */}
             {isChecked && (
-              <div className={`mt-6 p-5 rounded-xl border-l-4 shadow-sm ${isCurrentCorrect ? 'bg-green-50 border-green-500 dark:bg-green-900/20' : 'bg-red-50 border-red-500 dark:bg-red-900/20'}`}>
+              <div className={`mt-6 p-5 rounded-xl border-l-4 shadow-md ${isCurrentCorrect ? 'bg-green-50 border-green-500' : 'bg-red-50 border-red-500'}`}>
                 <div className="flex items-start gap-4">
-                  {isCurrentCorrect ? (
-                    <CheckCircle2 className="w-8 h-8 flex-shrink-0 text-green-600 dark:text-green-400" />
-                  ) : (
-                    <XCircle className="w-8 h-8 flex-shrink-0 text-red-600 dark:text-red-400" />
-                  )}
+                  {isCurrentCorrect ? <CheckCircle2 className="w-8 h-8 text-green-600" /> : <XCircle className="w-8 h-8 text-red-600" />}
                   <div>
-                    <h4 className={`text-lg font-bold ${isCurrentCorrect ? 'text-green-800 dark:text-green-300' : 'text-red-800 dark:text-red-300'}`}>
+                    <h4 className={`text-lg font-bold ${isCurrentCorrect ? 'text-green-800' : 'text-red-800'}`}>
                       {isCurrentCorrect ? 'Correct!' : 'Incorrect'}
                     </h4>
-                    
-                    {!isCurrentCorrect && question.type !== 'single' && (
-                      <p className="mt-2 font-medium inline-block px-3 py-1 rounded bg-white/60 text-red-900 dark:bg-black/30 dark:text-red-200">
-                        Correct Answer:{' '}
-                        {Array.isArray(question.correctAnswer) ? question.correctAnswer.join(', ') : question.correctAnswer}
-                      </p>
+                    {!isCurrentCorrect && (
+                      <p className="mt-2 font-medium">Answer: {Array.isArray(question.correctAnswer) ? question.correctAnswer.join(', ') : question.correctAnswer}</p>
                     )}
-                    
-                    <p className="mt-3 leading-relaxed text-gray-800 dark:text-gray-300">
-                      <span className="font-bold block mb-1 text-gray-900 dark:text-white">Explanation:</span> 
-                      {question.explanation}
-                    </p>
+                    {question.explanation && <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">{question.explanation}</p>}
                   </div>
                 </div>
               </div>
@@ -3022,38 +2693,18 @@ export default function App() {
           </div>
         </div>
 
-        {/* Footer Navigation */}
-        <div className="p-6 border-t flex justify-between items-center bg-gray-50 border-gray-200 dark:bg-gray-800 dark:border-gray-700">
-          <button 
-            onClick={prevQuestion}
-            disabled={currentQuestionIndex === 0}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-lg font-medium transition-colors ${
-              currentQuestionIndex === 0 
-              ? 'text-gray-400 cursor-not-allowed dark:text-gray-600'
-              : 'text-gray-700 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-700'
-            }`}
-          >
+        <div className="p-6 border-t flex justify-between items-center bg-gray-50 dark:bg-gray-800">
+          <button onClick={prevQuestion} disabled={currentQuestionIndex === 0} className={`flex items-center gap-2 px-5 py-2.5 rounded-lg font-medium transition-colors ${currentQuestionIndex === 0 ? 'text-gray-400 dark:text-gray-600' : 'text-gray-700 hover:bg-gray-200 dark:text-gray-300'}`}>
             <ArrowLeft className="w-5 h-5" /> Previous
           </button>
           
           {!isChecked ? (
-            <button 
-              onClick={handleCheckQuestion}
-              disabled={!isCurrentQuestionAnswered()}
-              className={`flex items-center gap-2 px-6 py-2.5 rounded-lg font-semibold transition-all shadow-sm ${
-                isCurrentQuestionAnswered() 
-                ? 'bg-amber-500 text-white hover:bg-amber-600' 
-                : 'cursor-not-allowed bg-gray-300 text-gray-500 dark:bg-gray-700 dark:text-gray-500'
-              }`}
-            >
+            <button onClick={handleCheckQuestion} disabled={!isCurrentQuestionAnswered()} className={`flex items-center gap-2 px-6 py-2.5 rounded-lg font-semibold transition-all shadow-md ${isCurrentQuestionAnswered() ? 'bg-amber-500 text-white hover:bg-amber-600' : 'bg-gray-300 text-gray-500'}`}>
               Check Answer
             </button>
           ) : (
-            <button 
-              onClick={nextQuestion}
-              className="flex items-center gap-2 px-6 py-2.5 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors shadow-sm"
-            >
-              {currentQuestionIndex === activeQuestions.length - 1 ? 'Finish Quiz' : 'Next'} <ArrowRight className="w-5 h-5" />
+            <button onClick={nextQuestion} className="flex items-center gap-2 px-6 py-2.5 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 shadow-md">
+              {currentQuestionIndex === activeQuestions.length - 1 ? 'Show Results' : 'Next Question'} <ArrowRight className="w-5 h-5" />
             </button>
           )}
         </div>
