@@ -155,6 +155,395 @@ const quiz1Data = [
     ],
     correctAnswer: "The directory above the current working directory",
     explanation: "The double dot (..) refers to the parent directory."
+  },
+  {
+    id: 15,
+    text: "In Bash, which symbol represents the home directory, which refers to the parent directory, and which denotes the current directory?",
+    type: "single",
+    options: [
+      "~ (home), - (parent), . (current)",
+      "~ (home), .. (parent), . (current)",
+      "/ (home), .. (parent), * (current)",
+      "~ (home), . (parent), .. (current)"
+    ],
+    correctAnswer: "~ (home), .. (parent), . (current)",
+    explanation: "Tilde (~) is home. Double dot (..) is parent. Single dot (.) is current directory. (A single dash '-' takes you to your PREVIOUS directory, not necessarily parent)."
+  },
+  {
+    id: 16,
+    text: "Which option for the `ls` command, when used in conjunction with the `-l` option, will display human-readable file sizes?",
+    type: "single",
+    options: ["-h", "-M", "-H", "-S"],
+    correctAnswer: "-h",
+    explanation: "-h stands for human-readable (shows KB, MB, GB instead of just bytes)."
+  },
+  {
+    id: 17,
+    text: "What does the -r option do with the `ls` command?",
+    type: "single",
+    options: [
+      "Groups files by their extension type",
+      "Displays detailed information about files",
+      "Shows hidden files including dotfiles",
+      "Lists files in reverse alphabetical order"
+    ],
+    correctAnswer: "Lists files in reverse alphabetical order",
+    explanation: "-r reverses the sort order. (-R uppercase is recursive, -a is hidden, -l is detailed)."
+  },
+  {
+    id: 18,
+    text: "The `ls` command without options or arguments:",
+    type: "single",
+    options: [
+      "...lists the contents of the current directory.",
+      "...prompts for a directory to list.",
+      "...generates an error as this command requires arguments.",
+      "...lists the contents of a user's home directory."
+    ],
+    correctAnswer: "...lists the contents of the current directory.",
+    explanation: "By default, ls lists visible files and directories in your current location."
+  },
+  {
+    id: 19,
+    text: "Which of the following commands will prevent any aliased options to the `ls` command?",
+    type: "single",
+    options: ["\"ls\"", "\\ls", "/ls", "%ls"],
+    correctAnswer: "\\ls",
+    explanation: "Prepending a backslash (\\) temporarily bypasses any alias set for that command."
+  },
+  {
+    id: 20,
+    text: "The `touch` command can be used to: (choose two)",
+    type: "multiple",
+    options: [
+      "Update the timestamp of existing files",
+      "Rename a file",
+      "Create new files",
+      "Change ownership of a file"
+    ],
+    correctAnswer: [
+      "Update the timestamp of existing files",
+      "Create new files"
+    ],
+    explanation: "If the file doesn't exist, touch creates it. If it does exist, touch updates its modified/accessed timestamps."
+  },
+  {
+    id: 21,
+    text: "What is the standard option to view a command's built-in help?",
+    type: "single",
+    options: ["-h", "--info", "--help", "--manual"],
+    correctAnswer: "--help",
+    explanation: "--help is the GNU standard long option for built-in command documentation."
+  },
+  {
+    id: 22,
+    text: "To get help on using the `info` command, execute: (choose two)",
+    type: "multiple",
+    options: ["help info", "info info", "man info", "info -q"],
+    correctAnswer: ["info info", "man info"],
+    explanation: "`info` is a standalone program, not a bash builtin, so `help info` doesn't work. You use `man info` or `info info`."
+  },
+  {
+    id: 23,
+    text: "In which section number of the man pages are regular user commands documented?",
+    type: "text",
+    correctAnswer: "1",
+    explanation: "Section 1 is for user commands. Section 8 is usually for sysadmin commands. Section 5 is for configuration files."
+  },
+  {
+    id: 24,
+    text: "To search the man page sections for the keyword 'example', which of the following command lines could you execute? (choose two)",
+    type: "multiple",
+    options: ["man -k example", "whatis example", "man -f example", "apropos example"],
+    correctAnswer: ["man -k example", "apropos example"],
+    explanation: "`apropos` and `man -k` search the name AND DESCRIPTION of man pages for a keyword. `whatis` and `man -f` only search the exact command names."
+  },
+  {
+    id: 25,
+    text: "The ______ command displays complete manual pages, while ______ provides a quick summary of command options.",
+    type: "single",
+    options: [
+      "man / apropos",
+      "man / whatis",
+      "info / man",
+      "whatis / apropos"
+    ],
+    correctAnswer: "man / whatis",
+    explanation: "`man` shows the full page. `whatis` shows a one-line summary (the NAME section of the man page)."
+  },
+  {
+    id: 26,
+    text: "Which glob character matches exactly one character?",
+    type: "single",
+    options: ["*", "?", ".", "["],
+    correctAnswer: "?",
+    explanation: "The question mark (?) matches exactly one character in globbing. Asterisk (*) matches zero or more."
+  },
+  {
+    id: 27,
+    text: "Which of the following are glob characters? (choose three)",
+    type: "multiple",
+    options: [
+      "The asterisk *",
+      "The dash character -",
+      "The question mark ?",
+      "The square brackets [ and ]"
+    ],
+    correctAnswer: [
+      "The asterisk *",
+      "The question mark ?",
+      "The square brackets [ and ]"
+    ],
+    explanation: "*, ?, and [] are the fundamental shell globbing characters."
+  },
+  {
+    id: 28,
+    text: "What will the following statement do? `for name in \\`cat /root/users\\``",
+    type: "single",
+    options: [
+      "Run for two values: cat and /root/users",
+      "Report a syntax error due to missing backtick closure",
+      "Assign to the name variable each value in the specified file",
+      "Enter an infinite loop reading the file continuously"
+    ],
+    correctAnswer: "Assign to the name variable each value in the specified file",
+    explanation: "The backticks execute the command `cat /root/users` first. The `for` loop then iterates over every word/line returned by that command."
+  },
+  {
+    id: 29,
+    text: "What is the key difference between `source script.sh` and `./script.sh`?",
+    type: "single",
+    options: [
+      "source is faster because it skips the fork() system call",
+      "source requires execute permission",
+      "They are identical — both execute in the current shell environment",
+      "source runs in current shell; ./script.sh runs in subshell"
+    ],
+    correctAnswer: "source runs in current shell; ./script.sh runs in subshell",
+    explanation: "Using `./` creates a new child process (subshell) so variables don't persist. `source` runs it in your CURRENT shell, so variable changes stay active."
+  },
+  {
+    id: 30,
+    text: "You define `SECRET=password` without export. What happens in a subshell?",
+    type: "single",
+    options: [
+      "The subshell inherits all variables",
+      "An error occurs",
+      "The variable SECRET is undefined",
+      "The variable has value 'password'"
+    ],
+    correctAnswer: "The variable SECRET is undefined",
+    explanation: "Local variables (not exported) are NOT passed down to child processes/subshells."
+  },
+  {
+    id: 31,
+    text: "To make a variable accessible in child processes, use the ______ command. To remove a variable entirely, use ______.",
+    type: "single",
+    options: [
+      "export / delete",
+      "env / remove",
+      "export / unset",
+      "set / unset"
+    ],
+    correctAnswer: "export / unset",
+    explanation: "`export` makes it global to children. `unset` completely removes a variable."
+  },
+  {
+    id: 32,
+    text: "Which chmod ensures ONLY the owner can execute a script?",
+    type: "single",
+    options: [
+      "`chmod +x script`",
+      "`chmod u+x,go-x script`",
+      "`chmod a+x script`",
+      "`chmod 755 script`"
+    ],
+    correctAnswer: "`chmod u+x,go-x script`",
+    explanation: "`u+x` adds execution for the User (owner). `go-x` explicitly removes execution for Group and Others."
+  },
+  {
+    id: 33,
+    text: "Apple's OS X is: (choose three)",
+    type: "multiple",
+    options: [
+      "Partially based on code from the FreeBSD project",
+      "Derived from Linux",
+      "Able to natively run Windows binaries",
+      "A fully certified UNIX distribution",
+      "Tightly integrated with Apple hardware",
+      "Primarily used to manage network services"
+    ],
+    correctAnswer: [
+      "Partially based on code from the FreeBSD project",
+      "A fully certified UNIX distribution",
+      "Tightly integrated with Apple hardware"
+    ],
+    explanation: "macOS (OS X) is NOT Linux. It is a certified UNIX, heavily based on FreeBSD, and tied to Apple hardware."
+  },
+  {
+    id: 34,
+    text: "Linux source code is available to:",
+    type: "single",
+    options: [
+      "Anyone who has the knowledge needed to access it",
+      "Only university researchers with a government grant",
+      "Employees of the FBI, CIA and NSA with top secret clearance",
+      "Only employees of the Linux Foundation"
+    ],
+    correctAnswer: "Anyone who has the knowledge needed to access it",
+    explanation: "Linux is open source. Anyone can view and modify the source code."
+  },
+  {
+    id: 35,
+    text: "Open source licenses differ, but generally agree that: (choose two)",
+    type: "multiple",
+    options: [
+      "You should have access to the source code of software",
+      "You are not allowed to sell the software",
+      "You must redistribute your changes",
+      "You should be able to modify the software as you wish"
+    ],
+    correctAnswer: [
+      "You should have access to the source code of software",
+      "You should be able to modify the software as you wish"
+    ],
+    explanation: "Open source guarantees access to code and the right to modify it. You ARE actually allowed to sell open source software, and you don't always have to redistribute changes."
+  },
+  {
+    id: 36,
+    text: "What does the `alias` command do?",
+    type: "single",
+    options: [
+      "Runs a specific program",
+      "Shows information about a command",
+      "Creates a shortcut for a longer command",
+      "Lists all available commands"
+    ],
+    correctAnswer: "Creates a shortcut for a longer command",
+    explanation: "Aliases are custom shortcuts, e.g., `alias update='sudo apt update && sudo apt upgrade'`."
+  },
+  {
+    id: 37,
+    text: "A user defines `alias cls='clear'` directly in the terminal. After closing and reopening the terminal, the alias no longer works. What is the most likely cause?",
+    type: "single",
+    options: [
+      "The alias was not saved in ~/.bashrc or another initialisation file",
+      "The alias definition used incorrect syntax or missing quotes",
+      "Aliases require root privileges to be saved permanently across sessions",
+      "The clear command does not exist on this system"
+    ],
+    correctAnswer: "The alias was not saved in ~/.bashrc or another initialisation file",
+    explanation: "Commands typed directly into the terminal are volatile. To make them permanent, they must be saved in a startup script like ~/.bashrc."
+  },
+  {
+    id: 38,
+    text: "Which of the following commands will execute the last command that started with `ec`:",
+    type: "single",
+    options: ["!-ec", "!!", "!?ec", "!ec"],
+    correctAnswer: "!ec",
+    explanation: "`!string` executes the most recent command starting with that string. `!!` runs the very last command."
+  },
+  {
+    id: 39,
+    text: "The `jamie` user already exists in the system. The command `grep jamie /etc/passwd` displays one user record. Running the `echo $?` command immediately after would result in what output?",
+    type: "single",
+    options: ["1", "5", "2", "0"],
+    correctAnswer: "0",
+    explanation: "Because `grep` successfully found the record, it exits with a success status, which in Bash is 0."
+  },
+  {
+    id: 40,
+    text: "An ______ (Interrupt Request) is a hardware signal line used by devices to request CPU attention. The code that handles the interrupt is called an ______ (Interrupt Service Routine). The IVT stores the ______ of all ISRs.",
+    type: "single",
+    options: [
+      "interrupt request / interrupt service routine / memory addresses",
+      "interrupt signal / interrupt handler / process IDs",
+      "interrupt request / system call / memory addresses",
+      "I/O request / interrupt service routine / IRQ numbers"
+    ],
+    correctAnswer: "interrupt request / interrupt service routine / memory addresses",
+    explanation: "Hardware sends an Interrupt Request (IRQ). The CPU runs the Interrupt Service Routine (ISR) to handle it. The Interrupt Vector Table (IVT) holds the memory addresses of these routines."
+  },
+  {
+    id: 41,
+    text: "______ quotes prevent all interpretation by the shell, while ______ quotes allow variable expansion but prevent word splitting.",
+    type: "single",
+    options: [
+      "Double / Single",
+      "Single / Double",
+      "Backtick / Single",
+      "Single / Backtick"
+    ],
+    correctAnswer: "Single / Double",
+    explanation: "Single quotes ('') are literal and prevent ALL interpretation. Double quotes (\"\") allow variables like $USER to be expanded while keeping the string together as one argument."
+  },
+  {
+    id: 42,
+    text: "Which correctly distinguishes monolithic and microkernel architectures?",
+    type: "single",
+    options: [
+      "Microkernels achieve higher performance due to minimal kernel-space footprint",
+      "Linux implements a pure microkernel design with all drivers in user space",
+      "Monolithic kernels cannot load or unload any modules during runtime",
+      "Monolithic runs services in kernel space; microkernel moves most to user space"
+    ],
+    correctAnswer: "Monolithic runs services in kernel space; microkernel moves most to user space",
+    explanation: "Monolithic kernels run OS services in kernel space. Microkernels run only the bare minimum in kernel space and move services to user space."
+  },
+  {
+    id: 43,
+    text: "Linux uses a ______ kernel architecture, where all services run in the same ______. In contrast, Minix uses a ______ design.",
+    type: "single",
+    options: [
+      "monolithic / virtual machine / microkernel",
+      "monolithic / address space / microkernel",
+      "microkernel / address space / monolithic",
+      "supervisor / kernel space / monolithic"
+    ],
+    correctAnswer: "monolithic / address space / microkernel",
+    explanation: "Linux is monolithic, sharing a single kernel address space for its services. Minix is the classic example of a microkernel architecture."
+  },
+  {
+    id: 44,
+    text: "Complete the help-seeking commands:\n1. Read the manual page for ls: ___ ls\n2. Search manuals by keyword: ___ network\n3. Brief description of a command: ___ grep\n4. Built-in help for cd: ___ cd",
+    type: "single",
+    options: [
+      "man / apropos / whatis / help",
+      "read / apropos / whatis / help",
+      "man / grep / info / man",
+      "info / find / whatis / info"
+    ],
+    correctAnswer: "man / apropos / whatis / help",
+    explanation: "man = manual pages. apropos = keyword search. whatis = brief description. help = built-in help."
+  },
+  {
+    id: 45,
+    text: "Environment variables cannot be created by which command?",
+    type: "single",
+    options: [
+      "declare",
+      "export",
+      "set",
+      "typeset"
+    ],
+    correctAnswer: "set",
+    explanation: "The `set` command creates local shell variables, not environment variables. `export` or `declare -x` creates environment variables."
+  },
+  {
+    id: 46,
+    text: "Environment variables can be viewed by running: (choose two)",
+    type: "multiple",
+    options: [
+      "env",
+      "printenv",
+      "setenv",
+      "showenv"
+    ],
+    correctAnswer: [
+      "env",
+      "printenv"
+    ],
+    explanation: "Both `env` and `printenv` will print out currently exported environment variables."
   }
 ];
 
@@ -727,7 +1116,7 @@ const quiz2Data = [
 
 const secretQuizData = [
   { id: 2001, text: "What does CLI stand for?", type: "single", options: ["Core Learning Interface", "Command Learning Interface", "Core Line Interface", "Command Line Interface"], correctAnswer: "Command Line Interface", explanation: "" },
-    { id: 2002, text: "Commands are case-sensitive. True or False?", type: "single", options: ["True", "False"], correctAnswer: "True", explanation: "" },
+   { id: 2002, text: "Commands are case-sensitive. True or False?", type: "single", options: ["True", "False"], correctAnswer: "True", explanation: "" },
   { id: 2003, text: "When entering a command, do arguments or options typically come first?", type: "single", options: ["Options", "Arguments"], correctAnswer: "Options", explanation: "" },
   { id: 2004, text: "Which of the following is NOT a correct way to combine options?", type: "single", options: ["-l -r", "-lr", "-r l", "-rl"], correctAnswer: "-r l", explanation: "" },
   { id: 2005, text: "Which command will print your current location in the filesystem?", type: "single", options: ["pcl", "pwd", "pd", "cd"], correctAnswer: "pwd", explanation: "" },
@@ -2488,7 +2877,7 @@ export default function App() {
                 </div>
                 <ChevronRight className="w-6 h-6 text-gray-400 group-hover:text-blue-500" />
               </div>
-              <h2 className="text-2xl font-bold mb-2 text-gray-800 dark:text-white">QUIZ 1</h2>
+              <h2 className="text-2xl font-bold mb-2 text-gray-800 dark:text-white">Essentials</h2>
               <p className="mb-4 text-gray-600 dark:text-gray-400">OS Fundamentals & Shell basics</p>
               <span className="inline-block px-3 py-1 text-sm font-medium rounded-full bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200">
                 {quiz1Data.length} Questions
@@ -2502,7 +2891,7 @@ export default function App() {
                 </div>
                 <ChevronRight className="w-6 h-6 text-gray-400 group-hover:text-amber-500" />
               </div>
-              <h2 className="text-2xl font-bold mb-2 text-gray-800 dark:text-white">QUIZ2</h2>
+              <h2 className="text-2xl font-bold mb-2 text-gray-800 dark:text-white">Advanced Operations</h2>
               <p className="mb-4 text-gray-600 dark:text-gray-400">Pipelines, Redirection & Scheduling</p>
               <span className="inline-block px-3 py-1 text-sm font-medium rounded-full bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200">
                 {quiz2Data.length} Questions
@@ -2516,8 +2905,8 @@ export default function App() {
                 </div>
                 <ChevronRight className="w-6 h-6 text-gray-400 group-hover:text-purple-500" />
               </div>
-              <h2 className="text-2xl font-bold mb-2 text-gray-800 dark:text-white">SECRET</h2>
-              <p className="mb-4 text-gray-600 dark:text-gray-400">idk</p>
+              <h2 className="text-2xl font-bold mb-2 text-gray-800 dark:text-white">Security & Hardware</h2>
+              <p className="mb-4 text-gray-600 dark:text-gray-400">Certified Hardware Interaction Quiz</p>
               <span className="inline-block px-3 py-1 text-sm font-medium rounded-full bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200">
                 {secretQuizData.length} Questions
               </span>
