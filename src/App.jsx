@@ -2807,8 +2807,8 @@ export default function App() {
           <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6 bg-purple-100 dark:bg-purple-900/50">
             <Lock className="w-8 h-8 text-purple-600 dark:text-purple-400" />
           </div>
-          <h1 className="text-2xl font-bold mb-2 text-gray-800 dark:text-white">SECRET Quiz</h1>
-          <p className="mb-8 text-gray-600 dark:text-gray-400">Restricted module access.</p>
+          <h1 className="text-2xl font-bold mb-2 text-gray-800 dark:text-white">Enter code</h1>
+          <p className="mb-8 text-gray-600 dark:text-gray-400">enther sumthing idk</p>
           <form onSubmit={handleSecretPassword} className="space-y-4">
             <div>
               <input
